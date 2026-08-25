@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#123463">
+<title>Planning familial V2.1 — Carballes</title>
+<style>
+:root{
+  --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
+  --green:#1f8f4e;--red:#c83d45;--amber:#e4a11b;--text:#14213a;--muted:#657089;
+  --angela:#df4f66;--yvan:#2468c7;--sole:#2d9c55;--calista:#7852cc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:13px 16px 11px;box-shadow:0 2px 12px #0002}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.title{font-weight:850;font-size:clamp(19px,2.6vw,32px);text-align:center;flex:1}
+.subtitle{font-size:12px;opacity:.9;text-align:center;margin-top:3px}
+.pill{background:#ffffff18;border:1px solid #ffffff33;padding:7px 10px;border-radius:999px;font-weight:750;white-space:nowrap;font-size:12px}
+.syncdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0b323;margin-right:5px}
+.syncdot.ok{background:#37c871}.syncdot.off{background:#8795a9}.syncdot.err{background:#e15b64}
+main{padding:14px 14px 90px;max-width:1500px;margin:auto}
+.view{display:none}.view.active{display:block}
+.weekhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.weekhead h2{margin:0;font-size:22px}.small{font-size:13px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.person{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 3px 12px #14315910}
+.person .head{padding:12px 14px;font-size:20px;font-weight:850;display:flex;justify-content:space-between;align-items:center}
+.person.angela .head{color:var(--angela);background:#fff3f5}.person.yvan .head{color:var(--yvan);background:#f1f6ff}
+.person.sole .head{color:var(--sole);background:#f1fbf5}.person.calista .head{color:var(--calista);background:#f7f3ff}
+.scorechip{font-size:13px;border-radius:999px;padding:5px 9px;background:white;border:1px solid currentColor}
+.body{padding:10px}
+.task{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid #edf1f6;min-height:52px}
+.task:last-child{border-bottom:0}.task .label{flex:1;font-weight:650;line-height:1.2}.tag{font-size:11px;color:var(--muted);margin-top:3px}
+.check{width:34px;height:34px;border:2px solid #a9b5c7;border-radius:9px;background:white;display:grid;place-items:center;font-weight:900;color:white;flex:0 0 auto}
+.check.done{background:var(--green);border-color:var(--green)}.check.done:after{content:"✓";font-size:22px}
+.section{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 3px 12px #1431590c}
+.section h3{margin:0 0 10px;font-size:19px}
+.points-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.point-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fbfcfe}
+.point-card h4{margin:0 0 8px;font-size:17px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pbtn{border:0;border-radius:11px;padding:10px 8px;font-weight:750}
+.plus{background:#e7f7ed;color:#14683a}.minus{background:#fdebed;color:#9e2731}.neutral{background:#edf3fb;color:#28496f}
+.parentOnly{display:none}.parent-mode .parentOnly{display:block}
+.familychallenge{display:flex;align-items:center;gap:12px;background:#fff9e7;border:1px solid #f0d273;border-radius:15px;padding:12px;margin-top:12px}
+.familychallenge .big{font-size:30px}.familychallenge strong{display:block}
+.weektable{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:white}
+.weektable th,.weektable td{padding:9px 7px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;font-size:13px}
+.weektable th{background:#eef3fa;font-weight:800}.weektable tr:last-child td{border-bottom:0}.weektable th:last-child,.weektable td:last-child{border-right:0}
+.rulegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule{background:white;border:1px solid var(--line);border-radius:14px;padding:14px;font-weight:700}
+.settingrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.settingrow input{padding:9px 10px;border:1px solid var(--line);border-radius:10px;min-width:210px}
+.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;background:var(--navy);color:white}.btn.secondary{background:#e8eef7;color:#18385e}.btn.danger{background:#a92f37}.btn.good{background:#1e8a4a}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
+.nav button{border:0;background:transparent;padding:10px 3px 7px;color:#60708b;font-weight:750;font-size:12px}.nav button.active{color:var(--navy)}.nav .ico{display:block;font-size:22px;margin-bottom:2px}
+.rotabox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.rotacell{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;font-size:13px}.rotacell b{display:block;margin-bottom:5px}
+.notice{background:#eef7ff;border:1px solid #b8d8f5;border-radius:13px;padding:11px;font-size:13px}.warn{background:#fff8e6;border-color:#ecd187}.okbox{background:#edf9f1;border-color:#b8dfc6}
+.modalback{position:fixed;inset:0;background:#091a32aa;display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modalback.show{display:flex}.modal{background:white;border-radius:18px;padding:18px;max-width:430px;width:100%;box-shadow:0 18px 60px #0005}.modal h3{margin-top:0}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinpad button{padding:14px;border:0;border-radius:12px;background:#edf3fb;font-size:21px;font-weight:800}.pinview{text-align:center;font-size:27px;letter-spacing:10px;margin:8px 0 2px;min-height:36px}
+.syncinfo{display:flex;gap:10px;align-items:flex-start}.syncicon{font-size:25px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf3fb;font-size:11px;font-weight:800}
+@media(max-width:900px){.cards,.points-grid{grid-template-columns:repeat(2,1fr)}.rotabox{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.cards,.points-grid,.rulegrid{grid-template-columns:1fr}.title{font-size:18px}.pill{font-size:11px}.rotabox{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header class="topbar">
+ <div class="toprow">
+  <div class="pill" id="todayLabel">Aujourd’hui</div>
+  <div class="title">PLANNING FAMILIAL — 2026–2027</div>
+  <button class="pill" onclick="parentButton()" id="parentBtn">🔒 Parent</button>
+ </div>
+ <div class="subtitle"><span class="syncdot off" id="syncDot"></span><span id="syncText">Mode local</span> • tâches • comportements • points quotidiens</div>
+</header>
+
+<main>
+<section id="today" class="view active">
+ <div class="weekhead"><div><h2 id="rangeTitle"></h2><div class="small">1 tâche rotative principale par personne • tortues en plus • tâches fixes des filles en plus</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
+ <div class="cards" id="personCards"></div>
+
+ <div class="section">
+  <h3>🌙 Routine du soir — Solé & Calista</h3>
+  <div class="small" style="margin-bottom:10px">Rappels quotidiens • cochables • sans point automatique</div>
+  <div class="points-grid" id="eveningRoutine"></div>
+ </div>
+
+ <div class="section">
+  <h3>⭐ Points du jour — comportement & attitude</h3>
+  <div class="points-grid" id="pointsCards"></div>
+  <div class="familychallenge">
+   <div class="big">🍽️🤫</div><div style="flex:1"><strong>Défi repas sans cris</strong><span class="small">Repas calme du début à la fin : +1 point à chacun.</span></div>
+   <button class="btn good parentOnly" onclick="mealNoShouting()">+1 à tous</button>
+  </div>
+ </div>
+</section>
+
+<section id="week" class="view">
+ <div class="weekhead"><div><h2>📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
+ <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
+ <div class="section"><h3>🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
+</section>
+
+<section id="points" class="view">
+ <div class="weekhead"><div><h2>🏆 Points famille</h2><div class="small">Tâches et comportements, jour par jour.</div></div></div>
+ <div class="section" id="scoreSummary"></div>
+ <div class="section"><h3>Historique récent</h3><div id="history"></div></div>
+</section>
+
+<section id="rules" class="view">
+ <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
+ <div class="rulegrid">
+  <div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div>
+  <div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div>
+ </div>
+ <div class="section"><h3>Barème</h3><p><b>+1</b> tâche faite • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée • <b>+1</b> comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés exactement comme les enfants.</p></div>
+</section>
+
+<section id="settings" class="view">
+ <div class="weekhead"><div><h2>⚙️ Réglages</h2><div class="small">Sauvegarde locale + synchronisation Supabase facultative.</div></div></div>
+ <div class="section">
+  <h3>🔐 Mode parent</h3>
+  <div class="notice">Les tâches restent cochables par tout le monde. En revanche, <b>ajouter/retirer des points, modifier la configuration et administrer la synchro</b> nécessite le mode parent.</div>
+  <div class="settingrow parentOnly"><button class="btn secondary" onclick="changePin()">Changer le PIN parent</button><button class="btn secondary" onclick="lockParent()">Verrouiller maintenant</button></div>
+ </div>
+ <div class="section parentOnly">
+  <h3>☁️ Synchronisation iPhone ↔ iPad</h3>
+  <div class="notice warn">Crée gratuitement un projet Supabase puis colle ici l’URL du projet et la clé <b>anon/public</b>. Utilise le même <b>Code famille</b> sur tous vos appareils. Le fichier SQL fourni avec cette page crée la table nécessaire.</div>
+  <div class="settingrow"><input id="sbUrl" placeholder="https://xxxxx.supabase.co"><input id="sbKey" placeholder="Clé anon/public"></div>
+  <div class="settingrow"><input id="familyCode" placeholder="Code famille (ex. maison-2026)"><button class="btn" onclick="saveCloudSettings()">Enregistrer</button></div>
+  <div class="settingrow"><button class="btn good" onclick="pushCloud()">Envoyer vers le cloud</button><button class="btn secondary" onclick="pullCloud()">Récupérer du cloud</button><button class="btn secondary" onclick="testCloud()">Tester</button></div>
+  <div id="cloudMsg" class="small"></div>
+ </div>
+ <div class="section parentOnly">
+  <h3>💾 Sauvegarde</h3>
+  <div class="settingrow"><button class="btn" onclick="exportData()">Exporter JSON</button><label class="btn secondary" style="cursor:pointer">Importer<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Réinitialiser</button></div>
+ </div>
+ <div class="section"><div class="syncinfo"><div class="syncicon">📱</div><div><b>Installation iPad</b><br><span class="small">Ouvrir cette page dans Safari → Partager → Sur l’écran d’accueil. Elle fonctionne hors ligne tant que le fichier reste disponible ; les données locales restent dans Safari.</span></div></div></div>
+</section>
+</main>
+
+<nav class="nav">
+ <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
+ <button data-view="week"><span class="ico">📅</span>Semaine</button>
+ <button data-view="points"><span class="ico">⭐</span>Points</button>
+ <button data-view="rules"><span class="ico">🛡️</span>Règles</button>
+ <button data-view="settings"><span class="ico">⚙️</span>Réglages</button>
+</nav>
+</div>
+
+<div class="modalback" id="pinModal">
+ <div class="modal">
+  <h3>🔐 Code parent</h3><div class="small" id="pinHelp">Saisis le code PIN.</div><div class="pinview" id="pinView"></div>
+  <div class="pinpad" id="pinPad"></div>
+  <div class="settingrow" style="justify-content:center"><button class="btn secondary" onclick="closePin()">Annuler</button></div>
+ </div>
+</div>
+
+<script>
+const PEOPLE=[{id:'angela',name:'Angela',emoji:'👩',cls:'angela'},{id:'yvan',name:'Yvan',emoji:'👨',cls:'yvan'},{id:'sole',name:'Solé',emoji:'👧',cls:'sole'},{id:'calista',name:'Calista',emoji:'👧',cls:'calista'}];
+const SHARED=[{id:'table',icon:'🍴',label:'Mettre la table + nettoyer la table'},{id:'trash',icon:'🗑️',label:'Poubelles + cartons'},{id:'salon',icon:'🧹',label:'Rangement couloirs + salon'}];
+const GIRL_FIXED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux',sharedGirls:true},{id:'room',icon:'🛏️',label:'Ranger sa chambre'},{id:'bath',icon:'🛁',label:'Garder sa salle de bain rangée'}];
+const ANCHOR=new Date(2026,7,17); let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
+let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],version:2,updatedAt:new Date().toISOString()};
+let cloud=JSON.parse(localStorage.getItem('familyCloudV2')||'null')||{url:'',key:'',familyCode:''};
+let parentUnlocked=false,pinBuffer='',pinMode='unlock';
+if(!localStorage.getItem('familyParentPin')) localStorage.setItem('familyParentPin','2468');
+
+function saveLocal(){state.updatedAt=new Date().toISOString();localStorage.setItem('familyBoardV2',JSON.stringify(state));schedulePush()}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function monday(d){let x=new Date(d);x.setHours(12,0,0,0);let day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);return x}
+function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
+function weekIndex(d){return Math.floor((monday(d)-ANCHOR)/(7*86400000))}
+function formatDate(d){return d.toLocaleDateString('fr-CH',{weekday:'short',day:'2-digit',month:'2-digit'})}
+function rangeText(d){let m=monday(d),s=addDays(m,6);return `Semaine ${weekIndex(d)+1} — du ${formatDate(m)} au ${formatDate(s)}`}
+function assignments(d){
+ let w=((weekIndex(d)%6)+6)%6, dishwasher=w%2===0?'angela':'yvan', other=dishwasher==='angela'?'yvan':'angela', people=[other,'sole','calista'], shift=w%3, out={angela:[],yvan:[],sole:[],calista:[]};
+ out[dishwasher].push({id:'dishwasher',icon:'🍽️',label:'Remplir + vider le lave-vaisselle',tag:'Parents uniquement'});
+ people.forEach((p,i)=>out[p].push({...SHARED[(i+shift)%3],tag:'Tâche rotative'}));
+ let turtle=PEOPLE[((weekIndex(d)%4)+4)%4].id;out[turtle].push({id:'turtles',icon:'🐢',label:"S’occuper des tortues",tag:'En plus de la tâche rotative'});
+ ['sole','calista'].forEach(p=>GIRL_FIXED.forEach(t=>out[p].push({...t,tag:t.sharedGirls?'Solé + Calista':'Tâche personnelle'})));return out;
+}
+function keyCheck(day,p,t){return `${iso(day)}|${p}|${t}`}
+function isDone(day,p,t){return !!state.checks[keyCheck(day,p,t)]}
+function toggle(day,p,t){let k=keyCheck(day,p,t),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-1,'Tâche décochée',day,true)}else{state.checks[k]=true;addPoint(p,1,'Tâche faite',day,true)}saveLocal();renderAll()}
+function addPoint(person,delta,reason,day=selectedDay,silent=false){if(!parentUnlocked&&!silent)return showPin('unlock');state.points.push({id:Date.now()+Math.random(),date:iso(day),person,delta,reason,ts:new Date().toISOString()});saveLocal();if(!silent)renderAll()}
+function scoreFor(person,from=null,to=null){return state.points.filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to))).reduce((a,b)=>a+b.delta,0)}
+function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
+function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag||''}</div></div></div>`).join('')}
+
+const EVENING_ROUTINE=[
+ {id:'teeth',icon:'🦷',label:'Se laver les dents'},
+ {id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure'}
+];
+
+function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
+function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
+function toggleRoutine(day,p,t){
+ let k=routineKey(day,p,t);
+ if(state.checks[k]) delete state.checks[k]; else state.checks[k]=true;
+ saveLocal(); renderAll();
+}
+function renderEveningRoutine(){
+ const girls=PEOPLE.filter(p=>p.id==='sole'||p.id==='calista');
+ document.getElementById('eveningRoutine').innerHTML=girls.map(p=>`
+  <div class="point-card">
+   <h4>${p.emoji} ${p.name}</h4>
+   ${EVENING_ROUTINE.map(t=>`
+    <div class="task">
+     <button class="check ${routineDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggleRoutine(selectedDay,'${p.id}','${t.id}')"></button>
+     <div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne</div></div>
+    </div>`).join('')}
+  </div>`).join('');
+}
+
+function renderToday(){let ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);document.getElementById('rangeTitle').textContent=rangeText(selectedDay);document.getElementById('weekNo').textContent='Sem. '+(weekIndex(selectedDay)+1);document.getElementById('todayLabel').textContent=selectedDay.toLocaleDateString('fr-CH',{weekday:'long',day:'numeric',month:'long'});
+ document.getElementById('personCards').innerHTML=PEOPLE.map(p=>`<article class="person ${p.cls}"><div class="head"><span>${p.emoji} ${p.name}</span><span class="scorechip">⭐ ${scoreFor(p.id,m,s)}</span></div><div class="body">${personTasksHtml(p,ass[p.id])}</div></article>`).join('');
+ document.getElementById('pointsCards').innerHTML=PEOPLE.map(p=>`<div class="point-card"><h4>${p.emoji} ${p.name}<span style="float:right">⭐ ${scoreFor(p.id,selectedDay,selectedDay)}</span></h4><div class="quick parentOnly"><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Repas sans cris')">+1 Repas calme</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Aide spontanée')">+1 Aide</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Bonne attitude')">+1 Positif</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Cris / ton agressif')">−1 Cris</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Manque de respect')">−1 Respect</button><button class="pbtn neutral" onclick="customPoint('${p.id}')">Autre…</button></div><div class="small">${parentUnlocked?'Mode parent : modification autorisée':'🔒 Points modifiables en mode parent'}</div></div>`).join('');
+}
+function customPoint(p){if(!parentUnlocked)return showPin('unlock');let reason=prompt('Raison du point :');if(!reason)return;let n=parseInt(prompt('Valeur (+1, -1, +2…)','1'),10);if(!Number.isFinite(n))return alert('Valeur invalide');addPoint(p,n,reason)}
+function renderWeek(){let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);let h='<tr><th>Personne</th>'+days.map(d=>`<th>${formatDate(d)}</th>`).join('')+'<th>Score</th></tr>';h+=PEOPLE.map(p=>`<tr><td><b>${p.emoji} ${p.name}</b></td>`+days.map(d=>{let tasks=assignments(d)[p.id],done=tasks.filter(t=>isDone(d,p.id,t.id)).length;return `<td>${done}/${tasks.length}<br><span class="small">⭐ ${scoreFor(p.id,d,d)}</span></td>`}).join('')+`<td><b>${scoreFor(p.id,m,addDays(m,6))}</b></td></tr>`).join('');document.getElementById('weekTable').innerHTML=h;
+ document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d),line=PEOPLE.map(p=>`${p.emoji} ${p.name}: ${a[p.id].find(x=>['dishwasher','table','trash','salon'].includes(x.id))?.label||'—'}`).join('<br>'),t=PEOPLE.find(p=>a[p.id].some(x=>x.id==='turtles'));return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${line}<br>🐢 ${t.name}</div>`}).join('');
+}
+function renderPoints(){let m=monday(selectedDay),s=addDays(m,6);document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+PEOPLE.map(p=>`<div class="task"><div class="label">${p.emoji} ${p.name}</div><b style="font-size:22px">${scoreFor(p.id,m,s)>=0?'+':''}${scoreFor(p.id,m,s)} ⭐</b></div>`).join('');let recent=[...state.points].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,40);document.getElementById('history').innerHTML=recent.length?recent.map(x=>{let p=PEOPLE.find(p=>p.id===x.person);return `<div class="task"><div class="label">${p?.emoji||''} ${p?.name||x.person}<div class="tag">${x.date} — ${x.reason}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`}).join(''):'<div class="small">Aucun point enregistré.</div>'}
+function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderEveningRoutine();renderWeek();renderPoints();loadCloudFields();updateSyncUI()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
+
+function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
+function showPin(mode){pinMode=mode;pinBuffer='';document.getElementById('pinView').textContent='';document.getElementById('pinHelp').textContent=mode==='change'?'Saisis le nouveau code PIN (4 chiffres).':'Saisis le code PIN parent.';document.getElementById('pinModal').classList.add('show')}
+function closePin(){document.getElementById('pinModal').classList.remove('show')}
+function pinPress(v){if(v==='C'){pinBuffer=''}else if(v==='OK'){if(pinMode==='unlock'){if(pinBuffer===localStorage.getItem('familyParentPin')){parentUnlocked=true;closePin();renderAll()}else{pinBuffer='';document.getElementById('pinHelp').textContent='Code incorrect. Réessaie.'}}else{if(/^\d{4}$/.test(pinBuffer)){localStorage.setItem('familyParentPin',pinBuffer);parentUnlocked=true;closePin();alert('Nouveau PIN enregistré.');renderAll()}else document.getElementById('pinHelp').textContent='Le PIN doit contenir 4 chiffres.'}}else if(pinBuffer.length<4)pinBuffer+=v;document.getElementById('pinView').textContent='•'.repeat(pinBuffer.length)}
+function changePin(){if(parentUnlocked)showPin('change')}function lockParent(){parentUnlocked=false;renderAll()}
+document.getElementById('pinPad').innerHTML=['1','2','3','4','5','6','7','8','9','C','0','OK'].map(x=>`<button onclick="pinPress('${x}')">${x}</button>`).join('');
+
+function loadCloudFields(){document.getElementById('sbUrl').value=cloud.url||'';document.getElementById('sbKey').value=cloud.key||'';document.getElementById('familyCode').value=cloud.familyCode||''}
+function saveCloudSettings(){if(!parentUnlocked)return;cloud={url:document.getElementById('sbUrl').value.trim().replace(/\/$/,''),key:document.getElementById('sbKey').value.trim(),familyCode:document.getElementById('familyCode').value.trim()};localStorage.setItem('familyCloudV2',JSON.stringify(cloud));updateSyncUI();document.getElementById('cloudMsg').textContent='Configuration enregistrée sur cet appareil.'}
+function cloudReady(){return cloud.url&&cloud.key&&cloud.familyCode}
+function updateSyncUI(){let dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');if(!navigator.onLine){dot.className='syncdot off';txt.textContent='Hors ligne — sauvegarde locale'}else if(cloudReady()){dot.className='syncdot ok';txt.textContent='Cloud configuré'}else{dot.className='syncdot off';txt.textContent='Mode local'}}
+async function api(method,body=null){let u=`${cloud.url}/rest/v1/family_boards?family_code=eq.${encodeURIComponent(cloud.familyCode)}`,headers={'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'};let r=await fetch(u,{method,headers,body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(await r.text());return r.status===204?[]:await r.json()}
+async function pushCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Envoi…');let existing=await api('GET');if(existing.length){await api('PATCH',{payload:state,updated_at:new Date().toISOString()})}else{let r=await fetch(`${cloud.url}/rest/v1/family_boards`,{method:'POST',headers:{'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({family_code:cloud.familyCode,payload:state})});if(!r.ok)throw new Error(await r.text())}msg('✅ Synchronisé vers le cloud.')}catch(e){msg('❌ '+e.message)}}
+async function pullCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Récupération…');let arr=await api('GET');if(!arr.length)return msg('Aucune donnée cloud pour ce code famille.');let remote=arr[0].payload;if(remote){state=remote;localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();msg('✅ Données cloud récupérées.')}}catch(e){msg('❌ '+e.message)}}
+async function testCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{await api('GET');msg('✅ Connexion Supabase réussie.')}catch(e){msg('❌ '+e.message)}}
+function msg(t){document.getElementById('cloudMsg').textContent=t}
+let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
+window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
+
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='planning-familial-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
+function resetAll(){if(!parentUnlocked)return;if(confirm('Effacer toutes les coches et tous les points sur cet appareil ?')){state={checks:{},points:[],version:2,updatedAt:new Date().toISOString()};saveLocal();renderAll()}}
+renderAll();if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
+</script>
+</body>
+</html>
