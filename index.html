@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Planning familial V2.12 — Carballes</title>
+<title>Planning familial V2.13 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -185,7 +185,18 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
  </div>
  <div class="section parentOnly">
   <h3>💾 Sauvegarde</h3>
-  <div class="settingrow"><button class="btn" onclick="exportData()">Exporter JSON</button><label class="btn secondary" style="cursor:pointer">Importer<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Réinitialiser</button></div>
+  <div class="settingrow">
+<button class="btn" onclick="exportData()">Exporter JSON</button>
+<label class="btn secondary" style="cursor:pointer">Importer<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+</div>
+<div class="notice warn" style="margin-top:10px">
+<b>Attention :</b> choisis bien ce que tu veux effacer. Les actions ci-dessous concernent les données locales de cet appareil.
+</div>
+<div class="settingrow">
+<button class="btn secondary" onclick="resetCurrentWeek()">Réinitialiser la semaine en cours</button>
+<button class="btn secondary" onclick="resetPointsOnly()">Effacer tous les points</button>
+<button class="btn danger" onclick="resetAll()">Réinitialiser TOUTES les données</button>
+</div>
  </div>
  <div class="section"><div class="syncinfo"><div class="syncicon">📱</div><div><b>Installation iPad</b><br><span class="small">Ouvrir cette page dans Safari → Partager → Sur l’écran d’accueil. Elle fonctionne hors ligne tant que le fichier reste disponible ; les données locales restent dans Safari.</span></div></div></div>
 </section>
@@ -193,7 +204,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 
 <footer class="footerinfo">
- Version <b>2.12</b> • Dernière mise à jour : <b>25/08/2026 23:04</b>
+ Version <b>2.13</b> • Dernière mise à jour : <b>25/08/2026 23:10</b>
 </footer>
 
 <nav class="nav">
