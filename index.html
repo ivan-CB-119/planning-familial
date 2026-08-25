@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Planning familial V2.9 — Carballes</title>
+<title>Planning familial V2.11 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -18,7 +18,7 @@ html,body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystem
 button,input,select{font:inherit}
 button{cursor:pointer}
 .app{min-height:100vh}
-.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:13px 16px 11px;box-shadow:0 2px 12px #0002}
+.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:calc(13px + env(safe-area-inset-top)) 16px 11px;box-shadow:0 2px 12px #0002}
 .toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .title{font-weight:850;font-size:clamp(19px,2.6vw,32px);text-align:center;flex:1}
 .subtitle{font-size:12px;opacity:.9;text-align:center;margin-top:3px}
@@ -65,7 +65,14 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 .syncinfo{display:flex;gap:10px;align-items:flex-start}.syncicon{font-size:25px}
 .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf3fb;font-size:11px;font-weight:800}
 @media(max-width:900px){.cards,.points-grid{grid-template-columns:repeat(2,1fr)}.rotabox{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.cards,.points-grid,.rulegrid{grid-template-columns:1fr}.title{font-size:18px}.pill{font-size:11px}.rotabox{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){
+.cards,.points-grid,.rulegrid{grid-template-columns:1fr}
+.topbar{padding-top:calc(22px + env(safe-area-inset-top));padding-left:12px;padding-right:12px}
+.toprow{align-items:center;gap:8px}
+.title{font-size:18px}
+.pill{font-size:11px;padding:9px 10px;min-height:38px;display:flex;align-items:center;justify-content:center}
+.rotabox{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
@@ -95,7 +102,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>🌙 Routine du soir — Solé & Calista</h3>
-  <div class="small" style="margin-bottom:10px">Rappels quotidiens • cochables • sans point automatique</div>
+  <div class="small" style="margin-bottom:10px">Rappels quotidiens • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
   <div class="points-grid" id="eveningRoutine"></div>
  </div>
 
@@ -108,6 +115,15 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
    <div class="rule">📚 Devoirs avant les écrans</div>
    <div class="rule">🏡 On aide à la maison</div>
    <div class="rule">🍽️ Pendant les repas : on évite les cris</div>
+  </div>
+ </div>
+
+ <div class="section">
+  <h3>ℹ️ Comment gagner des points ?</h3>
+  <div class="small">
+   ⭐ Une tâche affichée avec “+1 point” rapporte le point lorsqu’elle est cochée.<br>
+   ⬜ Une tâche non cochée ne rapporte rien, sans malus automatique.<br>
+   🌙 Les éléments marqués “0 point” servent uniquement de rappel.
   </div>
  </div>
 
@@ -225,8 +241,8 @@ function formatDate(d){return d.toLocaleDateString('fr-CH',{weekday:'short',day:
 function rangeText(d){let m=monday(d),s=addDays(m,6);return `Semaine ${weekIndex(d)+1} — du ${formatDate(m)} au ${formatDate(s)}`}
 function assignments(d){
  let w=((weekIndex(d)%6)+6)%6, dishwasher=w%2===0?'angela':'yvan', other=dishwasher==='angela'?'yvan':'angela', people=[other,'sole','calista'], shift=w%3, out={angela:[],yvan:[],sole:[],calista:[]};
- out[dishwasher].push({id:'dishwasher',icon:'🍽️',label:'Remplir + vider le lave-vaisselle',tag:'Parents uniquement'});
- people.forEach((p,i)=>out[p].push({...SHARED[(i+shift)%3],tag:'Tâche rotative de la semaine'}));
+ out[dishwasher].push({id:'dishwasher',icon:'🍽️',label:'Remplir + vider le lave-vaisselle',tag:'Parents uniquement • ⭐ +1 point si cochée'});
+ people.forEach((p,i)=>out[p].push({...SHARED[(i+shift)%3],tag:'Tâche rotative de la semaine • ⭐ +1 point si cochée'}));
  return out;
 }
 function turtlePerson(d){
@@ -279,34 +295,41 @@ function renderSharedTasks(){
    <h4>🐢 Tortues</h4>
    <div class="task">
     <button class="check ${sharedDone(selectedDay,'turtles','turtles')?'done':''}" onclick="toggleTurtles(selectedDay)"></button>
-    <div class="label">S’occuper des tortues<div class="tag">Cette semaine : ${turtle.name}</div></div>
+    <div class="label">S’occuper des tortues<div class="tag">Cette semaine : ${turtle.name} • ⭐ +1 point</div></div>
    </div>`;
  document.getElementById('girlsSharedCard').innerHTML=`
    <h4>👧👧 Solé + Calista</h4>
    ${GIRLS_SHARED.map(t=>`
     <div class="task">
      <button class="check ${sharedDone(selectedDay,'girls',t.id)?'done':''}" onclick="toggleSharedGirls(selectedDay,'${t.id}')"></button>
-     <div class="label">${t.icon} ${t.label}<div class="tag">Tâche commune • +1 chacune si cochée</div></div>
+     <div class="label">${t.icon} ${t.label}<div class="tag">Tâche commune • ⭐ +1 point chacune si cochée</div></div>
     </div>`).join('')}`;
  document.getElementById('roomsCard').innerHTML=`
    <h4>🛏️ Chambres</h4>
    ${['sole','calista'].map(id=>{const p=PEOPLE.find(x=>x.id===id);return `
     <div class="task">
      <button class="check ${roomDone(selectedDay,id)?'done':''}" onclick="toggleRoom(selectedDay,'${id}')"></button>
-     <div class="label">${p.name} — ranger sa chambre<div class="tag">Tâche individuelle</div></div>
+     <div class="label">${p.name} — ranger sa chambre<div class="tag">Tâche individuelle • ⭐ +1 point si cochée</div></div>
     </div>`}).join('')}`;
 }
 
 const EVENING_ROUTINE=[
- {id:'teeth',icon:'🦷',label:'Se laver les dents'},
- {id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure'}
+ {id:'teeth',icon:'🦷',label:'Se laver les dents',points:1},
+ {id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure',points:0}
 ];
 
 function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
 function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
 function toggleRoutine(day,p,t){
- let k=routineKey(day,p,t);
- if(state.checks[k]) delete state.checks[k]; else state.checks[k]=true;
+ let k=routineKey(day,p,t), was=!!state.checks[k];
+ let item=EVENING_ROUTINE.find(x=>x.id===t);
+ if(was){
+   delete state.checks[k];
+   if(item && item.points>0) addPoint(p,-item.points,item.label+' décoché',day,true);
+ }else{
+   state.checks[k]=true;
+   if(item && item.points>0) addPoint(p,item.points,item.label,day,true);
+ }
  saveLocal(); renderAll();
 }
 function renderEveningRoutine(){
@@ -317,7 +340,7 @@ function renderEveningRoutine(){
    ${EVENING_ROUTINE.map(t=>`
     <div class="task">
      <button class="check ${routineDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggleRoutine(selectedDay,'${p.id}','${t.id}')"></button>
-     <div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne</div></div>
+     <div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne • ${t.points>0?`⭐ +${t.points} point`:`0 point`}</div></div>
     </div>`).join('')}
   </div>`).join('');
 }
