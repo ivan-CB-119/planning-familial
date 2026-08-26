@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.32 — Carballes</title>
+<title>Family Flow V2.33 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -430,6 +430,12 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .family-account-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 @media(max-width:560px){.family-members-preview{grid-template-columns:1fr 1fr}}
 
+
+#app:not(.parent-mode) #menus .menu-cell,
+#app:not(.parent-mode) #menus .mobile-menu-slot{cursor:default}
+#app:not(.parent-mode) #menus .menu-cell:hover{border-color:var(--line);box-shadow:none}
+#app:not(.parent-mode) #menus .menu-cell:active{transform:none}
+#app.parent-mode #menuReadOnlyNotice{background:#edf9f1;border-color:#b8dfc6}
 </style>
 </head>
 <body>
@@ -493,12 +499,13 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 <section id="menus" class="view">
  <div class="weekhead"><div><h2>🍽️ Menus de la semaine</h2><div class="small">Parents et enfants séparés par défaut • menu commun possible repas par repas.</div></div></div>
  <div class="section">
+  <div id="menuReadOnlyNotice" class="notice" style="margin-bottom:8px">👀 Consultation libre • 🔒 modification réservée aux parents</div>
   <div class="menu-toolbar"><div class="menu-week-nav"><button class="btn secondary" onclick="moveMenuWeek(-1)">‹</button><b id="menuRangeTitle"></b><button class="btn secondary" onclick="moveMenuWeek(1)">›</button></div>
    <div class="menu-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
   </div>
   <div id="mobileMenuView" class="mobile-menu-view"></div><div class="menu-week-wrap"><div class="menu-grid" id="menuGrid"></div></div>
-  <div class="menu-actions"><button class="btn" id="menuAddEditBtn" type="button">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
-  <div class="menu-desktop-tools">
+  <div class="menu-actions parentOnly flex"><button class="btn" id="menuAddEditBtn" type="button">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
+  <div class="menu-desktop-tools parentOnly">
    <div class="toolfield"><label>Jour</label><select id="desktopMenuDay"></select></div>
    <div class="toolfield"><label>Repas</label><select id="desktopMenuMeal"><option value="breakfast">🥐 Petit-déjeuner</option><option value="lunch">☀️ Déjeuner</option><option value="dinner">🌙 Dîner</option></select></div>
    <button class="btn good" type="button" id="desktopMenuEditBtn">✏️ Modifier ce repas</button>
@@ -507,7 +514,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div id="desktopMenuEditorHost" class="desktop-menu-editor-host"></div>
  </div>
  
- <div class="section" id="foodCatalogSection">
+ <div class="section parentOnly block" id="foodCatalogSection">
   <h3>🥗 Bibliothèque d’aliments</h3>
   <div class="small" style="margin-bottom:8px">Crée une seule fois tes aliments, rattache-les à un groupe, puis sélectionne-les dans chaque repas.</div>
   <div class="food-add-row">
@@ -567,7 +574,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.32</b> • Compte familial préparé • Planning retiré temporairement • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.33</b> • Modification des menus réservée aux parents • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -620,7 +627,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.32;
+const APP_VERSION=2.33;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -896,7 +903,7 @@ function mobileMealSlotHtml(day,meal){
           <div class="mobile-menu-meal-value ${val?'':'mobile-menu-empty'}">${val||'À définir'}</div>
         </div>
       </div>
-      <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
+      <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn parentOnly" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
     </div>`;
   }
   let pv=compactMenuValue(e.parents), cv=compactMenuValue(e.children);
@@ -912,7 +919,7 @@ function mobileMealSlotHtml(day,meal){
         <div class="mobile-menu-meal-value ${cv?'':'mobile-menu-empty'}">${cv||'À définir'}</div>
       </div>
     </div>
-    <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
+    <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn parentOnly" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
   </div>`;
 }
 function renderMobileMenus(days){
@@ -941,7 +948,7 @@ function renderMobileMenus(days){
 
 function renderMenus(){let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
  let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- ['breakfast','lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='breakfast'?'🥐<br>Petit-déj.':meal==='lunch'?'☀️<br>Déjeuner':'🌙<br>Dîner'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
+ ['breakfast','lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='breakfast'?'🥐<br>Petit-déj.':meal==='lunch'?'☀️<br>Déjeuner':'🌙<br>Dîner'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit parentOnly" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
  renderMobileMenus(days);
  let ds=document.getElementById('desktopMenuDay');
  if(ds){
@@ -966,6 +973,7 @@ function placeMenuEditorForViewport(){
  }
 }
 function openMenuEditor(day,meal){
+ if(!parentUnlocked)return showPin('unlock');
  menuEditDay=new Date(day);menuEditMeal=meal;let e=menuEntry(menuEditDay,menuEditMeal);
  placeMenuEditorForViewport();
  document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='breakfast'?'Petit-déjeuner':meal==='lunch'?'Déjeuner':'Dîner');
@@ -1004,11 +1012,13 @@ function renderFoodPicker(hostId,target){
  }).join('');
 }
 function toggleFoodChoice(target,id){
+ if(!parentUnlocked)return showPin('unlock');
  let arr=pickerDraft[target]||[];
  pickerDraft[target]=arr.includes(id)?arr.filter(x=>x!==id):[...arr,id];
  renderFoodPicker(target==='parents'?'foodPickerParents':target==='children'?'foodPickerChildren':'foodPickerShared',target);
 }
 function saveMenuEntry(){
+ if(!parentUnlocked)return showPin('unlock');
  if(!menuEditDay)return;
  let e=menuEntry(menuEditDay,menuEditMeal);
  e.common=document.getElementById('menuCommonToggle').checked;
@@ -1017,8 +1027,8 @@ function saveMenuEntry(){
  e.shared={selected:[...pickerDraft.shared]};
  saveLocal();closeMenuEditor();renderMenus();renderFoodCatalog();
 }
-function clearMenuEntry(){if(!menuEditDay||!confirm('Effacer ce repas ?'))return;let k=iso(menuEditDay);if(state.menus[k])delete state.menus[k][menuEditMeal];saveLocal();closeMenuEditor();renderMenus()}
-function copyMenuWeek(){let src=monday(menuWeekDate),dest=addDays(src,7);if(!confirm('Copier tous les menus de cette semaine vers la semaine suivante ?'))return;for(let i=0;i<7;i++){let sKey=iso(addDays(src,i)),dKey=iso(addDays(dest,i));if(state.menus[sKey])state.menus[dKey]=JSON.parse(JSON.stringify(state.menus[sKey]))}saveLocal();alert('✅ Semaine copiée.')}
+function clearMenuEntry(){if(!parentUnlocked)return showPin('unlock');if(!menuEditDay||!confirm('Effacer ce repas ?'))return;let k=iso(menuEditDay);if(state.menus[k])delete state.menus[k][menuEditMeal];saveLocal();closeMenuEditor();renderMenus()}
+function copyMenuWeek(){if(!parentUnlocked)return showPin('unlock');let src=monday(menuWeekDate),dest=addDays(src,7);if(!confirm('Copier tous les menus de cette semaine vers la semaine suivante ?'))return;for(let i=0;i<7;i++){let sKey=iso(addDays(src,i)),dKey=iso(addDays(dest,i));if(state.menus[sKey])state.menus[dKey]=JSON.parse(JSON.stringify(state.menus[sKey]))}saveLocal();alert('✅ Semaine copiée.')}
 
 
 function renderFoodCatalog(){
@@ -1038,6 +1048,7 @@ function renderFoodCatalog(){
  }).join('');
 }
 function addFoodItem(){
+ if(!parentUnlocked)return showPin('unlock');
  const input=document.getElementById('foodNameInput'), sel=document.getElementById('foodCategorySelect');
  let name=(input?.value||'').trim(), category=sel?.value||'other';
  if(!name)return alert('Indique le nom de l’aliment.');
@@ -1047,6 +1058,7 @@ function addFoodItem(){
  if(menuEditDay){let e=menuEntry(menuEditDay,menuEditMeal);renderFoodPickers(e)}
 }
 function deleteFoodItem(id){
+ if(!parentUnlocked)return showPin('unlock');
  const item=foodItemById(id); if(!item)return;
  if(!confirm(`Supprimer « ${item.name} » de la bibliothèque ?`))return;
  state.foodCatalog.items=state.foodCatalog.items.filter(x=>x.id!==id);
@@ -1140,20 +1152,21 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-32-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-33-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
 function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales : tâches, points, menus, planning, lieux et transports ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};ensureState();saveLocal();renderAll()}}
 
 function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
-function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
+function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 /* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
 document.addEventListener('click',function(ev){
  const target=ev.target.closest('[data-menu-date][data-menu-meal]');
  if(target){
+   if(!parentUnlocked){ev.preventDefault();ev.stopPropagation();return;}
    ev.preventDefault();ev.stopPropagation();
    openMenuEditorIso(target.dataset.menuDate,target.dataset.menuMeal);
  }
@@ -1161,6 +1174,7 @@ document.addEventListener('click',function(ev){
 document.addEventListener('keydown',function(ev){
  const target=ev.target.closest?.('.menu-cell[data-menu-date][data-menu-meal]');
  if(target && (ev.key==='Enter'||ev.key===' ')){
+   if(!parentUnlocked)return;
    ev.preventDefault();openMenuEditorIso(target.dataset.menuDate,target.dataset.menuMeal);
  }
 });
