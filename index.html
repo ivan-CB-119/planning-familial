@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.16 — Carballes</title>
+<title>Family Flow V2.17 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -161,6 +161,18 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
   .lang-select{padding:8px 7px;font-size:11px;max-width:92px}
 }
 
+
+.daily-track-wrap{overflow-x:auto;padding-bottom:4px}
+.daily-track{min-width:760px;display:grid;grid-template-columns:170px repeat(7,minmax(72px,1fr));gap:6px;align-items:stretch}
+.daily-track .dh{font-size:11px;font-weight:850;text-align:center;padding:7px 3px;color:#33455f;background:#eef3fa;border-radius:10px}
+.daily-track .routine-label{display:flex;flex-direction:column;justify-content:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#fbfcfe}
+.daily-track .routine-label b{font-size:13px}
+.daily-track .routine-label span{font-size:10px;color:var(--muted);margin-top:2px}
+.daily-check-cell{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:12px;background:white;min-height:52px}
+.daily-check-cell .check{width:30px;height:30px}
+.daily-check-cell.today-col{box-shadow:inset 0 0 0 2px #c6d9f1;background:#f8fbff}
+.menu-edit{touch-action:manipulation;position:relative;z-index:2}
+
 </style>
 </head>
 <body>
@@ -197,7 +209,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3 data-i18n="evening_routine">🌙 Routine du soir — Solé & Calista</h3>
-  <div class="small" style="margin-bottom:10px">Rappels quotidiens • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
+  <div class="small" style="margin-bottom:10px">Rappels quotidiens • une case par jour • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
   <div class="points-grid" id="eveningRoutine"></div>
  </div>
 
@@ -293,6 +305,11 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
  <div class="weekhead"><div><h2 data-i18n="week_tracking">📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
  <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
  <div class="section"><h3 data-i18n="rotation_6w">🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
+ <div class="section">
+  <h3 data-i18n="daily_habits_week">🗓️ Habitudes quotidiennes — suivi jour par jour</h3>
+  <div class="small" data-i18n="daily_habits_help" style="margin-bottom:10px">Contrairement aux tâches hebdomadaires, ces habitudes ont une case pour chaque jour de la semaine.</div>
+  <div class="daily-track-wrap"><div class="daily-track" id="dailyRoutineWeek"></div></div>
+ </div>
 </section>
 
 <section id="points" class="view">
@@ -359,7 +376,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 
 <footer class="footerinfo">
- Version <b>2.16</b> • Dernière mise à jour : <b>26/08/2026</b>
+ Version <b>2.17</b> • Dernière mise à jour : <b>26/08/2026</b>
 </footer>
 
 <nav class="nav">
@@ -385,7 +402,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
  <div class="modal menu-modal" id="menuModalBox">
   <div class="menu-modal-head">
    <div><h3 style="margin-bottom:3px" data-i18n="edit_meal">🍽️ Modifier le repas</h3><div class="small" id="menuEditorDate"></div></div>
-   <button class="btn secondary" onclick="closeMenuEditor()" data-i18n="close">Fermer</button>
+   <button type="button" class="btn secondary" onclick="closeMenuEditor()" data-i18n="close">Fermer</button>
   </div>
 
   <div class="menu-toggle">
@@ -444,7 +461,7 @@ const I18N = {
   delete_meal:"Effacer ce repas",save_meal:"Enregistrer le repas",specific_tasks:"🏠 Tâches spécifiques & communes",evening_routine:"🌙 Routine du soir — Solé & Calista",
   house_rules:"🏠 Règles de la maison",daily_points:"⭐ Points du jour — comportement & attitude",week_tracking:"📅 Suivi de la semaine",
   rotation_6w:"🔁 Rotation des 6 prochaines semaines",family_points:"🏆 Points famille",recent_history:"Historique récent",scoring:"Barème",
-  parent_mode:"🔐 Mode parent",sync_title:"☁️ Synchronisation iPhone ↔ iPad",backup:"💾 Sauvegarde",
+  parent_mode:"🔐 Mode parent",sync_title:"☁️ Synchronisation iPhone ↔ iPad",backup:"💾 Sauvegarde",daily_habits_week:"🗓️ Habitudes quotidiennes — suivi jour par jour",daily_habits_help:"Contrairement aux tâches hebdomadaires, ces habitudes ont une case pour chaque jour de la semaine.",
   today:"Aujourd’hui",local_mode:"Mode local",offline_local:"Hors ligne — sauvegarde locale",cloud_configured:"Cloud configuré",
   lunch:"Midi",dinner:"Soir",edit:"✏️ Modifier",to_define:"À définir",meal_deleted_confirm:"Effacer ce repas ?",
   week_copy_confirm:"Copier tous les menus de cette semaine vers la semaine suivante ?",week_copied:"✅ Semaine copiée.",
@@ -461,7 +478,7 @@ const I18N = {
   delete_meal:"Delete this meal",save_meal:"Save meal",specific_tasks:"🏠 Specific & shared tasks",evening_routine:"🌙 Evening routine — Solé & Calista",
   house_rules:"🏠 House rules",daily_points:"⭐ Daily points — behavior & attitude",week_tracking:"📅 Weekly tracking",
   rotation_6w:"🔁 Next 6 weeks rotation",family_points:"🏆 Family points",recent_history:"Recent history",scoring:"Scoring",
-  parent_mode:"🔐 Parent mode",sync_title:"☁️ iPhone ↔ iPad sync",backup:"💾 Backup",
+  parent_mode:"🔐 Parent mode",sync_title:"☁️ iPhone ↔ iPad sync",backup:"💾 Backup",daily_habits_week:"🗓️ Daily habits — day-by-day tracking",daily_habits_help:"Unlike weekly tasks, these habits have one checkbox for each day of the week.",
   today:"Today",local_mode:"Local mode",offline_local:"Offline — local backup",cloud_configured:"Cloud configured",
   lunch:"Lunch",dinner:"Dinner",edit:"✏️ Edit",to_define:"To define",meal_deleted_confirm:"Delete this meal?",
   week_copy_confirm:"Copy all menus from this week to the next week?",week_copied:"✅ Week copied.",
@@ -478,7 +495,7 @@ const I18N = {
   delete_meal:"Eliminar esta comida",save_meal:"Guardar comida",specific_tasks:"🏠 Tareas específicas y comunes",evening_routine:"🌙 Rutina de noche — Solé y Calista",
   house_rules:"🏠 Reglas de la casa",daily_points:"⭐ Puntos del día — comportamiento y actitud",week_tracking:"📅 Seguimiento semanal",
   rotation_6w:"🔁 Rotación de las próximas 6 semanas",family_points:"🏆 Puntos familiares",recent_history:"Historial reciente",scoring:"Baremo",
-  parent_mode:"🔐 Modo padres",sync_title:"☁️ Sincronización iPhone ↔ iPad",backup:"💾 Copia de seguridad",
+  parent_mode:"🔐 Modo padres",sync_title:"☁️ Sincronización iPhone ↔ iPad",backup:"💾 Copia de seguridad",daily_habits_week:"🗓️ Hábitos diarios — seguimiento día a día",daily_habits_help:"A diferencia de las tareas semanales, estos hábitos tienen una casilla para cada día.",
   today:"Hoy",local_mode:"Modo local",offline_local:"Sin conexión — copia local",cloud_configured:"Cloud configurado",
   lunch:"Mediodía",dinner:"Noche",edit:"✏️ Modificar",to_define:"Por definir",meal_deleted_confirm:"¿Eliminar esta comida?",
   week_copy_confirm:"¿Copiar todos los menús de esta semana a la siguiente?",week_copied:"✅ Semana copiada.",
@@ -495,7 +512,7 @@ const I18N = {
   delete_meal:"Elimina questo pasto",save_meal:"Salva pasto",specific_tasks:"🏠 Attività specifiche e comuni",evening_routine:"🌙 Routine serale — Solé e Calista",
   house_rules:"🏠 Regole di casa",daily_points:"⭐ Punti del giorno — comportamento e atteggiamento",week_tracking:"📅 Monitoraggio settimanale",
   rotation_6w:"🔁 Rotazione delle prossime 6 settimane",family_points:"🏆 Punti famiglia",recent_history:"Cronologia recente",scoring:"Punteggio",
-  parent_mode:"🔐 Modalità genitore",sync_title:"☁️ Sincronizzazione iPhone ↔ iPad",backup:"💾 Backup",
+  parent_mode:"🔐 Modalità genitore",sync_title:"☁️ Sincronizzazione iPhone ↔ iPad",backup:"💾 Backup",daily_habits_week:"🗓️ Daily habits — day-by-day tracking",daily_habits_help:"Unlike weekly tasks, these habits have one checkbox for each day of the week.",
   today:"Oggi",local_mode:"Modalità locale",offline_local:"Offline — backup locale",cloud_configured:"Cloud configurato",
   lunch:"Pranzo",dinner:"Cena",edit:"✏️ Modifica",to_define:"Da definire",meal_deleted_confirm:"Eliminare questo pasto?",
   week_copy_confirm:"Copiare tutti i menu di questa settimana alla prossima?",week_copied:"✅ Settimana copiata.",
@@ -512,7 +529,7 @@ const I18N = {
   delete_meal:"Diese Mahlzeit löschen",save_meal:"Mahlzeit speichern",specific_tasks:"🏠 Spezifische & gemeinsame Aufgaben",evening_routine:"🌙 Abendroutine — Solé & Calista",
   house_rules:"🏠 Hausregeln",daily_points:"⭐ Tagespunkte — Verhalten & Haltung",week_tracking:"📅 Wochenübersicht",
   rotation_6w:"🔁 Rotation der nächsten 6 Wochen",family_points:"🏆 Familienpunkte",recent_history:"Letzter Verlauf",scoring:"Punktesystem",
-  parent_mode:"🔐 Elternmodus",sync_title:"☁️ iPhone ↔ iPad Synchronisierung",backup:"💾 Sicherung",
+  parent_mode:"🔐 Elternmodus",sync_title:"☁️ iPhone ↔ iPad Synchronisierung",backup:"💾 Sicherung",daily_habits_week:"🗓️ Tägliche Gewohnheiten — Tag für Tag",daily_habits_help:"Im Gegensatz zu Wochenaufgaben haben diese Gewohnheiten für jeden Tag ein eigenes Kästchen.",
   today:"Heute",local_mode:"Lokaler Modus",offline_local:"Offline — lokale Sicherung",cloud_configured:"Cloud konfiguriert",
   lunch:"Mittag",dinner:"Abend",edit:"✏️ Bearbeiten",to_define:"Noch offen",meal_deleted_confirm:"Diese Mahlzeit löschen?",
   week_copy_confirm:"Alle Menüs dieser Woche in die nächste Woche kopieren?",week_copied:"✅ Woche kopiert.",
@@ -690,6 +707,26 @@ function renderToday(){let ass=assignments(selectedDay),m=monday(selectedDay),s=
  document.getElementById('pointsCards').innerHTML=PEOPLE.map(p=>`<div class="point-card"><h4>${p.name}<span style="float:right">⭐ ${scoreFor(p.id,selectedDay,selectedDay)}</span></h4><div class="quick parentOnly"><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Repas sans cris')">+1 Repas calme</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Aide spontanée')">+1 Aide</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Bonne attitude')">+1 Positif</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Cris / ton agressif')">−1 Cris</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Manque de respect')">−1 Respect</button><button class="pbtn neutral" onclick="customPoint('${p.id}')">Autre…</button></div><div class="small">${parentUnlocked?'Mode parent : modification autorisée':'🔒 Points modifiables en mode parent'}</div></div>`).join('');
 }
 function customPoint(p){if(!parentUnlocked)return showPin('unlock');let reason=prompt('Raison du point :');if(!reason)return;let n=parseInt(prompt('Valeur (+1, -1, +2…)','1'),10);if(!Number.isFinite(n))return alert('Valeur invalide');addPoint(p,n,reason)}
+
+function renderDailyRoutineWeek(){
+ const box=document.getElementById('dailyRoutineWeek'); if(!box)return;
+ const m=monday(selectedDay), days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));
+ let html='<div></div>'+days.map(d=>`<div class="dh">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
+ const girls=PEOPLE.filter(p=>p.id==='sole'||p.id==='calista');
+ girls.forEach(p=>{
+   EVENING_ROUTINE.forEach(ti=>{
+     html+=`<div class="routine-label"><b>${p.name} — ${ti.icon} ${escapeHtml(ti.label)}</b><span>${ti.points>0?`⭐ +${ti.points} point`:'0 point'} • quotidien</span></div>`;
+     days.forEach(d=>{
+       const todayClass=iso(d)===iso(new Date())?' today-col':'';
+       html+=`<div class="daily-check-cell${todayClass}">
+         <button type="button" class="check ${routineDone(d,p.id,ti.id)?'done':''}" onclick="toggleRoutine(new Date(${d.getFullYear()},${d.getMonth()},${d.getDate()},12),'${p.id}','${ti.id}')"></button>
+       </div>`;
+     });
+   });
+ });
+ box.innerHTML=html;
+}
+
 function renderWeek(){let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);let h='<tr><th>Personne</th>'+days.map(d=>`<th>${formatDate(d)}</th>`).join('')+'<th>Score</th></tr>';h+=PEOPLE.map(p=>`<tr><td><b>${p.name}</b></td>`+days.map(d=>{let tasks=assignments(d)[p.id],done=tasks.filter(t=>isDone(d,p.id,t.id)).length;
    let extra=0,totalExtra=0;
    if(p.id==='sole'||p.id==='calista'){
@@ -751,13 +788,18 @@ function renderMenus(){
      const e=menuEntry(d,meal);
      html+=`<div class="menu-cell ${e.common?'common':''}">
        ${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}
-       <button class="menu-edit" onclick="openMenuEditor(new Date(${d.getFullYear()},${d.getMonth()},${d.getDate()},12),'${meal}')">${t('edit')}</button>
+       <button type="button" class="menu-edit" onclick="openMenuEditorIso('${iso(d)}','${meal}')">${t('edit')}</button>
      </div>`;
    });
  });
  grid.innerHTML=html;
 }
 function moveMenuWeek(n){menuWeekDate=addDays(menuWeekDate,n*7);renderMenus()}
+function openMenuEditorIso(dateStr,meal){
+ const parts=dateStr.split('-').map(Number);
+ const day=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0);
+ openMenuEditor(day,meal);
+}
 function openMenuEditor(day,meal){
  menuEditDay=new Date(day); menuEditMeal=meal;
  const e=menuEntry(menuEditDay,menuEditMeal);
@@ -767,7 +809,9 @@ function openMenuEditor(day,meal){
    ['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||'');
  });
  toggleMenuEditorMode();
- document.getElementById('menuModal').classList.add('show');
+ const modal=document.getElementById('menuModal');
+ modal.classList.add('show');
+ setTimeout(()=>{ const first=document.querySelector('#menuModal input:not([type="checkbox"])'); if(first) first.focus(); },50);
 }
 function closeMenuEditor(){document.getElementById('menuModal').classList.remove('show')}
 function toggleMenuEditorMode(){
@@ -801,7 +845,7 @@ function copyMenuWeek(){
  saveLocal(); alert(t('week_copied'));
 }
 
-function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
+function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderDailyRoutineWeek();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
