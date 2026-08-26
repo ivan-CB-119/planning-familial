@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.36 — Carballes</title>
+<title>Family Flow V2.37 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -71,6 +71,11 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .menu-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .menu-week-nav{display:flex;align-items:center;gap:8px}.menu-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:750}
 .legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.legend-parent{background:#8db8e8}.legend-child{background:#9dd8a5}.legend-common{background:#b9a0e8}
+.menu-family-legend,.menu-food-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:800}
+.menu-food-legend{margin:8px 0 10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f8fafc}
+.menu-family-legend span,.menu-food-legend span{display:inline-flex;align-items:center;gap:6px}
+.legend-rect{width:10px;height:18px;border-radius:3px;display:inline-block}
+.legend-rect.proteins{background:#f25f5c}.legend-rect.vegetables{background:#62c370}.legend-rect.starches{background:#f3a635}.legend-rect.soups{background:#4fb0c6}.legend-rect.fruits{background:#f2d53c}.legend-rect.desserts{background:#e68ac2}.legend-rect.drinks{background:#55c2ff}.legend-rect.dairy{background:#6d9ef8}.legend-rect.other{background:#a86de6}
 .menu-week-wrap{overflow-x:auto;padding-bottom:4px}.menu-grid{min-width:920px;display:grid;grid-template-columns:68px repeat(7,minmax(112px,1fr));gap:7px}
 .menu-dayhead{text-align:center;font-size:12px;font-weight:900;padding:7px;background:#eef3fa;border-radius:10px}.menu-meal-label{text-align:center;font-size:12px;font-weight:850;padding:8px 4px}
 .menu-cell{border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff;min-height:128px;display:flex;flex-direction:column;gap:5px;cursor:pointer;touch-action:manipulation;transition:transform .08s ease,box-shadow .08s ease,border-color .08s ease}.menu-cell:hover{border-color:#9bb3d2;box-shadow:0 3px 10px #17355d18}.menu-cell:active{transform:scale(.985)}
@@ -400,15 +405,15 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .food-picker-title{font-size:11px;font-weight:900;margin-bottom:5px}
 .food-choice{border:1px solid #ccd5e2;background:white;border-radius:999px;padding:7px 9px;font-size:11px;font-weight:800}
 .food-choice.selected{outline:2px solid var(--navy);outline-offset:1px}
-.food-cat-proteins{background:#fff0f0;border-color:#e8aaaa}
-.food-cat-vegetables{background:#eef9ef;border-color:#afd8b2}
-.food-cat-starches{background:#fff6e6;border-color:#e4c181}
-.food-cat-soups{background:#f1f0ff;border-color:#bbb6e8}
-.food-cat-fruits{background:#edfafa;border-color:#9dd4d6}
-.food-cat-desserts{background:#fff8dc;border-color:#ded08a}
-.food-cat-drinks{background:#f1f3f5;border-color:#c8cdd2}
-.food-cat-dairy{background:#eef5ff;border-color:#aec8eb}
-.food-cat-other{background:#f7f0fa;border-color:#d6b9de}
+.food-cat-proteins{background:#fff1f1;border-color:#f5a3a1}
+.food-cat-vegetables{background:#eef9ef;border-color:#9ed5a8}
+.food-cat-starches{background:#fff5e6;border-color:#f1c27a}
+.food-cat-soups{background:#ecf8fb;border-color:#9fd7e3}
+.food-cat-fruits{background:#fffbe8;border-color:#e9d86b}
+.food-cat-desserts{background:#fff1f8;border-color:#e4a6ca}
+.food-cat-drinks{background:#eef8ff;border-color:#9dd6ff}
+.food-cat-dairy{background:#eef3ff;border-color:#a9c0fb}
+.food-cat-other{background:#f5efff;border-color:#c7acef}
 .food-picker-empty{font-size:10px;color:var(--muted);font-style:italic;padding:5px 0}
 @media(max-width:700px){
  .food-add-row{grid-template-columns:1fr}
@@ -451,16 +456,24 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .menu-day-today{display:inline-block;margin-top:5px;font-size:10px;border-radius:999px;padding:3px 6px;background:#fff3cd;color:#7a5b00}
 .menu-meal-cell{padding:7px;background:white}
 .menu-meal-stack{display:flex;flex-direction:column;gap:6px}
-.menu-meal-card{border:1px solid var(--line);border-radius:12px;padding:7px;min-height:112px;display:flex;flex-direction:column;gap:5px}
-.menu-meal-card.parents{background:var(--parent)}
-.menu-meal-card.children{background:var(--child)}
-.menu-meal-card.commonbox{background:var(--common)}
-.menu-meal-title{font-size:10px;font-weight:900}
-.menu-meal-main{font-size:11px;font-weight:800;line-height:1.2}
-.menu-meal-sub{font-size:10px;color:var(--muted);line-height:1.2}
+.menu-meal-card{border:1px solid var(--line);border-radius:14px;padding:8px;min-height:132px;display:flex;flex-direction:column;gap:7px}
+.menu-meal-card.parents{background:linear-gradient(180deg,#f7fbff 0%, #edf5ff 100%);border-color:#b8d2f1}
+.menu-meal-card.children{background:linear-gradient(180deg,#f8fff9 0%, #eefaf0 100%);border-color:#b9dfc0}
+.menu-meal-card.commonbox{background:linear-gradient(180deg,#fbf8ff 0%, #f3edff 100%);border-color:#d2c2f1}
+.menu-meal-head{display:flex;align-items:center;justify-content:flex-start;gap:6px}
+.menu-role-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:900}
+.menu-role-badge.parents{background:#dcecff;color:#214d7a}
+.menu-role-badge.children{background:#dcf2df;color:#1f6b43}
+.menu-role-badge.commonbox{background:#eadfff;color:#5c3f8f}
+.menu-food-list{display:flex;flex-direction:column;gap:6px}
+.menu-food-item{display:flex;align-items:flex-start;gap:8px;padding:6px 7px;border:1px solid #e6ebf2;border-radius:10px;background:#ffffffd9}
+.menu-food-marker{width:8px;height:20px;border-radius:3px;display:inline-block;flex:0 0 8px;margin-top:1px}
+.menu-food-name{font-size:11px;font-weight:850;line-height:1.2}
+.menu-food-type{font-size:9px;color:var(--muted);font-weight:800;line-height:1.15;margin-top:1px}
 .menu-meal-empty{font-size:10px;color:#9aa4b4;font-style:italic}
 .menu-meal-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .menu-cell-btn{border:0;border-radius:999px;padding:5px 9px;background:#e9eef6;color:#1d395d;font-size:10px;font-weight:850}
+.food-marker-proteins{background:#f25f5c}.food-marker-vegetables{background:#62c370}.food-marker-starches{background:#f3a635}.food-marker-soups{background:#4fb0c6}.food-marker-fruits{background:#f2d53c}.food-marker-desserts{background:#e68ac2}.food-marker-drinks{background:#55c2ff}.food-marker-dairy{background:#6d9ef8}.food-marker-other{background:#a86de6}
 .menu-col-breakfast,.menu-col-lunch,.menu-col-dinner{min-width:250px}
 #app:not(.parent-mode) .menu-cell-btn{display:none}
 @media(max-width:700px){
@@ -472,9 +485,11 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .menu-day-today{font-size:8px;padding:2px 5px}
   .menu-meal-cell{padding:4px}
   .menu-meal-card{min-height:96px;padding:5px;border-radius:10px}
-  .menu-meal-title{font-size:9px}
-  .menu-meal-main{font-size:10px}
-  .menu-meal-sub,.menu-meal-empty{font-size:8.5px}
+  .menu-role-badge{font-size:8px;padding:3px 7px}
+  .menu-food-item{padding:5px 6px;gap:6px;border-radius:8px}
+  .menu-food-marker{width:7px;height:16px;flex-basis:7px}
+  .menu-food-name{font-size:9.5px}
+  .menu-food-type,.menu-meal-empty{font-size:8px}
   .menu-cell-btn{font-size:8px;padding:4px 7px}
 }
 
@@ -611,12 +626,13 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 
 <section id="menus" class="view">
- <div class="weekhead"><div><h2>🍽️ Menus de la semaine</h2><div class="small">Parents et enfants séparés par défaut • menu commun possible repas par repas.</div></div></div>
+ <div class="weekhead"><div><h2>🍽️ Menus de la semaine</h2><div class="small">Parents et enfants clairement séparés • code couleur par type d’aliment • menu commun possible repas par repas.</div></div></div>
  <div class="section">
   <div id="menuReadOnlyNotice" class="notice" style="margin-bottom:8px">👀 Consultation libre • 🔒 modification réservée aux parents</div>
   <div class="menu-toolbar"><div class="menu-week-nav"><button class="btn secondary" onclick="moveMenuWeek(-1)">‹</button><b id="menuRangeTitle"></b><button class="btn secondary" onclick="moveMenuWeek(1)">›</button></div>
-   <div class="menu-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
+   <div class="menu-family-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
   </div>
+  <div class="menu-food-legend"><span><i class="legend-rect proteins"></i>Protéines</span><span><i class="legend-rect vegetables"></i>Légumes</span><span><i class="legend-rect starches"></i>Féculents / céréales</span><span><i class="legend-rect fruits"></i>Fruits</span><span><i class="legend-rect dairy"></i>Produits laitiers</span><span><i class="legend-rect other"></i>Matières grasses / sauces</span><span><i class="legend-rect soups"></i>Soupes</span><span><i class="legend-rect desserts"></i>Desserts</span><span><i class="legend-rect drinks"></i>Boissons</span></div>
   <div class="menu-week-wrap"><div id="menuTableView" class="menu-table-view"></div></div>
   <div class="menu-actions parentOnly flex"><button class="btn" id="menuAddEditBtn" type="button">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
   <div class="menu-desktop-tools parentOnly">
@@ -630,7 +646,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  
  <div class="section parentOnly block" id="foodCatalogSection">
   <h3>🥗 Bibliothèque d’aliments</h3>
-  <div class="small" style="margin-bottom:8px">Crée une seule fois tes aliments, rattache-les à un groupe, puis sélectionne-les dans chaque repas.</div>
+  <div class="small" style="margin-bottom:8px">Crée une seule fois tes aliments, rattache-les à un type (protéines, légumes, féculents, etc.), puis sélectionne-les dans chaque repas.</div>
   <div class="food-add-row">
     <select id="foodCategorySelect"></select>
     <input id="foodNameInput" placeholder="Ex. Poulet grillé, brocolis, riz…">
@@ -638,7 +654,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div>
   <div id="foodCatalogList"></div>
  </div>
-<div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> utilise le bouton « ✏️ Modifier » dans la cellule du repas souhaité.</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
+<div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> utilise le bouton « ✏️ Modifier » dans la cellule du repas souhaité.</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus bien distincts : <b>Parents</b> et <b>Enfants</b>. Chaque aliment apparaît avec un <b>rectangle coloré</b> selon son type. Pour un repas identique, active <b>« Même menu pour tous »</b>.</div></div>
 </section>
 
 <section id="points" class="view">
@@ -688,7 +704,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.36</b> • Nouveau classement en podium • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.37</b> • Menus colorés parents/enfants • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -741,7 +757,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.36;
+const APP_VERSION=2.37;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -764,15 +780,15 @@ const EVENING_ROUTINE=[{id:'teeth',icon:'🦷',label:'Se laver les dents',points
 const DEFAULT_TRANSPORTS=[{id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},{id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}];
 
 const FOOD_CATEGORIES=[
- {id:'proteins',label:'Protéines',icon:'🥩'},
- {id:'vegetables',label:'Légumes',icon:'🥦'},
- {id:'starches',label:'Féculents',icon:'🍚'},
- {id:'soups',label:'Soupes',icon:'🥣'},
- {id:'fruits',label:'Fruits',icon:'🍎'},
- {id:'desserts',label:'Desserts',icon:'🍰'},
- {id:'drinks',label:'Boissons',icon:'🥤'},
- {id:'dairy',label:'Produits laitiers',icon:'🥛'},
- {id:'other',label:'Autres',icon:'🍽️'}
+ {id:'proteins',label:'Protéines',icon:'🥩',color:'#f25f5c'},
+ {id:'vegetables',label:'Légumes',icon:'🥦',color:'#62c370'},
+ {id:'starches',label:'Féculents / céréales',icon:'🍚',color:'#f3a635'},
+ {id:'soups',label:'Soupes',icon:'🥣',color:'#4fb0c6'},
+ {id:'fruits',label:'Fruits',icon:'🍎',color:'#f2d53c'},
+ {id:'desserts',label:'Desserts',icon:'🍰',color:'#e68ac2'},
+ {id:'drinks',label:'Boissons',icon:'🥤',color:'#55c2ff'},
+ {id:'dairy',label:'Produits laitiers',icon:'🥛',color:'#6d9ef8'},
+ {id:'other',label:'Matières grasses / sauces',icon:'🧈',color:'#a86de6'}
 ];
 const CARE_OPTIONS=[{id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},{id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}];
 const ANCHOR=new Date(2026,7,17,12,0,0,0);
@@ -986,13 +1002,17 @@ function menuEntry(day,meal){
  return e
 }
 function foodItemById(id){return state.foodCatalog.items.find(x=>x.id===id)}
-function selectedFoodNames(o){
+function foodCategoryById(id){return FOOD_CATEGORIES.find(x=>x.id===id)||FOOD_CATEGORIES.find(x=>x.id==='other')}
+function selectedFoodItems(o){
  let selected=(o&&Array.isArray(o.selected))?o.selected:[];
- let names=selected.map(id=>foodItemById(id)?.name).filter(Boolean);
- if(!names.length && o){
-   names=[o.dish,o.protein,o.side,o.dessert].filter(Boolean);
+ let items=selected.map(id=>foodItemById(id)).filter(Boolean);
+ if(!items.length && o){
+   items=[o.dish,o.protein,o.side,o.dessert].filter(Boolean).map(name=>({id:'legacy-'+name,name,category:'other'}));
  }
- return names
+ return items
+}
+function selectedFoodNames(o){
+ return selectedFoodItems(o).map(item=>item.name).filter(Boolean)
 }
 function menuSummary(o){
  let names=selectedFoodNames(o);
@@ -1002,23 +1022,20 @@ function menuMiniHtml(kind,o){let s=menuSummary(o),title=kind==='parents'?'Paren
 
 
 function mealTitle(meal){return meal==='breakfast'?'Petit-déjeuner':meal==='lunch'?'Déjeuner':meal==='dinner'?'Dîner':meal}
-function compactMenuValue(obj){
-  if(!obj)return '';
-  return selectedFoodNames(obj).join(' • ');
-}
-function splitMealValue(obj){
-  const vals = compactMenuValue(obj);
-  if(!vals)return {main:'',sub:''};
-  const parts = vals.split(' • ');
-  return {main:parts[0]||'',sub:parts.slice(1).join(' • ')};
+function menuFoodLinesHtml(obj){
+  const items=selectedFoodItems(obj);
+  if(!items.length)return `<div class="menu-meal-empty">À définir</div>`;
+  return `<div class="menu-food-list">${items.map(item=>{
+    const cat=foodCategoryById(item.category);
+    return `<div class="menu-food-item"><span class="menu-food-marker food-marker-${cat.id}"></span><div class="menu-food-text"><div class="menu-food-name">${esc(item.name)}</div><div class="menu-food-type">${esc(cat.label)}</div></div></div>`;
+  }).join('')}</div>`;
 }
 function menuMealCard(kind,obj){
-  const data=splitMealValue(obj);
   const cls=kind==='parents'?'parents':kind==='children'?'children':'commonbox';
-  const title=kind==='parents'?'👨‍👩 Parents':kind==='children'?'👧👧 Enfants':'👨‍👩‍👧‍👧 Commun';
+  const title=kind==='parents'?'👨‍👩 Parents':kind==='children'?'👧👧 Enfants':'👨‍👩‍👧‍👧 Menu commun';
   return `<div class="menu-meal-card ${cls}">
-    <div class="menu-meal-title">${title}</div>
-    ${data.main?`<div class="menu-meal-main">${esc(data.main)}</div>${data.sub?`<div class="menu-meal-sub">${esc(data.sub)}</div>`:''}`:`<div class="menu-meal-empty">À définir</div>`}
+    <div class="menu-meal-head"><span class="menu-role-badge ${cls}">${title}</span></div>
+    ${menuFoodLinesHtml(obj)}
   </div>`;
 }
 function menuMealCellHtml(day,meal){
