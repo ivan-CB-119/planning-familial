@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.20 — Carballes</title>
+<title>Family Flow V2.22 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -67,13 +67,13 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .rotabox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.rotacell{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;font-size:13px}.rotacell b{display:block;margin-bottom:5px}
 .notice{background:#eef7ff;border:1px solid #b8d8f5;border-radius:13px;padding:11px;font-size:13px}.warn{background:#fff8e6;border-color:#ecd187}.okbox{background:#edf9f1;border-color:#b8dfc6}
 .footerinfo{max-width:1500px;margin:8px auto 0;padding:8px 14px 90px;text-align:center;font-size:11px;color:var(--muted)}
-.modalback{position:fixed;inset:0;background:#091a32aa;display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modalback.show{display:flex}.modal{background:white;border-radius:18px;padding:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 18px 60px #0005}.modal h3{margin-top:0}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinpad button{padding:14px;border:0;border-radius:12px;background:#edf3fb;font-size:21px;font-weight:850}.pinview{text-align:center;font-size:27px;letter-spacing:10px;margin:8px 0 2px;min-height:36px}
+.modalback{position:fixed;inset:0;background:#091a32aa;display:none;align-items:center;justify-content:center;z-index:100;padding:18px;overscroll-behavior:contain}.modalback.show{display:flex}.modal{background:white;border-radius:18px;padding:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 18px 60px #0005}.modal h3{margin-top:0}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinpad button{padding:14px;border:0;border-radius:12px;background:#edf3fb;font-size:21px;font-weight:850}.pinview{text-align:center;font-size:27px;letter-spacing:10px;margin:8px 0 2px;min-height:36px}
 .menu-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .menu-week-nav{display:flex;align-items:center;gap:8px}.menu-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:750}
 .legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.legend-parent{background:#8db8e8}.legend-child{background:#9dd8a5}.legend-common{background:#b9a0e8}
 .menu-week-wrap{overflow-x:auto;padding-bottom:4px}.menu-grid{min-width:920px;display:grid;grid-template-columns:68px repeat(7,minmax(112px,1fr));gap:7px}
 .menu-dayhead{text-align:center;font-size:12px;font-weight:900;padding:7px;background:#eef3fa;border-radius:10px}.menu-meal-label{text-align:center;font-size:12px;font-weight:850;padding:8px 4px}
-.menu-cell{border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff;min-height:128px;display:flex;flex-direction:column;gap:5px}
+.menu-cell{border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff;min-height:128px;display:flex;flex-direction:column;gap:5px;cursor:pointer;touch-action:manipulation;transition:transform .08s ease,box-shadow .08s ease,border-color .08s ease}.menu-cell:hover{border-color:#9bb3d2;box-shadow:0 3px 10px #17355d18}.menu-cell:active{transform:scale(.985)}
 .menu-mini{border-radius:9px;padding:7px;font-size:11px}.menu-mini.parents{background:var(--parent)}.menu-mini.children{background:var(--child)}.menu-mini.commonbox{background:var(--common)}
 .menu-mini-title{font-weight:900;margin-bottom:3px}.menu-main{font-weight:800}.menu-sub{color:var(--muted);margin-top:2px}.menu-empty{color:#9aa4b4;font-style:italic}
 .menu-edit{margin-top:auto}.menu-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -95,6 +95,16 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  .toprow{align-items:center;gap:5px}.title{font-size:17px}.pill,.lang-select{font-size:10px;padding:8px 7px;min-height:36px}
  .rotabox{grid-template-columns:repeat(2,1fr)}.nav button{font-size:8px}.nav .ico{font-size:18px}
 }
+
+.menu-desktop-tools{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin:10px 0 4px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#f8fafc}
+.menu-desktop-tools .toolfield{min-width:150px}
+.menu-desktop-tools label{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.menu-desktop-tools select{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;background:white}
+.desktop-menu-editor-host{display:none;margin-top:12px}
+.desktop-menu-editor-host.active{display:block}
+.desktop-menu-editor-host .modal{max-width:none;width:100%;max-height:none;box-shadow:none;border:1px solid var(--line);padding:16px}
+@media(max-width:900px){.menu-desktop-tools{display:none}.desktop-menu-editor-host{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -196,9 +206,16 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
    <div class="menu-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
   </div>
   <div class="menu-week-wrap"><div class="menu-grid" id="menuGrid"></div></div>
-  <div class="menu-actions"><button class="btn" onclick="openMenuEditor(selectedDay,'lunch')">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
+  <div class="menu-actions"><button class="btn" id="menuAddEditBtn" type="button">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
+  <div class="menu-desktop-tools">
+   <div class="toolfield"><label>Jour</label><select id="desktopMenuDay"></select></div>
+   <div class="toolfield"><label>Repas</label><select id="desktopMenuMeal"><option value="lunch">☀️ Midi</option><option value="dinner">🌙 Soir</option></select></div>
+   <button class="btn good" type="button" id="desktopMenuEditBtn">✏️ Modifier ce repas</button>
+   <div class="small">Alternative spécialement prévue pour Chrome sur ordinateur.</div>
+  </div>
+  <div id="desktopMenuEditorHost" class="desktop-menu-editor-host"></div>
  </div>
- <div class="section"><h3>💡 Fonctionnement</h3><div class="small" style="line-height:1.55">Chaque repas possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
+ <div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> touche directement n’importe quelle case Midi/Soir, ou le bouton « ✏️ Modifier ».</div><div class="small" style="line-height:1.55">Chaque repas possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
 </section>
 
 <section id="points" class="view">
@@ -230,7 +247,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.20</b> • Fusion des branches V2.19 « Planning » + « points allégés / menus » • Dernière mise à jour : <b>26/08/2026 12:33</b></footer>
+<footer class="footerinfo">Version <b>2.22</b> • Correctif Chrome desktop pour l’édition des menus • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -255,12 +272,12 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div></div>
   <div class="menu-common-only"><div class="menu-form-card common"><h4>👨‍👩‍👧‍👧 Menu commun</h4><div class="menu-field"><label>Plat</label><input id="mcom_dish" placeholder="Ex. Tacos maison"></div><div class="menu-field"><label>Protéine</label><input id="mcom_protein" placeholder="Ex. Bœuf haché"></div><div class="menu-field"><label>Accompagnement</label><input id="mcom_side" placeholder="Ex. Légumes + salade"></div><div class="menu-field"><label>Dessert</label><input id="mcom_dessert" placeholder="Ex. Glace"></div></div></div>
   <div class="small">Tu peux laisser certains champs vides. Le « Plat » est affiché en priorité dans la vue semaine.</div>
-  <div class="settingrow" style="justify-content:flex-end"><button class="btn danger" onclick="clearMenuEntry()">Effacer ce repas</button><button class="btn good" onclick="saveMenuEntry()">Enregistrer le repas</button></div>
+  <div class="settingrow" style="justify-content:flex-end"><button class="btn danger" onclick="clearMenuEntry()">Effacer ce repas</button><button type="button" class="btn good" onclick="saveMenuEntry()">💾 Enregistrer le repas</button></div>
  </div>
 </div>
 
 <script>
-const APP_VERSION=2.20;
+const APP_VERSION=2.22;
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -377,12 +394,45 @@ function menuSummary(o){let extras=[o.protein,o.side,o.dessert].filter(Boolean);
 function menuMiniHtml(kind,o){let s=menuSummary(o),title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Menu commun';return `<div class="menu-mini ${kind==='common'?'commonbox':kind}"><div class="menu-mini-title">${kind==='parents'?'👨‍👩 ':kind==='children'?'👧👧 ':'👨‍👩‍👧‍👧 '}${title}</div>${s.main?`<div class="menu-main">${esc(s.main)}</div>${s.sub?`<div class="menu-sub">${esc(s.sub)}</div>`:''}`:'<div class="menu-empty">À définir</div>'}</div>`}
 function renderMenus(){let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
  let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- ['lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='lunch'?'☀️<br>Midi':'🌙<br>Soir'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button class="btn secondary menu-edit" onclick="openMenuEditorIso('${iso(d)}','${meal}')">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html}
+ ['lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='lunch'?'☀️<br>Midi':'🌙<br>Soir'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
+ let ds=document.getElementById('desktopMenuDay');
+ if(ds){
+   let previous=ds.value;
+   ds.innerHTML=days.map(d=>`<option value="${iso(d)}">${d.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long'})}</option>`).join('');
+   if(previous && days.some(d=>iso(d)===previous)) ds.value=previous;
+   else ds.value=iso(days[0]);
+ }
+}
 function moveMenuWeek(n){menuWeekDate=addDays(menuWeekDate,n*7);renderMenus()}
 function openMenuEditorIso(dateStr,meal){let [y,m,d]=dateStr.split('-').map(Number);openMenuEditor(new Date(y,m-1,d,12),meal)}
-function openMenuEditor(day,meal){menuEditDay=new Date(day);menuEditMeal=meal;let e=menuEntry(menuEditDay,menuEditMeal);document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='lunch'?'Midi':'Soir');document.getElementById('menuCommonToggle').checked=e.common;
- [['mp_',e.parents],['mc_',e.children],['mcom_',e.shared]].forEach(([pre,o])=>['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||''));toggleMenuEditorMode();document.getElementById('menuModal').classList.add('show')}
-function closeMenuEditor(){document.getElementById('menuModal').classList.remove('show')}
+function isDesktopMenuMode(){return window.matchMedia && window.matchMedia('(min-width: 901px)').matches}
+function placeMenuEditorForViewport(){
+ const box=document.getElementById('menuModalBox'), modal=document.getElementById('menuModal'), host=document.getElementById('desktopMenuEditorHost');
+ if(!box||!modal||!host)return;
+ if(isDesktopMenuMode()){
+   if(box.parentElement!==host)host.appendChild(box);
+   modal.classList.remove('show');
+ }else{
+   if(box.parentElement!==modal)modal.appendChild(box);
+   host.classList.remove('active');
+ }
+}
+function openMenuEditor(day,meal){
+ menuEditDay=new Date(day);menuEditMeal=meal;let e=menuEntry(menuEditDay,menuEditMeal);
+ placeMenuEditorForViewport();
+ document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='lunch'?'Midi':'Soir');
+ document.getElementById('menuCommonToggle').checked=e.common;
+ [['mp_',e.parents],['mc_',e.children],['mcom_',e.shared]].forEach(([pre,o])=>['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||''));
+ toggleMenuEditorMode();
+ if(isDesktopMenuMode()){
+   const host=document.getElementById('desktopMenuEditorHost');host.classList.add('active');
+   setTimeout(()=>host.scrollIntoView({behavior:'smooth',block:'start'}),0);
+ }else document.getElementById('menuModal').classList.add('show');
+}
+function closeMenuEditor(){
+ document.getElementById('menuModal').classList.remove('show');
+ document.getElementById('desktopMenuEditorHost')?.classList.remove('active');
+}
 function toggleMenuEditorMode(){document.getElementById('menuModalBox').classList.toggle('common-mode',document.getElementById('menuCommonToggle').checked)}
 function readMealFields(pre){return {dish:document.getElementById(pre+'dish').value.trim(),protein:document.getElementById(pre+'protein').value.trim(),side:document.getElementById(pre+'side').value.trim(),dessert:document.getElementById(pre+'dessert').value.trim()}}
 function saveMenuEntry(){if(!menuEditDay)return;let e=menuEntry(menuEditDay,menuEditMeal);e.common=document.getElementById('menuCommonToggle').checked;e.parents=readMealFields('mp_');e.children=readMealFields('mc_');e.shared=readMealFields('mcom_');saveLocal();closeMenuEditor();renderMenus()}
@@ -442,7 +492,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-20-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-22-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -451,6 +501,36 @@ function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES 
 function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
 function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderPlanner();renderMenus();renderPoints();loadCloudFields();updateSyncUI();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
+
+/* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
+document.addEventListener('click',function(ev){
+ const target=ev.target.closest('[data-menu-date][data-menu-meal]');
+ if(target){
+   ev.preventDefault();ev.stopPropagation();
+   openMenuEditorIso(target.dataset.menuDate,target.dataset.menuMeal);
+ }
+});
+document.addEventListener('keydown',function(ev){
+ const target=ev.target.closest?.('.menu-cell[data-menu-date][data-menu-meal]');
+ if(target && (ev.key==='Enter'||ev.key===' ')){
+   ev.preventDefault();openMenuEditorIso(target.dataset.menuDate,target.dataset.menuMeal);
+ }
+});
+document.getElementById('menuAddEditBtn')?.addEventListener('click',function(){
+ const ds=document.getElementById('desktopMenuDay'), ms=document.getElementById('desktopMenuMeal');
+ if(isDesktopMenuMode() && ds && ms)openMenuEditorIso(ds.value,ms.value);
+ else openMenuEditor(selectedDay,'lunch');
+});
+document.getElementById('desktopMenuEditBtn')?.addEventListener('click',function(){
+ const ds=document.getElementById('desktopMenuDay'), ms=document.getElementById('desktopMenuMeal');
+ if(ds?.value && ms?.value)openMenuEditorIso(ds.value,ms.value);
+});
+window.addEventListener('resize',function(){
+ if(menuEditDay){
+   const wasOpen=document.getElementById('menuModal').classList.contains('show')||document.getElementById('desktopMenuEditorHost').classList.contains('active');
+   if(wasOpen){placeMenuEditorForViewport();if(isDesktopMenuMode())document.getElementById('desktopMenuEditorHost').classList.add('active');else document.getElementById('menuModal').classList.add('show')}
+ }
+});
 
 renderAll();
 if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
