@@ -6,325 +6,156 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.19 — Carballes</title>
+<title>Family Flow V2.20 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
   --green:#1f8f4e;--red:#c83d45;--amber:#e4a11b;--text:#14213a;--muted:#657089;
   --angela:#1f6b43;--yvan:#6b7280;--sole:#d94f8a;--calista:#8fd39a;
+  --parent:#eaf3ff;--child:#eefaf0;--common:#f1ecff
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .app{min-height:100vh}
-.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:calc(13px + env(safe-area-inset-top)) 16px 11px;box-shadow:0 2px 12px #0002}
-.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.title{font-weight:850;font-size:clamp(19px,2.6vw,32px);text-align:center;flex:1}
+.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:calc(13px + env(safe-area-inset-top)) 14px 10px;box-shadow:0 2px 12px #0002}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.title{font-weight:900;font-size:clamp(19px,2.6vw,31px);text-align:center;flex:1}
+.family-title{display:flex;align-items:center;justify-content:center;gap:8px}
+.family-flags{font-size:.72em;letter-spacing:2px;white-space:nowrap}
 .subtitle{font-size:12px;opacity:.9;text-align:center;margin-top:3px}
-.pill{background:#ffffff18;border:1px solid #ffffff33;padding:7px 10px;border-radius:999px;font-weight:750;white-space:nowrap;font-size:12px}
-.syncdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0b323;margin-right:5px}
-.syncdot.ok{background:#37c871}.syncdot.off{background:#8795a9}.syncdot.err{background:#e15b64}
-main{padding:12px 12px 84px;max-width:1500px;margin:auto}
+.pill{background:#ffffff18;border:1px solid #ffffff33;padding:8px 10px;border-radius:999px;font-weight:800;white-space:nowrap;font-size:12px;color:inherit}
+.lang-select{background:#ffffff18;color:white;border:1px solid #ffffff33;border-radius:999px;padding:8px 6px;font-weight:800}
+.lang-select option{color:#111}
+.syncdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#8795a9;margin-right:5px}
+.syncdot.ok{background:#37c871}.syncdot.err{background:#e15b64}
+main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .view{display:none}.view.active{display:block}
-.weekhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.weekhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .weekhead h2{margin:0;font-size:20px}.small{font-size:12px;color:var(--muted)}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .person{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 3px 12px #14315910}
-.person .head{padding:10px 12px;font-size:18px;font-weight:850;display:flex;justify-content:space-between;align-items:center}
-.person.angela .head{color:#9BE6B2;background:var(--angela)}.person.yvan .head{color:#ffffff;background:var(--yvan)}
+.person .head{padding:10px 12px;font-size:18px;font-weight:900;display:flex;justify-content:space-between;align-items:center}
+.person.angela .head{color:#d7ffe3;background:var(--angela)}.person.yvan .head{color:white;background:var(--yvan)}
 .person.sole .head{color:#A91E58;background:#fff2f7}.person.calista .head{color:#1F6B43;background:#f1fbf4}
-.scorechip{font-size:12px;border-radius:999px;padding:4px 8px;background:white;border:1px solid currentColor}.person.yvan .scorechip{color:#6b7280}.person.angela .scorechip{color:#1f6b43}.person.sole .scorechip{color:#a91e58}.person.calista .scorechip{color:#1f6b43}
+.scorechip{font-size:12px;border-radius:999px;padding:4px 8px;background:white;border:1px solid currentColor}
 .body{padding:8px}
 .task{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid #edf1f6;min-height:44px}
-.task:last-child{border-bottom:0}.task .label{flex:1;font-weight:650;line-height:1.15;font-size:14px}.tag{font-size:10px;color:var(--muted);margin-top:2px}
+.task:last-child{border-bottom:0}.task .label{flex:1;font-weight:650;line-height:1.2;font-size:14px}.tag{font-size:10px;color:var(--muted);margin-top:3px}
 .check{width:28px;height:28px;border:2px solid #a9b5c7;border-radius:8px;background:white;display:grid;place-items:center;font-weight:900;color:white;flex:0 0 auto}
 .check.done{background:var(--green);border-color:var(--green)}.check.done:after{content:"✓";font-size:18px}
 .section{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 3px 12px #1431590c}
 .section h3{margin:0 0 8px;font-size:17px}
 .points-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.point-card{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfcfe}
-.point-card h4{margin:0 0 6px;font-size:15px}
+.point-card{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfcfe}.point-card h4{margin:0 0 6px;font-size:15px}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.pbtn{border:0;border-radius:10px;padding:8px 6px;font-weight:750;font-size:13px}
+.pbtn{border:0;border-radius:10px;padding:8px 6px;font-weight:800;font-size:13px}
 .plus{background:#e7f7ed;color:#14683a}.minus{background:#fdebed;color:#9e2731}.neutral{background:#edf3fb;color:#28496f}
-.parentOnly{display:none}.parent-mode .parentOnly{display:block}
+.parentOnly{display:none!important}.parent-mode .parentOnly{display:initial!important}
+.parent-mode .parentOnly.block{display:block!important}.parent-mode .parentOnly.flex{display:flex!important}
 .familychallenge{display:flex;align-items:center;gap:10px;background:#fff9e7;border:1px solid #f0d273;border-radius:14px;padding:10px;margin-top:10px}
 .familychallenge .big{font-size:24px}.familychallenge strong{display:block}
-.weektable{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:white}
+.weektable{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:white;min-width:760px}
 .weektable th,.weektable td{padding:9px 7px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;font-size:13px}
-.weektable th{background:#eef3fa;font-weight:800}.weektable tr:last-child td{border-bottom:0}.weektable th:last-child,.weektable td:last-child{border-right:0}
-.rulegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule{background:white;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:700;font-size:14px}
-.settingrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.settingrow input{padding:9px 10px;border:1px solid var(--line);border-radius:10px;min-width:210px}
-.btn{border:0;border-radius:10px;padding:9px 12px;font-weight:800;background:var(--navy);color:white;font-size:13px}.btn.secondary{background:#e8eef7;color:#18385e}.btn.danger{background:#a92f37}.btn.good{background:#1e8a4a}
+.weektable th{background:#eef3fa;font-weight:850}.weektable tr:last-child td{border-bottom:0}.weektable th:last-child,.weektable td:last-child{border-right:0}
+.rulegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule{background:white;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:750;font-size:14px}
+.settingrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.settingrow input,.settingrow select{padding:9px 10px;border:1px solid var(--line);border-radius:10px;min-width:200px}
+.btn{border:0;border-radius:10px;padding:9px 12px;font-weight:850;background:var(--navy);color:white;font-size:13px}.btn.secondary{background:#e8eef7;color:#18385e}.btn.danger{background:#a92f37}.btn.good{background:#1e8a4a}
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
-.nav button{border:0;background:transparent;padding:8px 3px 6px;color:#60708b;font-weight:750;font-size:11px}.nav button.active{color:var(--navy)}.nav .ico{display:block;font-size:20px;margin-bottom:2px}
+.nav button{border:0;background:transparent;padding:8px 3px 6px;color:#60708b;font-weight:780;font-size:10px}.nav button.active{color:var(--navy)}.nav .ico{display:block;font-size:19px;margin-bottom:2px}
 .rotabox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.rotacell{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;font-size:13px}.rotacell b{display:block;margin-bottom:5px}
 .notice{background:#eef7ff;border:1px solid #b8d8f5;border-radius:13px;padding:11px;font-size:13px}.warn{background:#fff8e6;border-color:#ecd187}.okbox{background:#edf9f1;border-color:#b8dfc6}
-.modalback{position:fixed;inset:0;background:#091a32aa;display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modalback.show{display:flex}.modal{background:white;border-radius:18px;padding:18px;max-width:430px;width:100%;box-shadow:0 18px 60px #0005}.modal h3{margin-top:0}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinpad button{padding:14px;border:0;border-radius:12px;background:#edf3fb;font-size:21px;font-weight:800}.pinview{text-align:center;font-size:27px;letter-spacing:10px;margin:8px 0 2px;min-height:36px}
-.syncinfo{display:flex;gap:10px;align-items:flex-start}.syncicon{font-size:25px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf3fb;font-size:11px;font-weight:800}
-
-.footerinfo{
-  max-width:1500px;
-  margin:8px auto 0;
-  padding:8px 14px 82px;
-  text-align:center;
-  font-size:11px;
-  color:var(--muted);
-}
-
-@media(max-width:900px){.cards,.points-grid{grid-template-columns:repeat(2,1fr)}.rotabox{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){
-.cards,.points-grid,.rulegrid{grid-template-columns:1fr}
-.topbar{padding-top:calc(22px + env(safe-area-inset-top));padding-left:12px;padding-right:12px}
-.toprow{align-items:center;gap:8px}
-.title{font-size:18px}
-.pill{font-size:11px;padding:9px 10px;min-height:38px;display:flex;align-items:center;justify-content:center}
-.rotabox{grid-template-columns:repeat(2,1fr)}
-}
-
-.family-title{display:flex;align-items:center;justify-content:center;gap:9px}
-.family-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #ffffffaa;box-shadow:0 2px 8px #0003}
-.family-flags{font-size:.72em;letter-spacing:2px;white-space:nowrap}
-
+.footerinfo{max-width:1500px;margin:8px auto 0;padding:8px 14px 90px;text-align:center;font-size:11px;color:var(--muted)}
+.modalback{position:fixed;inset:0;background:#091a32aa;display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modalback.show{display:flex}.modal{background:white;border-radius:18px;padding:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 18px 60px #0005}.modal h3{margin-top:0}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pinpad button{padding:14px;border:0;border-radius:12px;background:#edf3fb;font-size:21px;font-weight:850}.pinview{text-align:center;font-size:27px;letter-spacing:10px;margin:8px 0 2px;min-height:36px}
 .menu-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.menu-week-nav{display:flex;align-items:center;gap:8px}
-.menu-week-nav .btn{min-width:42px}
-.menu-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:700}
-.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
-.legend-parent{background:#8db8e8}.legend-child{background:#9dd8a5}.legend-common{background:#b9a0e8}
-
-.menu-week-wrap{overflow-x:auto;padding-bottom:4px}
-.menu-grid{min-width:920px;display:grid;grid-template-columns:68px repeat(7,minmax(112px,1fr));gap:7px}
-.menu-dayhead{font-size:12px;font-weight:850;text-align:center;padding:7px 4px;color:#203452}
-.menu-meal-label{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:850;color:#34455f;background:#f5f7fb;border-radius:12px;border:1px solid var(--line)}
-.menu-cell{background:white;border:1px solid var(--line);border-radius:14px;padding:7px;min-height:145px;box-shadow:0 2px 8px #1431590b;display:flex;flex-direction:column;gap:6px}
-.menu-cell.common{background:#faf6ff;border-color:#cdbdea}
-.menu-mini{border-radius:10px;padding:7px;border:1px solid transparent;min-height:54px;position:relative}
-.menu-mini.parents{background:#f2f7fd;border-color:#d8e8f8}
-.menu-mini.children{background:#f4fbf3;border-color:#dbeed8}
-.menu-mini.commonbox{background:#f8f3ff;border-color:#decff4;min-height:116px}
-.menu-mini-title{font-size:10px;text-transform:uppercase;letter-spacing:.3px;font-weight:850;margin-bottom:4px}
-.menu-mini.parents .menu-mini-title{color:#315d93}
-.menu-mini.children .menu-mini-title{color:#327244}
-.menu-mini.commonbox .menu-mini-title{color:#6a45a8}
-.menu-main{font-size:12px;font-weight:800;line-height:1.25}
-.menu-sub{font-size:10px;color:var(--muted);line-height:1.25;margin-top:2px}
-.menu-empty{font-size:11px;color:#929bae;font-style:italic}
-.menu-edit{margin-top:auto;border:0;background:#edf2f8;color:#29486f;border-radius:9px;padding:6px;font-size:11px;font-weight:800}
-.menu-cell.common .menu-edit{background:#eee6fb;color:#67449e}
-.menu-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-
-.menu-modal{max-width:720px}
-.menu-modal-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.menu-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0}
-.switch{position:relative;width:48px;height:28px;display:inline-block}
-.switch input{display:none}
-.switch span{position:absolute;inset:0;background:#c7ced8;border-radius:999px;transition:.2s}
-.switch span:after{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:white;border-radius:50%;box-shadow:0 1px 4px #0003;transition:.2s}
-.switch input:checked + span{background:var(--green)}
-.switch input:checked + span:after{transform:translateX(20px)}
-.menu-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.menu-form-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fbfcfe}
-.menu-form-card h4{margin:0 0 8px}
-.menu-form-card.parents{background:#f5f9fd}.menu-form-card.children{background:#f7fbf5}.menu-form-card.common{background:#faf7ff}
-.menu-field{display:grid;grid-template-columns:125px 1fr;align-items:center;gap:8px;margin:7px 0}
-.menu-field label{font-size:12px;font-weight:750}
-.menu-field input{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;background:white}
-.menu-common-only{display:none}
-.menu-modal.common-mode .menu-separate{display:none}
-.menu-modal.common-mode .menu-common-only{display:block}
-.menu-note{font-size:11px;color:var(--muted);line-height:1.4;margin-top:8px}
-
+.menu-week-nav{display:flex;align-items:center;gap:8px}.menu-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:750}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.legend-parent{background:#8db8e8}.legend-child{background:#9dd8a5}.legend-common{background:#b9a0e8}
+.menu-week-wrap{overflow-x:auto;padding-bottom:4px}.menu-grid{min-width:920px;display:grid;grid-template-columns:68px repeat(7,minmax(112px,1fr));gap:7px}
+.menu-dayhead{text-align:center;font-size:12px;font-weight:900;padding:7px;background:#eef3fa;border-radius:10px}.menu-meal-label{text-align:center;font-size:12px;font-weight:850;padding:8px 4px}
+.menu-cell{border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff;min-height:128px;display:flex;flex-direction:column;gap:5px}
+.menu-mini{border-radius:9px;padding:7px;font-size:11px}.menu-mini.parents{background:var(--parent)}.menu-mini.children{background:var(--child)}.menu-mini.commonbox{background:var(--common)}
+.menu-mini-title{font-weight:900;margin-bottom:3px}.menu-main{font-weight:800}.menu-sub{color:var(--muted);margin-top:2px}.menu-empty{color:#9aa4b4;font-style:italic}
+.menu-edit{margin-top:auto}.menu-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.menu-toggle{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#f6f8fc;border:1px solid var(--line);padding:10px;border-radius:12px;margin-bottom:10px}
+.switch input{width:22px;height:22px}.menu-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.menu-form-card{border:1px solid var(--line);border-radius:12px;padding:10px}.menu-form-card.parents{background:var(--parent)}.menu-form-card.children{background:var(--child)}.menu-form-card.common{background:var(--common)}
+.menu-form-card h4{margin:0 0 8px}.menu-field{margin:7px 0}.menu-field label{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:3px}.menu-field input{width:100%;padding:9px;border:1px solid #cfd8e6;border-radius:9px;background:white}
+.menu-common-only{display:none}.common-mode .menu-separate{display:none}.common-mode .menu-common-only{display:block}
+.planner-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.formgrid .wide{grid-column:1/-1}.fieldlabel{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.formgrid input,.formgrid select,.formgrid textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;background:white}.formgrid textarea{min-height:74px;resize:vertical}
+.event-card{border:1px solid var(--line);border-radius:13px;padding:10px;margin:8px 0;background:#fff}.event-top{display:flex;justify-content:space-between;gap:10px}.event-title{font-weight:900;font-size:15px}.event-meta{font-size:12px;color:var(--muted);line-height:1.55;margin-top:4px}.event-actions{display:flex;gap:6px;margin-top:8px}.status-badge{font-size:10px;font-weight:850;background:#edf3fb;padding:4px 7px;border-radius:999px;height:max-content}
+.transport-pills{display:flex;gap:6px;flex-wrap:wrap}.transport-pill{border:1px solid var(--line);border-radius:999px;padding:7px 9px;background:#fff;font-size:12px;font-weight:800}.transport-pill.off{opacity:.45;text-decoration:line-through}
+.syncinfo{display:flex;gap:10px;align-items:flex-start}.syncicon{font-size:25px}.syncrow{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #edf1f6;padding:8px 0}.syncrow:first-child{border-top:0}
+.empty-state{font-size:13px;color:var(--muted);padding:12px;text-align:center}
+.rank{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rankcard{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:white}.rankcard .score{font-size:26px;font-weight:900}
+@media(max-width:900px){.cards,.points-grid,.rank{grid-template-columns:repeat(2,1fr)}.rotabox{grid-template-columns:repeat(3,1fr)}.planner-layout{grid-template-columns:1fr}}
 @media(max-width:560px){
- .family-avatar{width:34px;height:34px}.family-flags{font-size:.66em}
- .menu-form-grid{grid-template-columns:1fr}
- .menu-field{grid-template-columns:105px 1fr}
- .menu-grid{min-width:850px}
+ .cards,.points-grid,.rulegrid,.rank,.menu-form-grid,.formgrid{grid-template-columns:1fr}
+ .formgrid .wide{grid-column:auto}.topbar{padding-top:calc(22px + env(safe-area-inset-top));padding-left:10px;padding-right:10px}
+ .toprow{align-items:center;gap:5px}.title{font-size:17px}.pill,.lang-select{font-size:10px;padding:8px 7px;min-height:36px}
+ .rotabox{grid-template-columns:repeat(2,1fr)}.nav button{font-size:8px}.nav .ico{font-size:18px}
 }
-
-
-.lang-select{
-  border:1px solid #ffffff33;
-  background:#ffffff18;
-  color:white;
-  border-radius:999px;
-  padding:7px 10px;
-  font-weight:800;
-  font-size:12px;
-}
-.lang-select option{color:#14213a;background:white}
-.settings-lang-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.settings-lang-row select{padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:white}
-@media(max-width:560px){
-  .lang-select{padding:8px 7px;font-size:11px;max-width:92px}
-}
-
-
-.menu-edit{touch-action:manipulation;position:relative;z-index:2}
-
-/* Planning & trajets */
-.planner-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:12px}
-.planner-list{display:grid;gap:9px}
-.event-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fff}
-.event-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.event-title{font-weight:850;font-size:15px}.event-meta{font-size:12px;color:var(--muted);line-height:1.5;margin-top:5px}
-.event-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.event-actions button{padding:6px 9px}
-.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formgrid .wide{grid-column:1/-1}
-.formgrid input,.formgrid select,.formgrid textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--text)}
-.formgrid textarea{min-height:70px;resize:vertical}.fieldlabel{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:3px}
-.transport-pills{display:flex;gap:6px;flex-wrap:wrap}.transport-pill{border:1px solid var(--line);background:#f7f9fc;color:var(--text);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:750}.transport-pill.off{opacity:.45;text-decoration:line-through}
-.calendar-row{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid #edf1f6;padding:9px 0}.calendar-row:first-child{border-top:0}
-.status-badge{display:inline-block;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:800;background:#edf3fb;color:#28496f}
-.empty-state{padding:18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
-@media(max-width:900px){.planner-grid{grid-template-columns:1fr}}
-@media(max-width:560px){.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}.nav button{font-size:9px}}
-
 </style>
 </head>
 <body>
 <div class="app" id="app">
 <header class="topbar">
  <div class="toprow">
-  <div class="pill" id="todayLabel">Aujourd’hui</div>
-  <div class="title family-title"><img class="family-avatar" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADHAPADASIAAhEBAxEB/8QAHQAAAQQDAQEAAAAAAAAAAAAABwQFBggAAgMBCf/EAE4QAAIBAwIDBQYDBAUHCQkAAAECAwQFEQAhBhIxBxNBUWEIFCJxgZEyobEVI0LRM1JiweEWJENygqLSFydThJKywtPwREdXY3R1k5Tx/8QAGwEAAgMBAQEAAAAAAAAAAAAAAwUCBAYBAAf/xAAzEQABAwIEAggGAgMBAAAAAAABAAIDBBEFEiExQXETIlFhgbHB8BQjMpGh4QbRFSQzQv/aAAwDAQACEQMRAD8Atty+mvCvprrjSekq6Os74UlVBUdxK0M3dSBu7kXqjY6MMjIO+qVlauvSgz014UHlrhfbnb7JaKq7XWpSloqWMyTStkhR8huSTgADckgDTVw7xhw7f5YKe23Dmqp6d6laWWJopljSQxOWRgCuHBXBwcjXcptdezC9k8svprmyemu5023a5e4zBBTtKqxGeUhsFUBAPKMfEd849NQOiKxjnnK3dKWQddcyoxrWhrFrO9AhmheJgHSUAMMgEdCfAjbrrsw1xcc0tNiuIXQ27X+2Xg7s0iMNzneuupXKW+lILjPQux2QfPfyB1v7RfaKOzjgGStpHUXiuY09vBAIRsZeUg7YQb7+JUa+dF+utZd7jNX11S9RPO7O7uSzMxOSST1J0WOPNqUJ8mXQI/cUe1zxzVVTfsC0Wa10+fhEkTVEmPViQP8Ad00UftVdrEE6yTvZalP+jloAqn6qQfz0FrbbqutkCU6M7HwHjp69yo7eBFUuajmXmMUTA92xGxz6HZl0Uhg0shguOt1bDss9qaw32sgtXG1s/wAn6yQ8q1cTF6Vm8OYH4k+ZyPMjViRysgkRgysAVYHIIPQjXzFdIpOeQW+V4SuWwcmLbGPl4/XVvvY348q75w5W8GXqp7+4WZUkpZGbLSUzdB68hwPkwHhoT2jcIrHHYo9kZ15jfWzba1zoSKvca1I17rM515eWpUazl21tjTRf+JuH7DPDBeLxR0U84Jhhkk/eSAdSqD4iB54xry9dOZXWrKNR2p4+4NhpYao8R22SGfPdPHUK3PjrgA5OPHbbxxp1o7xbK+iirLfWxVsEq8yPTHvQR5/DnXrLwISlkHlrwqMa2ikSWJZYnDo24YeOsOuLqTsgzrTlzruRk60YYOuLq4lAD01oy+WlBGtHAAGds9M+OvLqSuNcWTY50qcemuMgAGSQPnri6nLj/jUcPW2419HU22aCgsc1ymHeM02+1OyADlKMwYEk52GBqP8AZRPaOAuzl479We714pGv90V0YuiStgM+3425R8PUtzY03zdl3GNVTXKKfiGzwrXU1EjRw0zlV90z3VOCx/oScMxxzEkgADTD2kcM3Kq4rhobrxC1xreI7hbVr7fSU3JBTrHIzIveE8xjEaysExlmUuSBgaZNawjLf37ulhc4HNZS7tP4otdbxVwxwtDFX3JkrluVwo6KjeaTu4U54lZQMYMjRMcnbAzjI012W9Udp4h4u7RbnRzytX3QWKzUsCAzVCwnlYKCQBmRZGJJAARmOiLNaK2TtOh4hYIaGGyvSRnn+JZXnVzt5FVXf01GZey/nmhkXi27U3uVZUVNsFPHGvunvBkMwPMD3jHvWAcjKgDG+SYBzMtlItde6U2XtS4WurKYJZhDyUqvJhWCT1EzRR05Ck5k5kYnGRjfONO1mr14noHuVMHoXpa+qpYZlIfvFjlaJmGRgq3LnHgQOuNMdb2Q8HVM0LhLjTrT0sEFNHT1ZjWB4M91OuBnvgCRzHPU7ZJ1MbPbaKz2qmtdugENJSxiKJAScKPMncnxJPU6FJ0duqjxOka65W1HSw0cJjiDHLFndjlnY9WJ8TrodbnWraDZELi43KqB7f8AJOL5w8kwb3RbfKYvh27wyjmx64CfLbz1WThfhq6cSTy+5Q84jxzMThRnwzq6ft08Nm6dnlrvcMfNJbq0xOR17uUf8SL99An2fkhpqKemnUECrV2z1wQAP01GpqTBTl7d0ahpW1NSGP2Tfwv2K8X1kDcstLRU7n4g0pyy/If4aI/BPYBCtT3l9rFddvgg35t/M+B+Wi5w+irByAZwdSCnPIcgazL8WqZNL25LSf4qmiOjb81F6Ds84Z4do5KOhtVN3cq4kZxzs4PUEnQq7NbH/wAnntU0dNSO62u8QSQRBj0V1LKmfHDoAPpqwVShaIyMwAA3JOw0MuNqejnvVk4vt1RFXPZq+ISJTyKxZTKu2QdiCeh89ToKt0c5zHR3sIVdStkpwGjVvso+vrTSWxXSmvdohudL/RTc2BnOCrFSM+O4OlZGtGCCLhZ0gg2K1OsyqqWYhVAySTgAawjQ59oziOk4e7KruZ5YxJURLGsTycnfKZFDpkb/ABKSNvAny1IC5sok2CQce9u3AfDlLy++11U0ue7kpqVzHKAcNySY5T5ZG3jnVPLn2mcTXmO4KslFTT1s0k08qwhqibmbITvmyyqowAqkDbfck6ZOJL9c+Lb5NcqypMlVVSciQrskMQ2SONR+FRsABjAGney9j/H9zw9LZ2iAHNmZuQD79dFc+KEdcgc0Nkcsx6jSeSj1umrWeX4JY5WQkT82CD1JBA08cF8S8UWm23JbHxFc7cF/ez9xUOiygkAlgDjO436/3deIOGeK7TBUxVES0lNCRFWcv4QxRSfDOCN8ejY6a4WdbNT2ecx3Fj73AYmiEe4kDDIPUcpGSMjPTfUhI14u03UXRPjdZ4spfwH2r8QWKmqJadWrarvA5ac5ZQOrZOWyc74wds565t52Z9oFt404VprvSo4KoqVqh0Jglx8XMobmC53BxjGqB21ol95WkgeetMA7spjkQbcxIznP28dP/DlWeGCtdJX11BLNEG7mkleNnIYZQlTsOU58flrj2ArzHEL6Hkb61bQT7Du2KkvVLPQcT3mKOSHDUs9SnK8kZz8Lso5GZcfiAXII2znRqhmhqIEnp5Y5opFDI6MGVgehBHUarkEI4IK8YbaHtK9RHdbrcbda6S5XGSukEcJDc1OikoS0rZCZClggAJL+WiIdaMM6611l0i6g89346mdvceG6ZYyzBDUychA58Dmw39UeHUsMbDJQ3Km4yrKqonktFGf6FRF345XMZLqQebZDIfiBGcAfIOd0v12mukkFFZ616SkrOQTQAn3koDlOmAvP1OSPgI6nGt5K+8XawV4ltFZbpe8jiEQU96Ubl7wqc7kZYAjAGM6LqOAQ9DxKKlHcKuSYxVNvkiBBKyfwk+A/x1HxZqL/ACsbitrNVtd+65V5p3MCNyBS4TGA/IOXmxnG3idS4soIUsAT0GeutTIndmTmBUAkkb9NRBI2KkXMJuW+aRzV1Us7xx26RwrYDFsBum+caTrdat+VltU5Ukr16EfT/wBeeoTw12wWi/8AFVJYaO01yNVzmKOeRlC9CckdfDUu7ReIoOCuH1vNZTS1cZnWDu4mAbLA77/LUMwyl19AoYfUQ17gynGYk247pU1wrA4X9lS5xnIfb740qp5JJYFeWPu3Ocr5b6jfZ7xvb+NaSrmoqSopXpXVZEmIP4gSCCPkdScnXmvDxcHRWaqF8EhikZlcN1ja1OsJ14TrqrqB9vUlqPZhdaG7GQJXIIKfkTmPf/ij+mV1Uvs/pYaCnuF0qJO4SL4ZM7BMDmYt6jVu+2yyrfezuupzEZGpmjqwqjJPdtlsf7PNqr3Did9NcEnRFWZgwjO5PLsSfXBXfxxnS2vkIaWHb9p3hMLSRINwbfjROM3bNWW+HvLdwXVSUxb4KmuqlpkkH9YKRnRO7MuM34stff1dDFQVQ+Luo6gTKy/1g2BoU3HsfbiV1uFTcp4qxKhmjkch4zAygBAhBwVwd/Hmz10WLLw5abFNFLbKOOkWOIRhI8gZwAzfM4z8ydKKj4URDo/q8f79E1ibUGZ3S7cNvID1QU9oW43ur4pfvzdqqzQzrTpDG0kVLEehaTkBZySG+g1MezfhWensFRXvYLfZnq7XHLTmjlYiXnXnXvA3xB1IGc567HRWalpa2GSmniSSJm5mRwCpPXcHY63rKdI6F44woXlI28BjXHVl4RGBtxv6KLaS0xkJ0PC3rul3YpMsnA0KJCIkSQ4VSSASATgnwySfrqZtqL9k0Dx8B26Z1RTVRJOFXwBRQOnj8OfrqUHWkgaWxtB3ss1UPD5nOGxJSS6VkdutlXcJkd46WF5mVB8TBQTgepxjVBPaJ4kvN94qoqm+XAVhenSqWkiGIaeOQcyop/i2OCx3OPAEAXs4xu8dosrN7jLcaqqcU1JRREB6mVgcLk7KMAsWOyqpPhr5v9oKy0XFFyopJYHIncMICTGhJzyITg8q55enhq3CNVSmKMHswcFU1Yx4nuMCSyOW91Vl+FADjIHz/TVnqGlCqNtCD2du7HBlj7sqENGSx6AHmOfz0baJo3jDRyJIvgVII1jq6R0tS4u4Gy2tLG2CmY1vEA/dNHEvBdg4kop47lSymWRO7Z4Zmj518m5SObGTjOeuqkdtHALcH3kwQRpUUk0Jl5kjCPCAQmWC4B3I3x46thx1xbcOHjDT2u0xVU0wy9TVzd1TQLnGWIBLH+yPvoRcd3vhni80kVT2h8N1F1pmZBFBSMi8rkcwRufmJBVSN87HY5wbtBJJE4OB07PeyX1kbJWlpGp2PvdVs4WrY7NeFq5i5WMF4nUbE9CGHiCDuNcZKr325NIrRw/EWBGygj/+/lpy41sVVw5XzQ1yJLDUQGSB0Y8p+LGR+f6eGmuwW6WvuVPSUq4eZuVedSyEEZwcbjb01p2Pa9ucLMyMdG7I7cKf27iufg+8UlwssiipCIJQr5SUZVsZ8MHkI8seOrL9jnaVTX3iCutFRTQ0UlTDFWU8MMyOrMxYScvKcDcKSNjkk4HXVNeJZKR79WRUrZpzOe7KqFwDsQANuozj10+qgtUltnpbnLBcJYRKz7qqJzYJON843+WouYLKQcbr6CpNzTmF0ZHC84BI3GceGt85GRv5HVaODuPOKrDarJxNX3w3W015FPURdzh4PAOGP9Jg7EA+RwNxqyVKix00cceeRUAUk5OMaruFkZrrrWGKOCPu4kVF5mbA8ySSfqSTpm4krrpRzQChpkmSUFMlSSr52+mNPjeeubaidUeGRsbw4tuOxedqPDt0ubUt0tDytU0ymMxI/KxUn8S+u+/pp24Msk1g4UNDUy95OweSQA5VSR+EfLH3zqQ5GvGwQQdwRgjU8gDsy7JXSvphTH6R91VHsZH/ADqcPf8A1f8A4W0c/ahH/NrH/wDcYf8AuvpRZezPhKzX6nvdvpamKqp5DJEDUMUU7+B8N9P/ABjZqHiu0i13lZJKYSrKBG/IeYA43HzOhhhEDo+JSf8AidO/Cahkk+wdfTXT8IV+zDtR37P/AEkH6Pox50ycJcK2bhamngs8EkazsGkaSQuzEDA3PgMnTydcgYY4w0rQ4zWR1tbJPHextv3ABenXh15nGvCdFSxY3TGqte0ZbLdwBxDbbzRvD3ddVFo6KP8ApFj5T3oxj+jGcg52O2NtHTtR7ReG+z2zGuvlUWndSaaihIM059B4D+0dv01TfiPi2r7Tu1RLhdQII6hJaangD8y0yGF1VQfHBbJPiSTrzoGyjrDREiqXwu6h1KOXBnENJPSxRmUOGGYnG4Zf564ce8fWyy29ZaaqpquoVyGp4252xjyXyOq4xX3iDhCopjUBzGpKYY/C2NmQ+RByNSjsv4o4UnhkoZYkoKnv3ZGklKLImcgF89R038tZ5+GmO77Zm9y07cTbK4Mvld3oo2jtHvN1qaWqpOHKmKkEJwJj3YlkJI6kbgb7Dc5Gs4h7RLtbLNcVv9thtVYO7FOqS8xZJA2WK9RgL+eoZS9q9VTcTrSGgt1NaoJSslRTKZ5ZEXwVmI2Pn9dQTiW8VXHHavSVVTHIKKepijeH+rTK4GD6kHHzOjwUGZ/XbYWuqlTXhrfluJde21lYvsk7a+FKbhG0WS6w19DNTUyRGYoJI5CPEcp5vHpjRTtvG3CVzwaPiK3OT/A8wjb/ALLYOql8a8Lpw/xbdLPyELBVPEufAA5Rh81Kn666UTyAFSxDDbOeo0/LBbRZ4OPFWi7R6Rrtw9HU2mvRLnRyma3lB3qzSNG8ZiKqckOjuu24znw186eNZ5aziGurpoBTyT1ErPDzc3dNznmTPjg7Z8saMnFN0rLZTwyULmGd5O7SRfh+JhyjcdNmJ+h0G+JokiujUsTNKkaiMOd848fvnRIhZCl1RO7Lr9RPwDT01Za1vlZTVYoKG3TSFYmkmYlHYDruSN845duupt2I8e3G1cby8KT2KloomqpYp4aNJAEaPOZCGGANiNjn4dx46EvYBdoqDjNqCoHwVyBVz4SIeZSPXyOrdLHboIqq+CBJrjPHvUsoMjnGx+fnjr46QYg6OF72ObfNqNffFabDopaiKORjhYaEW10/Sk/E/Dlp4loRR3ZHkp2Ze8VGILIGBZfqMj5HQbtnYXSUXF9c1RPFWcNyzzyRUkmF/pQR+EDYgcu/N1QEddjLbLhTzw0ywT+8d6gOUBYDA3yRsPrpVVTU1NLCs8qo878kSnq7YzgD5aWQ1UsTS1htdXJaSKR4MgvZVJ9ofhErca+60VKyWmhdKSGGIErEQA8mR/CD3gIPQgHfOhfw/T+799XczBu7MSKrjIJODt1I5Q22PEatb7StrgXg2quEbtFOyknDcomIwFRh/ECSPUAHGNVAg76WGqqw0Yqp35wiDBxk8xHl8taHCpXSQ2PBIMWiZHKCNyuSI01Y7RhWUSb7fCMjY46+ene40zLVxJNzIZIywXmJBBAA5Sck9RtpDbCY6YxLEzVc0qCN1X4l3yw9c7YOtr1VVFddi0xEbHJiUjk5RgYx5dPr9dNOKU8E/VVXU27htaConmaCaQT0scUwMYcMOYsBncjbG2+/gdWK4M7Y6McPtU3+pV4ECiBlkgWWQgfFmPvA6YyB8AI25gNyNVkuUNPJb4qmsqYYamVcoUYkuRtnH8O4G+nDhe4nh9auOqWlqGlTkZHhjdo2z1V2BMbb9V6/LQyAQpgkFfQC31aTWehq2qIplqI4ys0bBkcsNiCNiDpTnffVU+w7tCgsnDVNab0lVFT0lfGI65J+anjVpBhZU6gAk48Oh6jOrTU9TTVkIqKSZJ4G/BJGwZWHmCNjqs5tirLHZgpznWZ1qTrM66oLYnXmCdhvrwb6q37THbbWi7VHA/B1aaaKHMdxromw7t0MaMOijoSNyc+HXl10C+gR34n7SeBOGp3pr1xTbqaoQEvCJO8dfmqAkH0Oh3dPad7N6auampFutwVTgzQwqqH5czA/cDVP7jGKukIMpdFOGHiT5n/1nTAtvlmnenpV5ZVQtGPF8blc+eNx8sa81wcNVNzMp7V9A+GO2/s6v04plvRttQwyI7hH3II9H3T89QXta9oy2WqOW3cELHcaw5X3+VT3Efqi9XPqcL89VBsdXKAmCFeJshSCB986kXENAqVCvGrI0kSyMjjABIzsfLy15rw1+V68Yi5mZibeKr3dOILpJc7tXz1tXM/NJNM2WY/3AeAGw8NcbNVNQXWlrlJzBMsm3iAd/wAs68qaGeKBZXjIjZgFbz8dcPHI1e0sqWoKOPGdkgrbYLmIVnoapB7wvLnlOMCT5HbPkcHxOg5euCqu31XvNqPfRdTGzb/Tz+ujr2NXaK7cGR00uHlo808qnxX+E/UHH00h4isKUFdILZz1FN+JoQpZoc+HqPzGk8nSQOLmeIWgiENSwMl8CgbFScTzzpFTW91C/idgFUeu+il2ScLSLeKFKpllrK6th52GcBEYNj/d0sFOeYIikcxwQB1OiFw/bEslWXmXmqI6ZuUD+s68v0x8X2Hnqq6sfM4RgW/StDD46ZjpL3NtL9699pq2JSdoC1y7rXUkUvmCyZRt/kE0LVl/zxcjkjRfiZv4ieij9T9PPU04yL0lpoLJUJIncSz9x3nUK6qzJ6YZMgf2tQh2kLc2F7o+Piu356dRm7VnnjKbJHxoqz25YRlZC/eKc7qy4w3qBnp66D1eXkqX734pY2Ik5NuYZxzDRL4jrglNApJkyobOd8gY2Phoc3rmeVp2wskYycDYjwx6Y/XRmhAebpqhnmo6yOqpnaOWB1dHHUMDkH76tp2acZ0vF/DUc1NURRV0agVNOd+7k88Z/CfA/TrqplShHISvIrjm663tVyuFnr4662Vk1LUx7rJG2CPT1HpqrXULatg1sRsruG4i6ieeLTuFfbgm4CmjnjuskdHIz55qZQe+G+Pjc7H05TqWU1upPfzdDCTUmPu42kcu0aE5IBPTJwTjGcDbVX+xvtvjmrordxbQmWYnEdRBGCrHzZT+E+o2+Wibxf2lVN0o2t1jp6ijD5WWaTAkZfJACeXPn18vPWYmglhd0bhZaiOWKqAkjN/TwTN7RfEsN1pJLNROHpqJi88i788vQqv+qvMSfP5aqjTQz++EoheSBizKTvtjGj9xJTGnskRD91JHOki/DnLjPKnyJ2+ugRNJ7tdal8mCZ8jLOHwT1OemneEaMICS44wBzV0pbkgq6usqFDFYyI0UYAb8KkeWNzpZQWqSrhqbnJ3b0sSZV5W25gAAufMjw8MZ8NI7ZXQ04aGSihVMBGkZc8xyCObz6a4Se9PUM6E08UhZgq/gCgZ2+g03skN15DNFNXhKpgiDK46rjH1307xUlBUz5p+c918IMp+I+eBuOuktmgpxTVFZUOIokkCoCM8xOc/YDS+KngaUiI7yts4AG2N8a4SpAJVTiso4Z1pauQ0tTH3c6MAGkTmDY9d1BHqNWk7GO0XhGWaexUl5jjWtusj26jlUq8UTKMJnpnnBOM+J1WFY2qZG7o8kaDlX1Pnqa9k3ENnsovvDl8kjhiv8MUMMsyjuYJQW5pGbGVIBBBAznHTGhOFwitNir/g76wnWgOvc6r3RFEO2riluDuzK83uF+WqSHuaY+Ur/AAg/TJb6a+cvv0slVLPIS8sjZJJ3JJ1c32162ROBbRbI2wKmrklf5Rpj/wAZ1SB5f32xx46IwXC4TlUrpa/3elKvh4m2wTsWP8X9/wBNETs/7LbzxJXUt7mT9kWuN1lphKS00mDnIXwHz31FOxzh48VcY2+ldf8AM6ZjNOcZ+Feg+urm2ukjSFERAiqAFAGwGk1fVGF2Rm53TygpWyt6STbgg1X+zraK2aeptN7uNvldzIqBEeNc745SOmhT2kcOcRcL3VKG/okismKepiBEcqjy8j6fy1dKFOUbbHQ67aBwnfbDVcO3C60qXNR3lPGmZJYpBupIUEqD0OcbHVSnq5cwz6hHmp4iDlFiqt2maCsop7fWEEcpaNj1UjTPcLZUW+bu5jzBhzKc521qsj0l3EcigMuQVPQ4OCPsdTGOjp6xO6qTzsiAqx6uhHwkfp8xrTwO6tlnJ2dZa9j1/Nl4lEEmWp60CF1H9b+A/fI/2tGy3UsvdSOwaOZ35pA/xAnOcj00DKTh6np7gkjSyGEHK+BB8DkeWrS9nNl9+s1qv1TGlXRSL+/iRjzRupKkHzAI+2h1AG6NSusMpTDTcFTTVMl/rKGpangxLJhcfhAOcdTtv0389Tvhnh+muc9HUTNzttPVoVyqk7pED5hcc3kfnqXXqmpYbYy87JFMyRBVOQA7BSR5bEnSu20kVto44kjVOVOUAHPj5+JOdzqi2nY1+firUlXI+MRnZBz2krbHT2K2XGJAmbo3NgdecEfqdAGeTkibbOTqwntX360WvgykoKqqj98eoSeOnG7lVdSTjw6HGeuqq3K9Vc699DGsNM5IUufiPyGdXYnta2xVN7XONwkHEFQZjDCP4IgCBtud9Q66GMxAMpWQMdz1I/nqaC2tVQNNTSidwAX5WGV8OmP0zqL3q2DmDQ1EZcbFGOPz0dlRG42QJKeQC9kwcxZShYsNgCfAa5SDDba3ljaKRo5VKsDgrrXl5m2yQPHVhVVLuyinSbiX4158QtgYzvo9Wgt3QUkMFHwMRvjyPy0DeyWQU/FtEx2EjNH91OPz1YmzWypr5ysACoN5GYfCP8fTWaxd3zdexbXBo8tOCmLidJzQR1kMSyrTs7Mhbl5xyEHB8CObOq43mGeS5PNURsrNI3eYA5Qc9FI2OOmPDpq2t+siQ25KVyVjdWQDHxEndifuNVr7SqWqt81NaHCKKGPAKOT3mScMRgYJG+N+up4RKMxaq+NwF7A8e9vRRutqKaeqiFFR9xEkYVk5i3Py9WOfHSmvuhkip4qZIkiA5QSOu4O/n002qq92JCw8fDJOlMqN7nAgHPv3hAUfD/P/AA1oFlSCEqMVVLUMKqcco5mRM4G/XA09U8ZgDKPidYwufU6ZKRUEeylMyIzEjBK5wQB5Zxp9gkXlmlc7CQ7/AC21Fyk1OFIBFGsa9NPfCN0p7Hxfa73V0a1cFJNzTQlQe8QggjfbOD/6zpgpCzIHcYLb48tKjuMddCcL6IwK+kJOszk6bTdU/wChb761/ayD/Qt99U+kaj5D2IBe23KwgsKZ+AQ1P3PINUxJ/wA5Zf7GdW69tqvE1usriMoQ0y9eu8Oqv0dsgqLJXVoUioppAoIbqpHQjy2znR43gNuoGNzzlHNFv2WGr0rbultpqWWoMCN3tVIUihUMcsxG569B18x10auGeKI6nieO2jtOsdwqeblNvo6FAM/1Q3OW+udVz7C7S3EV0nsDXKSio6qMe+pHs1RCjqzRg+GevrjHjovdhvZZUcI8T1T3mSKvtsMUgowY0GZWZCsgI+IEcgO+MHYdSdKKuOHpHue6x5f36JxTOn6JgY27f373R8lfEDsoJbGwB8dVr4e7QuJbj2mTcF8Ex2exM1bJAhqKF5HqZFV2Mkr7YUlCuSeb4gfPFi3mbl2BOfLTJPw9aRezxBT0Ea3KRcNOpIJyME4zjJGxOPE+Z0uppo4iS9t1enp5JbBjrKm/azT3Kj49grbvQpb6yvVamenjbKRu43APlnf66cbBUPLQq6rzS0jFMDYsvl9vzA0++11GkPH1oLH961EjsPId44H6ahXDVY0F3MUhxHOB98fzX89aOjfmiY7uSGuYGSvaDsfRTOWRJYlkQgq26k9dHX2XuJsvWcM1En9IDUQZP8agB1HzXlP+ydADm93kIz+5lOx/qt/j+vz07cMXaqsd8pbhSSFZoJBJGQcfEPA+h3B9CdWntu2yptNirr3CBJ6WSJwMFSEJ/hPh+eNRntX46o+CuBZOI6ju3l5QKWFjs8rKSAfQbk/LTpb7zFfLJbrhbOWSOujWRSwyFGNwfUHI+mqz+2JdwaqyWAPzClWWUqP9coMjp/APvqoN7KyQgxeZ7/xdxIbncBXXO63CQstPGCzP9uigY9BsNS2Xsm40qbW0tHY44J5HBMEtQuVRRsuem5JJ+Wiv7PdhjpeC6e6TxD3ysBJcjcIDsAfLx0WIaYAAnSWoxN4kLWDZO4cMjyBzzuqXzcN3+0VJp5bbNa7lGQBkZBPhgjIYHz0hr6ILMsdwtrUldIAHKplH36/2dtWp7erO1TwM12tyNFcLcQxlTZmiJAYE+Q2P0Ogp7tR33s1jrKpgK631DU5k9COZAT6gkZ/s6sQ1Ze0OPJAlpWtOVv5QjuVnjlpnpxgywMyxvnoTuEPz/InUXROUkYII6g6IdcY2t7JzN3/vCM4UfhGRjJ8+umKS3RT3YuikRzyYUEdDn4v0P0OnNPNoQ5KJabO9oZubBLeB6Jzc6SrctHDTSq5ZRuSDnA1c220MVPSRClQCnKhkI8Qd86q3YKXu6fuQuBHIwAPlnI1afstqo7pwLQnPNJTr7tID1BXp/uldZ/FSZCHdi3rqQUlOwjxTJxfT08dPJXTs6w08LSORvy43Jx6gaqHxfHcbtfa6rmR0kqGMnKBnlXwGfQYH01Zbtdu4S3/suNsNUzOZBn/RxvgD6sP906ET0kJnZu7UmQ/EceGpYYTEC88UQ4Z8ZF1johPW05gjhhdO7cJzNnx3wMa7WlZIp8Mo5mIUcynIGp/feH4ayKrnVWLiLMS+AYDw/P76YzyvTwygD4lyNaCGcSNWMxrCnUMovsdvBI6pFkdEIAMisufXAI/TSCjleeUxyHEYkLsPM56ac6hAzREHDKxI020y8l4kXovMWA+Yz/fo4SU7qQU7kfi3J0qycDTZSzd5WCJfwqpLfPTirDQyitVqv8ork3WqcfI62W9XA7+9y/fUeVzjXQTkDWbuU9yhDb2n7hUVNmtgnnaT45SAT6pv+Wgla70Lb7xHNEZaOsj5ZQuzKcHDD5E9NET2hLgamvpqINtTQhT/AKzfE35cuhHGRJAUPVScad0sYMIDkpnkLJiWogdi15Fm49t1SW5VMvI/qGBU/qNXTtyJIi1CEsrDmB89fPm2OyuGUkMo6g/fVmuzDtAutDw/SM4/adGqhZEZsSxsNjg+PnvpXi1PdwkHJO8GqD0bovFHmKpglVArSgkZ5TGyn6gjW8LGONjIiQU0SbFm3AHUnwAx/fqJ2rtE4TuER94rmo2xlkqUK4+oyD99CP2le0Wsu1mXhnhGcpQ1Kt75UgFDOox+7Unop3yT+LGOnVbBTuleGbK9NJ0bC4C5Qo7duMKXjbtQr7hbn7y3U0aUlJJ4SKjbuPQsWI9MaYqiR0kppYjhxkL/AKynI/v1HqWKWnlKTIVbYFT8xp9Ec9bPDHRr3j87Mq5AzgnI39CdaoMbFlaNgsqS+QuJ+oqV0F8pamERVSlBIME52/w0qlr1SCTvGDPFjkI/0gPRv56itTRVlulNPXU0tNNu3dyDBxnWrysrRlDum4zqwLEXCruzNNnDVWS9nvtJqIeHrhw+6xiqhcVFKWH8DH94uPHBwf8Aa0NO3msiufHUYhDZeIIQW5ghLAnBO/iT9dQ3hi+vaOIKW6Rlisb4kXOModmH2P6amfHzwverVPEiypLUCfps6ci+PlgaqTtyEuVynPSAN70dODLpHa7HbKCnsF8qaWOBENZFTDuum5GWDMPUDHlnREi5SgI3BGRqs/aNdO0mKzUvElFX3Wjtv7TFDBSW9Fk/zdIg3esDs7Pk4BOPhxo59llzuF54DtVyusRhq54SZFI5TkMVyR4ZAzjwzrMT0pjY2S4171omVIfI6Ox07lzvU/E1X71RyUnD1PbplaMrV1TmR0IwSeUYGfroN9mdgIvvFnAdzISeeLnjljPOqujfC46ZBDg/LUg9qbga4XuyUl9trNVPT1SJPSvM0caxBTvserNsW8MDceMR7M7JceC+L+FbrWzNDBeDNA1NlnEPMzhFDMc8vLyHf56txxNbTlwcLnhyVUyOdPkymw480Kb7bLrb75crKaaqqKqjZ++igjZySnU4G+AN86RcPSHvKYz82VZnDnoQR/jqyVRw8Yu0W8VUidzFd6h3eWOTD8kYXGfHk5wWPTOB5ar3VS0klWyUndin94kenblwOXJx9Cv6DV6CpEwIt2eSEIPhZmSk8fIqV29eXPrvor9jHE0Voe40NTIqxSQGePmOBzoCcfMjP/ZGhDRzd2M82cbfTSiqnVomRJ2j51IDg4Kk9DqvNF0gsvoUrGzwFqV3y8yXetatdy3OAFP9kfzJJ+ukUL85ydNytn92pA5fgK56Y667xScp69NFDA0WCnCQxoaNgnuBVAA2Pnoe1MPu1TPSkY7mVlA9M7fljUzgq8eOopxPIv7emZf9IiP9ccp/TViiuJCO1IP5fGJKNkg3afwf3ZIJB8afM/ppor2MN05x15Af1Gl804SWPJG+f00z3OcPXhgdscv9+moC+buKdLO3Kskp8ds6dEfK9dM1sy4RR+BPib1Y6X94SSykCJfxP5+g1xwUmlXXj7PFG73Jz8k0j4j4Ut1mstXcaq4uI6eF5HLYACqMknTy95qgjO8wRFBJJ2AA8dBLtOvdx4vr6W3PVSG3Bu8iplOBJ5PN59Obl6DbO+cZ9jWk67J8xkkrgxm5Qe43oa7iO9T1du53oC7clXP8JcZ/Fy9cHGo7cOEbnaqRpZ6SQKRzCXBwds436efTVhqKz0L1dLRCIOyr3kx64UHckebHA+WdLLzRwRvULLAJoJIzJKjn+kJcDHpgbDVgV5bYAaJwP45EWkudr2qrFB+7qsMCPMfr+WdEzsuugp7hLbHYIZPiiZjhZP7Pz8j9NRztH4dFg4n7umlaSndswEjcAHABPjg/D9Naxwr3FNVmVadOfk5id1z/AHAjVmbLNHzWfhY+kqC07go1S0lLOO8CEE9Spxn56aeLrclPQzmWMoQiiNWHyIwfrpVwOsslN7vXSO8kb/GSxKnIBXl8CrD4s+vz0QeP1p7nUQQIvvFJPRr3eRygEswbPlghftpJYxyAcFrBDnt3qpvFcPdVscg6kEH6H/HS3hWoFPcrdVKqsY548q3Q5xn9dOfabaZaKUROMtExw+PxAjP9x0x28LFYamTbn5lKg+gXp+WnwcHxBZWrjdBVk+KOlx4couJuGpIFcGpjJamm5+YRN4jPUKfFT8x4aCtdS1FDWy0dXC0c8LFHU+BGil2UVzzWqSOVmMsYxKqt8fdscrIPMBsg+X30w9sVTTVFwtxECpXCBlqtsHY4XPn0JB8iNAopHMkMR2TTG6eKopW1jdHaX7/2PJD+VhC/eDJB/EP79PV14gebh62IsoNXa3blH9aLKkZ9OoxpllYFWBHh0PjpA4AEYLDkbm28gRvplKARYrKwuLXXCuL2P3Gi4o7OKErCk1GcxvDKOYAo2wI8xoj0atFyxJCscCRqI+UgAemPDAxqovs2cd3Lhu+yWOShnr7VVsHcQjLUz9OceYONx9tWXho6e53ePiSxXidcxmKogVueGU+BKMDyON+gGfHWSq6UwykOPV4LX01UKmMEWzceCk1c8WEjadEdzyoCwBY4zgDxOhd2+q1FZrHcHflekuiSKR16HU7SzUEN1XiO6yJNV00bLFUTHCwKfxYzsCemdtCbt+4lS82mCmt5UUcdQoWSQYMzdSVz0UBep6/qGBg6UWRZXERuCgfar2zyX6jr7LYrWLVUVdQ1NPO6nvpKUElSpwOUMDuPn56GcjdxS0h5iizlox48m2A32x9zqadrNkSl4ppD3kcUkNNyiV9zIqlwzHH9sFR6DUO4yiiSjgp7c0k4AVtlOWIGCQPLfWiijjZlYwWus5I+R+Z7zeyXUtebfUJSVcmZUxHKVOV6bMPTppa9bBIQrTKVP4ZlOwPkR4ah9FVR1FO7zgswCqmDuDv113Q7AZ8NEMIvrutDhuKuMWRSK6TSQoZ425WGBUcgHMR0DA+Xh9tJ6a+IoCNCwUdCGyfrpthrZYGXPxqoxhvLxHy0nriiMZqfmanOMqBlo/n6euvCIbFX5K1zTnYbdo9/n7qRG+0yrnEhPly6YLvcZKitFSyBRylAo8uuk4ljxkso+Z0mrZkMeOZeu2+ixRhrrhLsUrH1FM5jjotK+p7zuiMjBPXSCVuaUMc/i31vUH4lHz1ooLSqQQMdc6urDkp3tiSTZVnIRd+RerZ06qquAjROqL0XG2mGipw8qgVfKx6HBU6dh7zF8KzyPjxblYD9DqDkRqtT2u8QpaOFWpE+KpuOYEUPykJj42+23+1oY8J3yjWrn/aAaKpYDDk5Ujyz4HbUg7ULusPDtmAjVpq+JpZ5iBlz5E9cdcDy0PLWneCJG3aaXGfIZwP00gitJHey3FGx1O/v96Im8CXi31XvTGf/AD6VyWjZcEKOgXzA0+Xp4StMkoH76XuwfXqPzA0OoLdV0PFkcVuRZJY272ESNgMAM4J+41Kay5R19baoOR4atKrmlp3HxR4Gc+o8iNBewXuE/ikOXK7cflQ/tjt0KUdMs3KZDJIU2wRzO3j8wn56FAq5OaekmHRi3KfPx/POjz2uIktvtp5OaR66KMADPMCQSPsp0I+0Hh6poeJq94YvhhSOZwm6hXz/ACOr1I8FoaVmcbpHGUyMG1vI/wBKadn01Zb75RQR1bzUtxoe+gyuQSm5X0IJfRNeLM1DJ3xkjjDLljn8ZB/UA/fz0POx6F7habdPGF7y2yTxl2GeYMFwPzOiXSQ93TPCu+AVBKjp4apVFs6d4e0up2uHMfYet1EO03hpbzZK+riH76miLxADry/ER+ugOw5IHplySTgD64/u1a1oo51cMeaOVcMPTVca21SXDj33eJeWCrlaaPlGP3aswz9eQn66s0cuhadhqlePUl3Me3c6J97Kx70O45EkqoXlVQTg4Cq2MjpnBH11J+1+G0S8MUlx7hPeiyR0rj8XL1ZT5gAH5HTbwnZ3s3HNeFDRJHUl15jgmMkLkD/aOm/tR7uapEtHUvNRwTtGgz8Cs2C/L6ZwM6myzqlpB0UpmmLC3tc252+2l/BD+sPJC0m2F89cqSlaqo5q+TMVPyskZJ/GwxkD5ZG/rpLWmavuKUdOCzswRFG/MxOAPvov9rPBZ4L4foFjgHf2+JaZ1b8LTFSWJ8zzHm9fpplO61hxKxlO29zwCmPZvwfJw7wnZ6uqomQVBaoqqjkIHMy/CObyVfz0SuF+CklrVuttu91pJmiLEROhjMeQdwV39M566iXYr2h/tDg6nqIKtJGhg7mtpZDlY5AuOblPQHqCPP01YG0QQUvDdMI4SJp7fCC6jY/CPt10rlaSSHJo14YAWeCHknZrxbeqtX4gvMQohLywxs3McZ2bu1AXP1/lqBdo3CNJcO020cF2WN6qGih97udS7c7YzuOUbKDgKANyWGrH8bzQU9i7yeokp41njJaL8ZAOcDyJxjOg97PUve9oPGdNXwpDdJLklUwB5s0wTmRQ3iFZlB+mdRbAxjuqF51XLIzrHRVg7aq3m4yNNMk4rKcyxVisOQKRK5SMD+qE5Pppu4cpbvUW+u4jp4YBFSU8nK7PvGrcsXMo88yAYPn6amntaJEvbfd05VEcUcYbfHxMvMT69R9tQuhvEMfZ1Na3rCkxrFMVIKccojPxM/e56lkT4cfXw0xYzQJe+TUpnWgplh5WjXmxnmB6beekNXDUUzIFcPG5J36jTl3vM5UkAc+APkNeVMAqKRkJwzA4byPho9u1QimMbw5qbEkKjDqcem+t0k5W54n0mQSphZDlgcHfW7AE5KfXOoELSMlJFwt2SBskBUfry42Py8tIpjGSV5AGxsAN9dZo+Zf4vuddIqaeZooIKeWedzyxxopZ3Y7bAa6NECa7r6WCbijSyhFGWI2Gni2W4o3ekCQgdCMacoLFU2uoNPX0k9LVYyyTRlWx6A+Hy0uEaxDfA0XpARos50RaSCuUEMEiHnRS3iCOmtaqnR1wPhYdCP01rWzKid6Dhl/MeWkNTcgEBQcxI6Hw+eogErpICuBcewA3S2xUVz4ooJ+5dWjcI4Ix0HX1030ns511M8Hd8Y2vkiIIBp3zsc+ejrU26ant1TV/talneABu6jVWyuQNyDt465k4ONebh0TRYHRMm4nPfMDryCB3aJ2dXjhanpeJYZ4K6mpJcTSQZyEbY5B8N+vrrpTdll441o4bzQXGG0BCUjqpSwLr48oXfY+Pz0Y+I3QcE8Qd6R3YonY53A9dbcEpFFwFw/HAxMQo1Knz0oq4W0z9NbBOmYtNJS3NsxNr+F727UNoexO7zSUct04stVVPSNzRyCncHoRuM4zv167a7U/YYrVtxrK/iGgqJa6JIXAiYKEUHAxn1OiuTpNWVYhVkiRpp8AiKNS7Yz1IUE41R+IB0DfNC+Pqh/7/AAOXYhJwD2BVPC0FVCOLqCeOdw4UU7AKd/X5fbUo/wCS2oB24iof/wATfz1OLRKtVVQ0tUGgmdiCjKykjOOYBgDg7H0zrnba9a6ruVKbTXUT0B5ZJJnDIW5sBQfElcN9dHGaUF5aPuVyLEKqJmRjtB3Dif7Qq4m4Au3D9qareemuFCCVeSDOUB2HMp8PDOmjgnspkvl0fiSNoKSFIhTRSTA4UKSSFA67nc7Dw89Gu/sp4Qvyv+D9nykj5KdN/Zy5fs4sL8hTnhZivrzt11OCNshvwsiVONTMpcxsXhwANu697dqH9V2G1NRf57keJbaEmpe4aMwvv1366YLr7NtbW2RreOMLWjEswb3d8AkLjx/s5OjvU98YHFO0aTY+AyKWUH1AIJ++miO/U9G01NeqiGKpgcBmjifkdSAVYdcdcYz1B1dbGxpuAkEuPVb2lr3CxvwHFAXgP2UK6wca2m+1/HFpq6ahq0qJII6Rw0nK3MBknHXGpf2ydhvEXH/u9MnHFoo6GGd6numpHLPK3VmYHcdcDwzoox8S2NpY4/fxl5OQZicb+X4dOVJP73NcI/2ZXUfub8hknIKSHOwXHXK4bPrjVm+c57bJaypIaWtO6rPw77OF44C/ad+qL1b7vAlKAjUwdGRubJJU9ANt8nx1aOhjRbLSxllQJTxAk9AAF/lpNUIZbNdYBuHoZRy+fwnXC4FhbKNMnGBn5hQNV5jc5kxo/nAN2XnFdqoOIbctBU3FEh79JHCnBYLnbY+uo5PwUIeKeGbrZr/S0EFnSSKojC71SFOVQcfTPnyjxAw5Sycic3KWOQAB4knAH3OutjpP2pBU1MlwFHHDKEHwAry8ikNzNjrzaC03OgTJ9KxjbucbINdp/s+VvGXHV44jHGtogS4T94kUkDsyKFCqCQeoAGoxJ7KFS1FOn+Xto79ivdEUz8ijB5s79emPrqylHb6Sso5ailvrSiNWJHcqGGM7kdcHGx8RpqoKr3mJSyhXKBjjON+vUAjRunc0DRBbQRSXs46e+xVO7S/Z+4u4IscvEy3G33+2UqZqWogyyQ5252Ruq+oO3iMb6R9jvY7xP2k0tRXUc9JbLXTv3clbVk8rPjJRFG7EAjPQDPXVwruqycKcRQSANHJaKoOp6Ed02oZ7LmF9nbhflXl7x6l3x4nvn3OrlMem3Sytj+GcQNULn9km5yOzHtAsuG8PdJP56weyNc//AIg2X/8AVf8A4tWXzqHPxxGJiyUbGIHlVCw5nG/xZ6DGBt/a9NMWUAk+nVVf8zNC0NvYIMj2R7kP/eDZT/1V/wDi0Sezb2frFwbAs/7eoq66MmJKt4zlfMIM/CPzPidPh42TmVvcygHWMvkv8jjAx69dSu31UdbQwVcYZUmjDgN1GdDqMJa5uWQG3NTix6cnquH2UP7ROySh4h4amjmmp6mSFS0FVAP3lO+Nj6r5jxGq48B9ifG/Gl1uFMi01rpLfL3U9dV5ETNjOIwBlzjB8hnBOdXQt7OsdZ3as5NLJhF6seXYajvZG1xfs7pZLra57XVy1U7yU07qzj4zgkqSNxg9TpM+nFDJlj+ki9jwKZMqTXRZpPrBtccQq/1Xsi32c79oFmA9aST+euDex3fCNu0Gyg+tHJ/xatfnXJquIzLTwsJah25FiU7k+O/oNz5a58a7sUfgmnim/jXiK32WgqLfcTSLVVMQ7pKNGYgc3V9hgbba4U1TDVwJU08iyQyDmRh0I1GuK7NWXC+tc7TQUNH3kSoUeT8DrtzrhQBt/P5PNgt/7LtEFCZO8aMEs2MAsSScemTrRuYxrAQdVVYCFtxYObgPiNR1Nvf9Nb8Dgp2f8OqeooVGs4iQycGX9B1ahcD7a34SUx8E2FCd1o1Gsti56zuQ8wmlMflAd/oltZMYKSWZV5mRSVHmfAffTpw5Q+6RySuZO8LsnxZHNg4LkeJYjOfAYA2Gma4QNVU/ch+UcwJG+GA8DykHHyI1zAuPjID/ANYqP/M0qpp2Rkl26nLG54sFKrpRQXGielqBsw+Fh+JG8GB8Dpjhrqmqo4veJGJA+JfAMNj+Y03MLl4SY/6xP/5mu1BA1PAY2fmyxYAFiFz4AsSTvk7nx1KpqhJ9HivRQFn1La//ABcJX4edul/7p0i7PAV7PLEvlTt/3zpfdF5+Gr1GOrUMoH/ZOkvBMfdcE2eM9VhI/wB46t0TuqOR81Vr/wDkR3jyTtqCdpNNM1xielilmlmpGBSPvCQUb4ThPPmIyfLU60x8S2muuFXRTUNU1N3bYnKTPGXTIIB5fxAfFtt+LOdXgUhmZmbZQOKiuUdT3r09bIS8rBe7qcHIGB08d9FS3NUxWaioppGPcQopUnO4G/z3zpjvllrZ56I2yvqII45MzhqyUFlyPU52DDG2cjfbUgJHhqWZQiiyEpVQqHWoQ9GgcH7aQXQ5pYP9Zv7tK6WTu1nfGeWFjjz202PUCrtlNOqlQzNsT66HK4WAT7Cwc10lkQOjI3RhjbXO2lKSOvoq91FFWxcvfcvMIXwQGK+A3G+cAqOg6d+XSWuSWULEikxMCJQrAMR5bgjB3zoANk/c0PFil1ZBDZ6OuttJVPWV1cio7sADBHy4JLAbZGSBg7nyydI6OnEEeCeZjsT6b7fcn7/TWnJMa33iOLuQ+FkjBQJgA4ICqPi6fTSvGvaDRuwUY2lo1Nyd169OKq1XWlLcgmt08fN5cyEZ/PTB2O2WHhzslsVkp6h546UzASOBliZGJ6ep1JaNeeKsQAEtSSLg9DldN/CMJpuDrfCQoKtJsvT8R1doHnpg3hY+iTYu1uQu43HqnMtjTpBZbSnDVPUwWK2yz+7xtlqRWJyBzHGxY4ycZ300DrpbSXe6U1LFTRtSMkSBFLQtnAGBnDaeEngs623Fd7ZRcPNC1RcrdYUiaTlgl91SJZBgZxzdQDnfx8tM9v7oUcYhCd0MhOTHLy5OMY8NJ+Maeu4mgpoamqggWBmYd1AcnIAxu3prtbqZKK3wUcbFlhjCAkYzjU9Mt769igTd1raJ4szYqJPWFx+WtbTtZoRjH7xtteWg4mkP/wApv01rZ5TLZYXIwTI22dIcTPzRyPmE7w0fLPMeRSiSRY0aRzhUBZj5AaTUMFwkkgp4TDDgtUIxBLQ5O3N4MTzEY/PbSh0WRGR1DKwII8wdeU6SU0jSU880bMoVstz5AOR+LOOulzSA65TN2rSBuhyOG+IlZj/lTPNmNFQuWXlYFcnCkAg4Prv18dS8HWazWrJJSsABaXbbhW8s34TSsv1Os4dOeEbMR0FNy/Y6zWazGL6yO5DzCYU30Dn6JaDjUZqrHepap5I+IqhUZ5CqbqIw3PgDB3xzDr/VHlrNZpBeyuLpFZr2jRl7+83JN3hLBlLDIypAOMYHTzY6kROs1mvXXlrXELYLs7fhFI4P2Ok3CZDcJWwjoEYf7x1ms02ouHI+aW1//I8x5JZWxyzUU8EM7QSyRsqSgZKEjAb6ajsthvpk54L80GVKlQ0rgAry4HMx/DuwPUk79BrNZpgCQkpaCuKcN36Iw8vE1RLyFTIZGf48MTjY7dfXOB01ILJS1VFaoKWsqjVTxghpjnLbkjOdycYGf01ms165K4GgbJxXalqm8BA+ftpntnxcP0pHRWcH551ms0GX6xyPmE7wz6fH0KYrrZbnV3N6qG8ywQswZYRnCEJy5G+OpzrlNYrxI+Yr9LTDyjLtgcuMfEx6bkHrk79BrNZoZT8SuC5tw9esYi4lqlZl3dsnDcxOwz0xgY+f07Q2W8Rz9417kdAylVZn2Ack533yDjw6DWazXF3pXKWW7/2p/AU75+2k1nXPD9Nj+F2B++s1mrlCf9lvI+YSHFtYncx5FdRqK1XD/EUpl5OJnHeOzD4HXkDHPKMN03wCegAx46zWa0AJCzdrrQ8N8QCoeROKqghucJzBj3YY9AAwDYyQObpt5ak1vingoKeCpqPeJo41R5sY7wgY5seZ66zWa6SSuAJ0tW0krHoIWz9taWLJscWeokYHWazSDEz84cj6J5hv/I8x6pprLNdpblNUR32ZKaSQMIPiHdjx5SCPAdDtudaUViudLcqeoN8qJoIyheB3chsJg7knOTvvrNZpYQmuYr//2Q==" alt="Famille"><span>Family Flow</span><span class="family-flags">🇪🇸 🇮🇹</span></div>
   <select id="langSelectTop" class="lang-select" onchange="setLanguage(this.value)" aria-label="Langue">
-    <option value="fr">🇫🇷 FR</option>
-    <option value="en">🇬🇧 EN</option>
-    <option value="es">🇪🇸 ES</option>
-    <option value="it">🇮🇹 IT</option>
-    <option value="de">🇩🇪 DE</option>
-   </select>
-   <button class="pill" onclick="parentButton()" id="parentBtn">🔒 Parent</button>
+   <option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="it">🇮🇹 IT</option><option value="de">🇩🇪 DE</option>
+  </select>
+  <div class="title"><div class="family-title"><span>Family Flow</span><span class="family-flags">🇪🇸 🇮🇹</span></div></div>
+  <button class="pill" onclick="parentButton()" id="parentBtn">🔒 Parent</button>
  </div>
- <div class="subtitle"><span class="syncdot off" id="syncDot"></span><span id="syncText">Mode local</span> • <span data-i18n="top_subtitle">organisation familiale • tâches • menus • points</span></div>
+ <div class="subtitle"><span class="syncdot" id="syncDot"></span><span id="syncText">Mode local</span> • <span data-i18n="top_subtitle">organisation familiale • tâches • planning • menus • points</span></div>
 </header>
 
 <main>
 <section id="today" class="view active">
- <div class="weekhead"><div><h2 id="rangeTitle"></h2><div class="small">1 tâche rotative principale par personne • tortues séparées • tâches communes des filles bien distinguées</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
+ <div class="weekhead"><div><h2 id="rangeTitle"></h2><div class="small">1 responsabilité principale par personne • enfants affichés avant les adultes • extras sans surcharge de points</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
  <div class="cards" id="personCards"></div>
 
  <div class="section">
-  <h3 data-i18n="specific_tasks">🏠 Tâches spécifiques & communes</h3>
-  <div class="points-grid">
-   <div class="point-card" id="turtlesCard"></div>
-   <div class="point-card" id="girlsSharedCard"></div>
-   <div class="point-card" id="roomsCard"></div>
-  </div>
+  <h3>🏠 Tâches spécifiques & communes</h3>
+  <div class="points-grid"><div class="point-card" id="turtlesCard"></div><div class="point-card" id="girlsSharedCard"></div><div class="point-card" id="roomsCard"></div></div>
  </div>
 
  <div class="section">
-  <h3 data-i18n="evening_routine">🌙 Routine du soir — Solé & Calista</h3>
-  <div class="small" style="margin-bottom:10px">Rappels quotidiens • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
+  <h3>🌙 Routine du soir — Solé & Calista</h3>
+  <div class="small" style="margin-bottom:10px">Rappels simples : cases quotidiennes, sans point automatique.</div>
   <div class="points-grid" id="eveningRoutine"></div>
  </div>
 
  <div class="section">
-  <h3 data-i18n="house_rules">🏠 Règles de la maison</h3>
-  <div class="rulegrid">
-   <div class="rule">❤️ On se respecte</div>
-   <div class="rule">💬 On parle calmement</div>
-   <div class="rule">📦 On range après soi</div>
-   <div class="rule">📚 Devoirs avant les écrans</div>
-   <div class="rule">🏡 On aide à la maison</div>
-   <div class="rule">🍽️ Pendant les repas : on évite les cris</div>
+  <h3>ℹ️ Comment fonctionnent les points ?</h3>
+  <div class="small" style="line-height:1.6">
+   <b>Responsabilité principale de la semaine :</b> ⭐ +2 quand elle est faite.<br>
+   <b>Tortues :</b> ⭐ +1 pour la personne responsable cette semaine.<br>
+   <b>Salle de jeux, chambres et routine du soir :</b> suivi visuel uniquement, 0 point, afin de ne pas avantager automatiquement les enfants dans le classement familial.<br>
+   <b>Comportement :</b> un parent peut ajouter ou retirer des points manuellement. Le défi « repas sans cris » donne +1 à chacun.
   </div>
  </div>
 
  <div class="section">
-  <h3>ℹ️ Comment fonctionnent les points du jour ?</h3>
-  <div class="small" style="line-height:1.55">
-   <b>1. Points liés aux tâches</b><br>
-   ⭐ Une tâche marquée “+1 point” rapporte automatiquement le point dès qu’elle est cochée.<br>
-   ⬜ Si elle n’est pas cochée, aucun point n’est attribué et il n’y a pas de malus automatique.<br>
-   🌙 Une tâche marquée “0 point” est uniquement un rappel.<br><br>
-
-   <b>2. Points de comportement</b><br>
-   Ils sont ajoutés manuellement par un parent lorsqu’un comportement mérite d’être valorisé ou signalé.<br>
-   ✅ Exemples positifs : aide spontanée, bonne attitude, repas calme, effort particulier.<br>
-   ❌ Exemples négatifs : cris, manque de respect, ton agressif, comportement inadapté.<br><br>
-
-   <b>3. Quand attribuer le point ?</b><br>
-   Attribuer le point au moment où le comportement se produit, ou au plus tard à la fin de la journée, afin d’éviter les oublis.<br>
-   Pour une tâche déjà cochée, ne pas ajouter manuellement un second “+1 tâche” : le point est déjà compté automatiquement.<br><br>
-
-   <b>4. Défi “repas sans cris”</b><br>
-   Si le repas se déroule calmement du début à la fin, le bouton “+1 à tous” attribue un point positif à chaque membre de la famille.<br><br>
-
-   <b>5. Principe général</b><br>
-   Le but est de valoriser les bons comportements plus souvent que de sanctionner les mauvais. Un même événement ne doit normalement être compté qu’une seule fois.
-  </div>
- </div>
-
- <div class="section">
-  <h3 data-i18n="daily_points">⭐ Points du jour — comportement & attitude</h3>
+  <h3>⭐ Points du jour — comportement & attitude</h3>
   <div class="points-grid" id="pointsCards"></div>
-  <div class="familychallenge">
-   <div class="big">🍽️🤫</div><div style="flex:1"><strong>Défi repas sans cris</strong><span class="small">Repas calme du début à la fin : +1 point à chacun.</span></div>
-   <button class="btn good parentOnly" onclick="mealNoShouting()">+1 à tous</button>
-  </div>
- </div>
-</section>
-
-
-<section id="menus" class="view">
- <div class="weekhead">
-  <div>
-   <h2 data-i18n="menus_title">🍽️ Menus de la semaine</h2>
-   <div class="small" data-i18n="menus_subtitle">Parents et enfants séparés par défaut • possibilité d’activer un menu commun repas par repas.</div>
-  </div>
- </div>
-
- <div class="section">
-  <div class="menu-toolbar">
-   <div class="menu-week-nav">
-    <button class="btn secondary" onclick="moveMenuWeek(-1)">‹</button>
-    <b id="menuRangeTitle"></b>
-    <button class="btn secondary" onclick="moveMenuWeek(1)">›</button>
-   </div>
-   <div class="menu-legend">
-    <span><i class="legend-dot legend-parent"></i><span data-i18n="parents">Parents</span></span>
-    <span><i class="legend-dot legend-child"></i><span data-i18n="children">Enfants</span></span>
-    <span><i class="legend-dot legend-common"></i><span data-i18n="common_menu">Menu commun</span></span>
-   </div>
-  </div>
-  <div class="menu-week-wrap">
-   <div class="menu-grid" id="menuGrid"></div>
-  </div>
-  <div class="menu-actions">
-   <button class="btn" onclick="openMenuEditor(selectedDay,'lunch')"><span data-i18n="add_edit_meal">＋ Ajouter / modifier un repas</span></button>
-   <button class="btn secondary" onclick="copyMenuWeek()"><span data-i18n="copy_next_week">📋 Copier la semaine suivante</span></button>
-  </div>
- </div>
-
- <div class="section">
-  <h3 data-i18n="how_it_works">💡 Fonctionnement</h3>
-  <div class="small" style="line-height:1.55">
-   Chaque repas possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>.
-   Pour les repas où tout le monde mange la même chose, active <b>« Même menu pour tous »</b>.
-   Les menus sont enregistrés avec les autres données de Family Flow et sont donc inclus dans la sauvegarde locale et la synchronisation Supabase.
-  </div>
+  <div class="familychallenge"><div class="big">🍽️🤫</div><div style="flex:1"><strong>Défi repas sans cris</strong><span class="small">Repas calme du début à la fin : +1 point à chacun.</span></div><button class="btn good parentOnly" onclick="mealNoShouting()">+1 à tous</button></div>
  </div>
 </section>
 
 <section id="week" class="view">
- <div class="weekhead"><div><h2 data-i18n="week_tracking">📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
+ <div class="weekhead"><div><h2>📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
  <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
- <div class="section"><h3 data-i18n="rotation_6w">🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
+ <div class="section"><h3>🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
+ <div class="section"><h3>🗓️ Habitudes quotidiennes</h3><div class="small">Dents et coucher restent des rappels quotidiens, sans impact automatique sur le score.</div><div id="dailyRoutineWeek" style="overflow:auto;margin-top:8px"></div></div>
 </section>
 
 <section id="planner" class="view">
- <div class="weekhead"><div><h2>🗓️ Planning & trajets</h2><div class="small">Activités, lieux, transports, accompagnement et synchronisation des calendriers.</div></div><button class="btn parentOnly" onclick="resetPlannerForm()">+ Activité</button></div>
- <div class="planner-grid">
+ <div class="weekhead"><div><h2>🗓️ Planning enfants & activités</h2><div class="small" id="plannerWeekRange"></div></div><button class="btn secondary" onclick="goToday()">Aujourd’hui</button></div>
+ <div class="planner-layout">
   <div>
-   <div class="section" style="margin-top:0">
-    <h3>📆 Activités de la semaine</h3>
-    <div class="small" id="plannerWeekRange" style="margin-bottom:10px"></div>
-    <div class="planner-list" id="plannerEvents"></div>
-   </div>
-   <div class="section parentOnly">
+   <div class="section" style="margin-top:0"><h3>📌 Activités de la semaine</h3><div id="plannerEvents"></div></div>
+   <div class="section parentOnly block">
     <h3 id="plannerFormTitle">➕ Ajouter une activité</h3>
     <div class="formgrid">
      <div><div class="fieldlabel">Enfant / membre</div><select id="plPerson"></select></div>
@@ -333,644 +164,264 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
      <div><div class="fieldlabel">Début</div><input id="plStart" type="time"></div>
      <div><div class="fieldlabel">Fin</div><input id="plEnd" type="time"></div>
      <div><div class="fieldlabel">Lieu enregistré</div><select id="plPlace"></select></div>
+     <div><div class="fieldlabel">Point de départ</div><select id="plStartPlace"></select></div>
+     <div><div class="fieldlabel">Marge avant départ (min)</div><input id="plMargin" type="number" min="0" max="120" value="10"></div>
      <div><div class="fieldlabel">Transport aller</div><select id="plTransportOut"></select></div>
      <div><div class="fieldlabel">Transport retour</div><select id="plTransportBack"></select></div>
      <div><div class="fieldlabel">Qui accompagne à l’aller ?</div><select id="plOutCare"></select></div>
      <div><div class="fieldlabel">Qui s’occupe du retour ?</div><select id="plBackCare"></select></div>
-     <div><div class="fieldlabel">Temps trajet aller (min)</div><input id="plOutMinutes" type="number" min="0" max="300" placeholder="Auto plus tard"></div>
-     <div><div class="fieldlabel">Temps trajet retour (min)</div><input id="plBackMinutes" type="number" min="0" max="300" placeholder="Auto plus tard"></div>
+     <div><div class="fieldlabel">Temps trajet aller (min)</div><input id="plOutMinutes" type="number" min="0" max="300" placeholder="Manuel / API plus tard"></div>
+     <div><div class="fieldlabel">Temps trajet retour (min)</div><input id="plBackMinutes" type="number" min="0" max="300" placeholder="Manuel / API plus tard"></div>
      <div class="wide"><div class="fieldlabel">À prendre / notes</div><textarea id="plNotes" placeholder="Sac, gourde, équipement, informations utiles…"></textarea></div>
     </div>
     <div class="settingrow"><button class="btn good" onclick="savePlannerEvent()">Enregistrer</button><button class="btn secondary" onclick="resetPlannerForm()">Annuler</button></div>
-    <div class="small">Le calcul automatique du trajet sera relié à Apple Maps / Google Maps lors de l’intégration cartographique.</div>
+    <div class="small">Le modèle calcule l’heure de départ conseillée à partir du temps de trajet + marge. Le calcul automatique du trajet pourra être relié à un service cartographique dans une version connectée.</div>
    </div>
   </div>
   <div>
-   <div class="section" style="margin-top:0">
-    <h3>📍 Lieux enregistrés</h3>
-    <div id="placesList"></div>
-    <div class="formgrid parentOnly" style="margin-top:10px">
-     <div><div class="fieldlabel">Nom</div><input id="placeName" placeholder="Ex. Piscine"></div>
-     <div><div class="fieldlabel">Adresse</div><input id="placeAddress" placeholder="Rue, NPA, ville"></div>
-    </div>
+   <div class="section" style="margin-top:0"><h3>📍 Lieux enregistrés</h3><div id="placesList"></div>
+    <div class="formgrid parentOnly block" style="margin-top:10px"><div><div class="fieldlabel">Nom</div><input id="placeName" placeholder="Ex. Maison"></div><div><div class="fieldlabel">Adresse</div><input id="placeAddress" placeholder="Rue, NPA, ville"></div></div>
     <button class="btn parentOnly" onclick="addPlace()" style="margin-top:8px">+ Enregistrer le lieu</button>
    </div>
-   <div class="section">
-    <h3>🚗 Modes de transport</h3>
-    <div class="transport-pills" id="transportModes"></div>
-    <div class="small" style="margin-top:8px">Touchez un mode en mode parent pour le masquer ou le réactiver.</div>
-   </div>
-   <div class="section parentOnly">
-    <h3>🔄 Calendriers externes</h3>
-    <div class="notice">Synchronisation <b>bidirectionnelle</b> prévue avec Google Calendar, Outlook / Microsoft 365 et Apple Calendar. Les connexions OAuth/API seront activées dans la version connectée/native.</div>
-    <div id="calendarConnections"></div>
-   </div>
+   <div class="section"><h3>🚗 Modes de transport</h3><div class="transport-pills" id="transportModes"></div><div class="small" style="margin-top:8px">En mode parent, touche un mode pour le masquer ou le réactiver.</div></div>
+   <div class="section parentOnly block"><h3>🔄 Calendriers externes</h3><div class="notice">Architecture prévue en <b>bidirectionnel</b> pour Google Calendar, Outlook / Microsoft 365 et Apple Calendar. Les connexions OAuth/API ne sont pas encore actives dans ce fichier autonome.</div><div id="calendarConnections"></div></div>
   </div>
  </div>
+</section>
+
+<section id="menus" class="view">
+ <div class="weekhead"><div><h2>🍽️ Menus de la semaine</h2><div class="small">Parents et enfants séparés par défaut • menu commun possible repas par repas.</div></div></div>
+ <div class="section">
+  <div class="menu-toolbar"><div class="menu-week-nav"><button class="btn secondary" onclick="moveMenuWeek(-1)">‹</button><b id="menuRangeTitle"></b><button class="btn secondary" onclick="moveMenuWeek(1)">›</button></div>
+   <div class="menu-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
+  </div>
+  <div class="menu-week-wrap"><div class="menu-grid" id="menuGrid"></div></div>
+  <div class="menu-actions"><button class="btn" onclick="openMenuEditor(selectedDay,'lunch')">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
+ </div>
+ <div class="section"><h3>💡 Fonctionnement</h3><div class="small" style="line-height:1.55">Chaque repas possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
 </section>
 
 <section id="points" class="view">
- <div class="weekhead"><div><h2 data-i18n="family_points">🏆 Points famille</h2><div class="small">Tâches et comportements, jour par jour.</div></div></div>
+ <div class="weekhead"><div><h2>🏆 Classement familial</h2><div class="small">Un seul classement pour Solé, Calista, Angela et Yvan.</div></div></div>
+ <div class="section"><div class="rank" id="rankCards"></div></div>
  <div class="section" id="scoreSummary"></div>
- <div class="section"><h3 data-i18n="recent_history">Historique récent</h3><div id="history"></div></div>
+ <div class="section"><h3>Historique récent</h3><div id="history"></div></div>
 </section>
 
 <section id="rules" class="view">
- <div class="weekhead"><div><h2 data-i18n="house_rules">🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
- <div class="rulegrid">
-  <div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div>
-  <div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div>
- </div>
- <div class="section"><h3 data-i18n="scoring">Barème</h3><p><b>+1</b> tâche faite • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée • <b>+1</b> comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés exactement comme les enfants.</p></div>
+ <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
+ <div class="rulegrid"><div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div><div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div></div>
+ <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>+1</b> tortues • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés comme les enfants.</p></div>
 </section>
 
 <section id="settings" class="view">
- <div class="weekhead"><div><h2 data-i18n="settings_title">⚙️ Réglages</h2><div class="small" data-i18n="settings_subtitle">Sauvegarde locale + synchronisation Supabase facultative.</div></div></div>
- <div class="section">
-  <h3 data-i18n="language_title">🌍 Langue de l’application</h3>
-  <div class="settings-lang-row">
-   <select id="langSelectSettings" onchange="setLanguage(this.value)">
-    <option value="fr">Français</option>
-    <option value="en">English</option>
-    <option value="es">Español</option>
-    <option value="it">Italiano</option>
-    <option value="de">Deutsch</option>
-   </select>
-   <div class="small" data-i18n="language_help">Le choix est enregistré sur cet appareil.</div>
-  </div>
- </div>
- <div class="section">
-  <h3 data-i18n="parent_mode">🔐 Mode parent</h3>
-  <div class="notice">Les tâches restent cochables par tout le monde. En revanche, <b>ajouter/retirer des points, modifier la configuration et administrer la synchro</b> nécessite le mode parent.</div>
-  <div class="settingrow parentOnly"><button class="btn secondary" onclick="changePin()">Changer le PIN parent</button><button class="btn secondary" onclick="lockParent()">Verrouiller maintenant</button></div>
- </div>
- <div class="section parentOnly">
-  <h3 data-i18n="sync_title">☁️ Synchronisation iPhone ↔ iPad</h3>
-  <div class="notice warn">Crée gratuitement un projet Supabase puis colle ici l’URL du projet et la clé <b>anon/public</b>. Utilise le même <b>Code famille</b> sur tous vos appareils. Le fichier SQL fourni avec cette page crée la table nécessaire.</div>
+ <div class="weekhead"><div><h2>⚙️ Réglages</h2><div class="small">Sauvegarde locale + synchronisation Supabase facultative.</div></div></div>
+ <div class="section"><h3>🔐 Mode parent</h3><div class="notice">Les tâches restent cochables par tout le monde. Les ajouts/retraits manuels de points, le planning, les réglages et les suppressions sensibles nécessitent le mode parent.</div><div class="settingrow"><button class="btn secondary parentOnly" onclick="changePin()">Changer le PIN</button><button class="btn secondary parentOnly" onclick="lockParent()">Verrouiller</button></div></div>
+ <div class="section parentOnly block"><h3>☁️ Synchronisation iPhone ↔ iPad</h3><div class="notice">Utilise le même <b>Code famille</b> sur tous les appareils. La table Supabase attendue est <code>family_boards</code> avec <code>family_code</code>, <code>payload</code> et <code>updated_at</code>.</div>
   <div class="settingrow"><input id="sbUrl" placeholder="https://xxxxx.supabase.co"><input id="sbKey" placeholder="Clé anon/public"></div>
-  <div class="settingrow"><input id="familyCode" placeholder="Code famille (ex. maison-2026)"><button class="btn" onclick="saveCloudSettings()">Enregistrer</button></div>
-  <div class="settingrow"><button class="btn good" onclick="pushCloud()">Envoyer vers le cloud</button><button class="btn secondary" onclick="pullCloud()">Récupérer du cloud</button><button class="btn secondary" onclick="testCloud()">Tester</button></div>
-  <div id="cloudMsg" class="small"></div>
+  <div class="settingrow"><input id="familyCode" placeholder="Code famille"><button class="btn" onclick="saveCloudSettings()">Enregistrer</button></div>
+  <div class="settingrow"><button class="btn good" onclick="pushCloud()">Envoyer vers le cloud</button><button class="btn secondary" onclick="pullCloud()">Récupérer du cloud</button><button class="btn secondary" onclick="testCloud()">Tester</button></div><div id="cloudMsg" class="small"></div>
  </div>
- <div class="section parentOnly">
-  <h3 data-i18n="backup">💾 Sauvegarde</h3>
-  <div class="settingrow">
-<button class="btn" onclick="exportData()">Exporter JSON</button>
-<label class="btn secondary" style="cursor:pointer">Importer<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
-</div>
-<div class="notice warn" style="margin-top:10px">
-<b>Attention :</b> choisis bien ce que tu veux effacer. Les actions ci-dessous concernent les données locales de cet appareil.
-</div>
-<div class="settingrow">
-<button class="btn secondary" onclick="resetCurrentWeek()">Réinitialiser la semaine en cours</button>
-<button class="btn secondary" onclick="resetPointsOnly()">Effacer tous les points</button>
-<button class="btn danger" onclick="resetAll()">Réinitialiser TOUTES les données</button>
-</div>
+ <div class="section parentOnly block"><h3>💾 Sauvegarde</h3><div class="settingrow"><button class="btn" onclick="exportData()">Exporter JSON</button><label class="btn secondary" style="cursor:pointer">Importer<input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label></div>
+  <div class="notice warn"><b>Attention :</b> choisis bien ce que tu veux effacer.</div>
+  <div class="settingrow"><button class="btn secondary" onclick="resetCurrentWeek()">Réinitialiser la semaine en cours</button><button class="btn secondary" onclick="resetPointsOnly()">Effacer tous les points</button><button class="btn danger" onclick="resetAll()">Réinitialiser TOUTES les données</button></div>
  </div>
- <div class="section"><div class="syncinfo"><div class="syncicon">📱</div><div><b>Installation iPad</b><br><span class="small">Ouvrir cette page dans Safari → Partager → Sur l’écran d’accueil. Elle fonctionne hors ligne tant que le fichier reste disponible ; les données locales restent dans Safari.</span></div></div></div>
+ <div class="section"><div class="syncinfo"><div class="syncicon">📱</div><div><b>Installation iPhone / iPad</b><br><span class="small">Ouvrir ce fichier dans Safari → Partager → Sur l’écran d’accueil. Les données locales restent dans le navigateur ; Supabase permet le partage entre appareils quand il est configuré.</span></div></div></div>
 </section>
 </main>
 
-
-<footer class="footerinfo">
- Version <b>2.19</b> • Dernière mise à jour : <b>26/08/2026</b>
-</footer>
+<footer class="footerinfo">Version <b>2.20</b> • Fusion des branches V2.19 « Planning » + « points allégés / menus » • Dernière mise à jour : <b>26/08/2026 12:33</b></footer>
 
 <nav class="nav">
- <button class="active" data-view="today"><span class="ico">🏠</span><span data-i18n="nav_today">Aujourd’hui</span></button>
- <button data-view="week"><span class="ico">📅</span><span data-i18n="nav_week">Semaine</span></button>
- <button data-view="planner"><span class="ico">🗓️</span><span data-i18n="nav_planner">Planning</span></button>
- <button data-view="menus"><span class="ico">🍽️</span><span data-i18n="nav_menus">Menus</span></button>
- <button data-view="points"><span class="ico">⭐</span><span data-i18n="nav_points">Points</span></button>
- <button data-view="rules"><span class="ico">🛡️</span><span data-i18n="nav_rules">Règles</span></button>
- <button data-view="settings"><span class="ico">⚙️</span><span data-i18n="nav_settings">Réglages</span></button>
+ <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
+ <button data-view="week"><span class="ico">📅</span>Semaine</button>
+ <button data-view="planner"><span class="ico">🗓️</span>Planning</button>
+ <button data-view="menus"><span class="ico">🍽️</span>Menus</button>
+ <button data-view="points"><span class="ico">⭐</span>Points</button>
+ <button data-view="rules"><span class="ico">🛡️</span>Règles</button>
+ <button data-view="settings"><span class="ico">⚙️</span>Réglages</button>
 </nav>
 </div>
 
-<div class="modalback" id="pinModal">
- <div class="modal">
-  <h3>🔐 Code parent</h3><div class="small" id="pinHelp">Saisis le code PIN.</div><div class="pinview" id="pinView"></div>
-  <div class="pinpad" id="pinPad"></div>
-  <div class="settingrow" style="justify-content:center"><button class="btn secondary" onclick="closePin()">Annuler</button></div>
- </div>
-</div>
-
+<div class="modalback" id="pinModal"><div class="modal"><h3>🔐 Code parent</h3><div class="small" id="pinHelp">Saisis le code PIN parent.</div><div class="pinview" id="pinView"></div><div class="pinpad" id="pinPad"></div><div class="settingrow" style="justify-content:center"><button class="btn secondary" onclick="closePin()">Annuler</button></div></div></div>
 
 <div class="modalback" id="menuModal">
- <div class="modal menu-modal" id="menuModalBox">
-  <div class="menu-modal-head">
-   <div><h3 style="margin-bottom:3px" data-i18n="edit_meal">🍽️ Modifier le repas</h3><div class="small" id="menuEditorDate"></div></div>
-   <button type="button" class="btn secondary" onclick="closeMenuEditor()" data-i18n="close">Fermer</button>
-  </div>
-
-  <div class="menu-toggle">
-   <div><b data-i18n="same_menu_all">Même menu pour tous</b><div class="small" data-i18n="same_menu_help">Parents et enfants auront exactement le même repas.</div></div>
-   <label class="switch"><input id="menuCommonToggle" type="checkbox" onchange="toggleMenuEditorMode()"><span></span></label>
-  </div>
-
-  <div class="menu-separate">
-   <div class="menu-form-grid">
-    <div class="menu-form-card parents">
-     <h4>👨‍👩 <span data-i18n="parents">Parents</span></h4>
-     <div class="menu-field"><label data-i18n="dish">Plat</label><input id="mp_dish" placeholder="Ex. Saumon grillé"></div>
-     <div class="menu-field"><label data-i18n="protein">Protéine</label><input id="mp_protein" placeholder="Ex. Saumon"></div>
-     <div class="menu-field"><label data-i18n="side">Accompagnement</label><input id="mp_side" placeholder="Ex. Haricots verts"></div>
-     <div class="menu-field"><label data-i18n="dessert">Dessert</label><input id="mp_dessert" placeholder="Ex. Yaourt"></div>
-    </div>
-    <div class="menu-form-card children">
-     <h4>👧👧 <span data-i18n="children">Enfants</span></h4>
-     <div class="menu-field"><label data-i18n="dish">Plat</label><input id="mc_dish" placeholder="Ex. Pâtes bolognaise"></div>
-     <div class="menu-field"><label data-i18n="protein">Protéine</label><input id="mc_protein" placeholder="Ex. Poulet"></div>
-     <div class="menu-field"><label data-i18n="side">Accompagnement</label><input id="mc_side" placeholder="Ex. Riz"></div>
-     <div class="menu-field"><label data-i18n="dessert">Dessert</label><input id="mc_dessert" placeholder="Ex. Compote"></div>
-    </div>
-   </div>
-  </div>
-
-  <div class="menu-common-only">
-   <div class="menu-form-card common">
-    <h4>👨‍👩‍👧‍👧 <span data-i18n="common_menu">Menu commun</span></h4>
-    <div class="menu-field"><label data-i18n="dish">Plat</label><input id="mcom_dish" placeholder="Ex. Tacos maison"></div>
-    <div class="menu-field"><label data-i18n="protein">Protéine</label><input id="mcom_protein" placeholder="Ex. Bœuf haché"></div>
-    <div class="menu-field"><label data-i18n="side">Accompagnement</label><input id="mcom_side" placeholder="Ex. Légumes + salade"></div>
-    <div class="menu-field"><label data-i18n="dessert">Dessert</label><input id="mcom_dessert" placeholder="Ex. Glace"></div>
-   </div>
-  </div>
-
-  <div class="menu-note">Tu peux laisser certains champs vides. Le « Plat » est celui qui sera affiché en priorité dans la vue semaine.</div>
-  <div class="settingrow" style="justify-content:flex-end;margin-top:14px">
-   <button class="btn danger" onclick="clearMenuEntry()" data-i18n="delete_meal">Effacer ce repas</button>
-   <button class="btn good" onclick="saveMenuEntry()" data-i18n="save_meal">Enregistrer le repas</button>
-  </div>
+ <div class="modal" id="menuModalBox">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><h3 style="margin-bottom:3px">🍽️ Modifier le repas</h3><div class="small" id="menuEditorDate"></div></div><button class="btn secondary" onclick="closeMenuEditor()">Fermer</button></div>
+  <div class="menu-toggle"><div><b>Même menu pour tous</b><div class="small">Parents et enfants auront exactement le même repas.</div></div><label class="switch"><input id="menuCommonToggle" type="checkbox" onchange="toggleMenuEditorMode()"></label></div>
+  <div class="menu-separate"><div class="menu-form-grid">
+   <div class="menu-form-card parents"><h4>👨‍👩 Parents</h4><div class="menu-field"><label>Plat</label><input id="mp_dish" placeholder="Ex. Saumon grillé"></div><div class="menu-field"><label>Protéine</label><input id="mp_protein" placeholder="Ex. Saumon"></div><div class="menu-field"><label>Accompagnement</label><input id="mp_side" placeholder="Ex. Haricots verts"></div><div class="menu-field"><label>Dessert</label><input id="mp_dessert" placeholder="Ex. Yaourt"></div></div>
+   <div class="menu-form-card children"><h4>👧👧 Enfants</h4><div class="menu-field"><label>Plat</label><input id="mc_dish" placeholder="Ex. Pâtes bolognaise"></div><div class="menu-field"><label>Protéine</label><input id="mc_protein" placeholder="Ex. Poulet"></div><div class="menu-field"><label>Accompagnement</label><input id="mc_side" placeholder="Ex. Riz"></div><div class="menu-field"><label>Dessert</label><input id="mc_dessert" placeholder="Ex. Compote"></div></div>
+  </div></div>
+  <div class="menu-common-only"><div class="menu-form-card common"><h4>👨‍👩‍👧‍👧 Menu commun</h4><div class="menu-field"><label>Plat</label><input id="mcom_dish" placeholder="Ex. Tacos maison"></div><div class="menu-field"><label>Protéine</label><input id="mcom_protein" placeholder="Ex. Bœuf haché"></div><div class="menu-field"><label>Accompagnement</label><input id="mcom_side" placeholder="Ex. Légumes + salade"></div><div class="menu-field"><label>Dessert</label><input id="mcom_dessert" placeholder="Ex. Glace"></div></div></div>
+  <div class="small">Tu peux laisser certains champs vides. Le « Plat » est affiché en priorité dans la vue semaine.</div>
+  <div class="settingrow" style="justify-content:flex-end"><button class="btn danger" onclick="clearMenuEntry()">Effacer ce repas</button><button class="btn good" onclick="saveMenuEntry()">Enregistrer le repas</button></div>
  </div>
 </div>
 
 <script>
+const APP_VERSION=2.20;
+const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
+const ROTATION_TASKS=[
+ {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
+ {id:'table',icon:'🍴',label:'Table + rangement table'},
+ {id:'trash',icon:'🗑️',label:'Poubelles'},
+ {id:'salon',icon:'🧹',label:'Rangement salon + couloirs'}
+];
+const GIRLS_SHARED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'}];
+const EVENING_ROUTINE=[{id:'teeth',icon:'🦷',label:'Se laver les dents',points:0},{id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure',points:0}];
+const DEFAULT_TRANSPORTS=[{id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},{id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}];
+const CARE_OPTIONS=[{id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},{id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}];
+const ANCHOR=new Date(2026,7,17,12,0,0,0);
+let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
+let currentLang=localStorage.getItem('familyFlowLang')||'fr';
+let parentUnlocked=false,pinBuffer='',pinMode='unlock',editingPlannerId=null,menuWeekDate=new Date(selectedDay),menuEditDay=null,menuEditMeal='lunch';
+if(!localStorage.getItem('familyParentPin'))localStorage.setItem('familyParentPin','2468');
 
-const I18N = {
- fr:{
-  nav_today:"Aujourd’hui",nav_week:"Semaine",nav_planner:"Planning",nav_menus:"Menus",nav_points:"Points",nav_rules:"Règles",nav_settings:"Réglages",
-  top_subtitle:"organisation familiale • tâches • menus • points",settings_title:"⚙️ Réglages",settings_subtitle:"Sauvegarde locale + synchronisation Supabase facultative.",
-  language_title:"🌍 Langue de l’application",language_help:"Le choix est enregistré sur cet appareil.",
-  menus_title:"🍽️ Menus de la semaine",menus_subtitle:"Parents et enfants séparés par défaut • possibilité d’activer un menu commun repas par repas.",
-  parents:"Parents",children:"Enfants",common_menu:"Menu commun",add_edit_meal:"＋ Ajouter / modifier un repas",copy_next_week:"📋 Copier la semaine suivante",
-  how_it_works:"💡 Fonctionnement",edit_meal:"🍽️ Modifier le repas",close:"Fermer",same_menu_all:"Même menu pour tous",
-  same_menu_help:"Parents et enfants auront exactement le même repas.",dish:"Plat",protein:"Protéine",side:"Accompagnement",dessert:"Dessert",
-  delete_meal:"Effacer ce repas",save_meal:"Enregistrer le repas",specific_tasks:"🏠 Tâches spécifiques & communes",evening_routine:"🌙 Routine du soir — Solé & Calista",
-  house_rules:"🏠 Règles de la maison",daily_points:"⭐ Points du jour — comportement & attitude",week_tracking:"📅 Suivi de la semaine",
-  rotation_6w:"🔁 Rotation des 6 prochaines semaines",family_points:"🏆 Points famille",recent_history:"Historique récent",scoring:"Barème",
-  parent_mode:"🔐 Mode parent",sync_title:"☁️ Synchronisation iPhone ↔ iPad",backup:"💾 Sauvegarde",daily_habits_week:"🗓️ Habitudes quotidiennes — suivi jour par jour",daily_habits_help:"Contrairement aux tâches hebdomadaires, ces habitudes ont une case pour chaque jour de la semaine.",
-  today:"Aujourd’hui",local_mode:"Mode local",offline_local:"Hors ligne — sauvegarde locale",cloud_configured:"Cloud configuré",
-  lunch:"Midi",dinner:"Soir",edit:"✏️ Modifier",to_define:"À définir",meal_deleted_confirm:"Effacer ce repas ?",
-  week_copy_confirm:"Copier tous les menus de cette semaine vers la semaine suivante ?",week_copied:"✅ Semaine copiée.",
-  parent_locked:"🔒 Parent",parent_unlocked:"🔓 Parent"
- },
- en:{
-  nav_today:"Today",nav_week:"Week",nav_planner:"Planning",nav_menus:"Menus",nav_points:"Points",nav_rules:"Rules",nav_settings:"Settings",
-  top_subtitle:"family organization • tasks • menus • points",settings_title:"⚙️ Settings",settings_subtitle:"Local backup + optional Supabase sync.",
-  language_title:"🌍 App language",language_help:"The choice is saved on this device.",
-  menus_title:"🍽️ Weekly menus",menus_subtitle:"Parents and children are separate by default • a shared menu can be enabled meal by meal.",
-  parents:"Parents",children:"Children",common_menu:"Shared menu",add_edit_meal:"＋ Add / edit a meal",copy_next_week:"📋 Copy to next week",
-  how_it_works:"💡 How it works",edit_meal:"🍽️ Edit meal",close:"Close",same_menu_all:"Same menu for everyone",
-  same_menu_help:"Parents and children will have exactly the same meal.",dish:"Dish",protein:"Protein",side:"Side",dessert:"Dessert",
-  delete_meal:"Delete this meal",save_meal:"Save meal",specific_tasks:"🏠 Specific & shared tasks",evening_routine:"🌙 Evening routine — Solé & Calista",
-  house_rules:"🏠 House rules",daily_points:"⭐ Daily points — behavior & attitude",week_tracking:"📅 Weekly tracking",
-  rotation_6w:"🔁 Next 6 weeks rotation",family_points:"🏆 Family points",recent_history:"Recent history",scoring:"Scoring",
-  parent_mode:"🔐 Parent mode",sync_title:"☁️ iPhone ↔ iPad sync",backup:"💾 Backup",daily_habits_week:"🗓️ Daily habits — day-by-day tracking",daily_habits_help:"Unlike weekly tasks, these habits have one checkbox for each day of the week.",
-  today:"Today",local_mode:"Local mode",offline_local:"Offline — local backup",cloud_configured:"Cloud configured",
-  lunch:"Lunch",dinner:"Dinner",edit:"✏️ Edit",to_define:"To define",meal_deleted_confirm:"Delete this meal?",
-  week_copy_confirm:"Copy all menus from this week to the next week?",week_copied:"✅ Week copied.",
-  parent_locked:"🔒 Parent",parent_unlocked:"🔓 Parent"
- },
- es:{
-  nav_today:"Hoy",nav_week:"Semana",nav_planner:"Planificación",nav_menus:"Menús",nav_points:"Puntos",nav_rules:"Reglas",nav_settings:"Ajustes",
-  top_subtitle:"organización familiar • tareas • menús • puntos",settings_title:"⚙️ Ajustes",settings_subtitle:"Copia local + sincronización Supabase opcional.",
-  language_title:"🌍 Idioma de la aplicación",language_help:"La elección se guarda en este dispositivo.",
-  menus_title:"🍽️ Menús de la semana",menus_subtitle:"Padres e hijos separados por defecto • se puede activar un menú común para cada comida.",
-  parents:"Padres",children:"Niños",common_menu:"Menú común",add_edit_meal:"＋ Añadir / modificar una comida",copy_next_week:"📋 Copiar a la semana siguiente",
-  how_it_works:"💡 Funcionamiento",edit_meal:"🍽️ Modificar comida",close:"Cerrar",same_menu_all:"Mismo menú para todos",
-  same_menu_help:"Padres e hijos tendrán exactamente la misma comida.",dish:"Plato",protein:"Proteína",side:"Acompañamiento",dessert:"Postre",
-  delete_meal:"Eliminar esta comida",save_meal:"Guardar comida",specific_tasks:"🏠 Tareas específicas y comunes",evening_routine:"🌙 Rutina de noche — Solé y Calista",
-  house_rules:"🏠 Reglas de la casa",daily_points:"⭐ Puntos del día — comportamiento y actitud",week_tracking:"📅 Seguimiento semanal",
-  rotation_6w:"🔁 Rotación de las próximas 6 semanas",family_points:"🏆 Puntos familiares",recent_history:"Historial reciente",scoring:"Baremo",
-  parent_mode:"🔐 Modo padres",sync_title:"☁️ Sincronización iPhone ↔ iPad",backup:"💾 Copia de seguridad",daily_habits_week:"🗓️ Hábitos diarios — seguimiento día a día",daily_habits_help:"A diferencia de las tareas semanales, estos hábitos tienen una casilla para cada día.",
-  today:"Hoy",local_mode:"Modo local",offline_local:"Sin conexión — copia local",cloud_configured:"Cloud configurado",
-  lunch:"Mediodía",dinner:"Noche",edit:"✏️ Modificar",to_define:"Por definir",meal_deleted_confirm:"¿Eliminar esta comida?",
-  week_copy_confirm:"¿Copiar todos los menús de esta semana a la siguiente?",week_copied:"✅ Semana copiada.",
-  parent_locked:"🔒 Padres",parent_unlocked:"🔓 Padres"
- },
- it:{
-  nav_today:"Oggi",nav_week:"Settimana",nav_planner:"Planning",nav_menus:"Menu",nav_points:"Punti",nav_rules:"Regole",nav_settings:"Impostazioni",
-  top_subtitle:"organizzazione familiare • attività • menu • punti",settings_title:"⚙️ Impostazioni",settings_subtitle:"Backup locale + sincronizzazione Supabase opzionale.",
-  language_title:"🌍 Lingua dell’app",language_help:"La scelta viene salvata su questo dispositivo.",
-  menus_title:"🍽️ Menu della settimana",menus_subtitle:"Genitori e bambini separati per impostazione predefinita • è possibile attivare un menu comune per ogni pasto.",
-  parents:"Genitori",children:"Bambini",common_menu:"Menu comune",add_edit_meal:"＋ Aggiungi / modifica un pasto",copy_next_week:"📋 Copia alla settimana successiva",
-  how_it_works:"💡 Come funziona",edit_meal:"🍽️ Modifica pasto",close:"Chiudi",same_menu_all:"Stesso menu per tutti",
-  same_menu_help:"Genitori e bambini avranno esattamente lo stesso pasto.",dish:"Piatto",protein:"Proteina",side:"Contorno",dessert:"Dessert",
-  delete_meal:"Elimina questo pasto",save_meal:"Salva pasto",specific_tasks:"🏠 Attività specifiche e comuni",evening_routine:"🌙 Routine serale — Solé e Calista",
-  house_rules:"🏠 Regole di casa",daily_points:"⭐ Punti del giorno — comportamento e atteggiamento",week_tracking:"📅 Monitoraggio settimanale",
-  rotation_6w:"🔁 Rotazione delle prossime 6 settimane",family_points:"🏆 Punti famiglia",recent_history:"Cronologia recente",scoring:"Punteggio",
-  parent_mode:"🔐 Modalità genitore",sync_title:"☁️ Sincronizzazione iPhone ↔ iPad",backup:"💾 Backup",daily_habits_week:"🗓️ Daily habits — day-by-day tracking",daily_habits_help:"Unlike weekly tasks, these habits have one checkbox for each day of the week.",
-  today:"Oggi",local_mode:"Modalità locale",offline_local:"Offline — backup locale",cloud_configured:"Cloud configurato",
-  lunch:"Pranzo",dinner:"Cena",edit:"✏️ Modifica",to_define:"Da definire",meal_deleted_confirm:"Eliminare questo pasto?",
-  week_copy_confirm:"Copiare tutti i menu di questa settimana alla prossima?",week_copied:"✅ Settimana copiata.",
-  parent_locked:"🔒 Genitore",parent_unlocked:"🔓 Genitore"
- },
- de:{
-  nav_today:"Heute",nav_week:"Woche",nav_planner:"Planung",nav_menus:"Menüs",nav_points:"Punkte",nav_rules:"Regeln",nav_settings:"Einstellungen",
-  top_subtitle:"Familienorganisation • Aufgaben • Menüs • Punkte",settings_title:"⚙️ Einstellungen",settings_subtitle:"Lokale Sicherung + optionale Supabase-Synchronisierung.",
-  language_title:"🌍 App-Sprache",language_help:"Die Auswahl wird auf diesem Gerät gespeichert.",
-  menus_title:"🍽️ Wochenmenüs",menus_subtitle:"Eltern und Kinder standardmäßig getrennt • ein gemeinsames Menü kann pro Mahlzeit aktiviert werden.",
-  parents:"Eltern",children:"Kinder",common_menu:"Gemeinsames Menü",add_edit_meal:"＋ Mahlzeit hinzufügen / bearbeiten",copy_next_week:"📋 In nächste Woche kopieren",
-  how_it_works:"💡 So funktioniert es",edit_meal:"🍽️ Mahlzeit bearbeiten",close:"Schließen",same_menu_all:"Gleiches Menü für alle",
-  same_menu_help:"Eltern und Kinder bekommen genau dieselbe Mahlzeit.",dish:"Gericht",protein:"Protein",side:"Beilage",dessert:"Dessert",
-  delete_meal:"Diese Mahlzeit löschen",save_meal:"Mahlzeit speichern",specific_tasks:"🏠 Spezifische & gemeinsame Aufgaben",evening_routine:"🌙 Abendroutine — Solé & Calista",
-  house_rules:"🏠 Hausregeln",daily_points:"⭐ Tagespunkte — Verhalten & Haltung",week_tracking:"📅 Wochenübersicht",
-  rotation_6w:"🔁 Rotation der nächsten 6 Wochen",family_points:"🏆 Familienpunkte",recent_history:"Letzter Verlauf",scoring:"Punktesystem",
-  parent_mode:"🔐 Elternmodus",sync_title:"☁️ iPhone ↔ iPad Synchronisierung",backup:"💾 Sicherung",daily_habits_week:"🗓️ Tägliche Gewohnheiten — Tag für Tag",daily_habits_help:"Im Gegensatz zu Wochenaufgaben haben diese Gewohnheiten für jeden Tag ein eigenes Kästchen.",
-  today:"Heute",local_mode:"Lokaler Modus",offline_local:"Offline — lokale Sicherung",cloud_configured:"Cloud konfiguriert",
-  lunch:"Mittag",dinner:"Abend",edit:"✏️ Bearbeiten",to_define:"Noch offen",meal_deleted_confirm:"Diese Mahlzeit löschen?",
-  week_copy_confirm:"Alle Menüs dieser Woche in die nächste Woche kopieren?",week_copied:"✅ Woche kopiert.",
-  parent_locked:"🔒 Eltern",parent_unlocked:"🔓 Eltern"
- }
-};
-let currentLang = localStorage.getItem('familyFlowLang') || 'fr';
-function t(key){return (I18N[currentLang]&&I18N[currentLang][key]) || I18N.fr[key] || key}
-function applyTranslations(){
- document.documentElement.lang=currentLang;
- document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); if(t(k)) el.textContent=t(k)});
- const a=document.getElementById('langSelectTop'), b=document.getElementById('langSelectSettings');
- if(a)a.value=currentLang;if(b)b.value=currentLang;
- renderAll();
-}
-function setLanguage(lang){
- if(!I18N[lang]) return;
- currentLang=lang;localStorage.setItem('familyFlowLang',lang);
- applyTranslations();
-}
-
-
-function currentLocale(){return {fr:'fr-CH',en:'en-GB',es:'es-ES',it:'it-IT',de:'de-CH'}[currentLang]||'fr-CH'}
-
-const PEOPLE=[{id:'sole',name:'Solé',emoji:'',cls:'sole'},{id:'calista',name:'Calista',emoji:'',cls:'calista'},{id:'angela',name:'Angela',emoji:'',cls:'angela'},{id:'yvan',name:'Yvan',emoji:'',cls:'yvan'}];
-const SHARED=[{id:'table',icon:'🍴',label:'Mettre la table + nettoyer la table'},{id:'trash',icon:'🗑️',label:'Poubelles + cartons'},{id:'salon',icon:'🧹',label:'Rangement couloirs + salon'}];
-const GIRL_ROOM={id:'room',icon:'🛏️',label:'Ranger sa chambre'};
-const GIRLS_SHARED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'},{id:'bath',icon:'🛁',label:'Garder la salle de bain rangée'}];
-const ANCHOR=new Date(2026,7,17); let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
-let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:[]},version:2.19,updatedAt:new Date().toISOString()};
-if(!state.menus) state.menus={};
-state.version=Math.max(Number(state.version)||0,2.19);
+let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};
 let cloud=JSON.parse(localStorage.getItem('familyCloudV2')||'null')||{url:'',key:'',familyCode:''};
-let parentUnlocked=false,pinBuffer='',pinMode='unlock';
-if(!localStorage.getItem('familyParentPin')) localStorage.setItem('familyParentPin','2468');
 
-
-function migrateV21ToV22(){
- if(localStorage.getItem('familyBoardV22Migrated')) return;
- // Convert prior duplicated girl checkboxes into new shared/common layout when possible.
- Object.keys(state.checks||{}).forEach(k=>{
-   if(!state.checks[k]) return;
-   let parts=k.split('|');
-   if(parts.length!==3) return;
-   let [date,p,task]=parts;
-   if((p==='sole'||p==='calista') && (task==='playroom'||task==='bath')){
-     state.checks[`shared|${date}|girls|${task}`]=true;
-   }
-   if((p==='sole'||p==='calista') && task==='room'){
-     state.checks[`shared|${date}|${p}|room`]=true;
-   }
-   if(task==='turtles'){
-     state.checks[`shared|${date}|turtles|turtles`]=true;
-   }
- });
- localStorage.setItem('familyBoardV22Migrated','1');
- localStorage.setItem('familyBoardV2',JSON.stringify(state));
-}
-
-function saveLocal(){state.updatedAt=new Date().toISOString();localStorage.setItem('familyBoardV2',JSON.stringify(state));schedulePush()}
-function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function monday(d){let x=new Date(d);x.setHours(12,0,0,0);let day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);return x}
-function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
-function weekIndex(d){return Math.floor((monday(d)-ANCHOR)/(7*86400000))}
-function formatDate(d){return d.toLocaleDateString(currentLocale(),{weekday:'short',day:'2-digit',month:'2-digit'})}
-function rangeText(d){let m=monday(d),s=addDays(m,6);return `Semaine ${weekIndex(d)+1} — du ${formatDate(m)} au ${formatDate(s)}`}
-function assignments(d){
- let w=((weekIndex(d)%6)+6)%6, dishwasher=w%2===0?'angela':'yvan', other=dishwasher==='angela'?'yvan':'angela', people=[other,'sole','calista'], shift=w%3, out={angela:[],yvan:[],sole:[],calista:[]};
- out[dishwasher].push({id:'dishwasher',icon:'🍽️',label:'Remplir + vider le lave-vaisselle',tag:'Parents uniquement • ⭐ +1 point si cochée'});
- people.forEach((p,i)=>out[p].push({...SHARED[(i+shift)%3],tag:'Tâche rotative de la semaine • ⭐ +1 point si cochée'}));
- return out;
-}
-function turtlePerson(d){
- return PEOPLE[((weekIndex(d)%4)+4)%4];
-}
-function keyCheck(day,p,t){return `${iso(day)}|${p}|${t}`}
-function isDone(day,p,t){return !!state.checks[keyCheck(day,p,t)]}
-function toggle(day,p,t){let k=keyCheck(day,p,t),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-1,'Tâche décochée',day,true)}else{state.checks[k]=true;addPoint(p,1,'Tâche faite',day,true)}saveLocal();renderAll()}
-function addPoint(person,delta,reason,day=selectedDay,silent=false){if(!parentUnlocked&&!silent)return showPin('unlock');state.points.push({id:Date.now()+Math.random(),date:iso(day),person,delta,reason,ts:new Date().toISOString()});saveLocal();if(!silent)renderAll()}
-function scoreFor(person,from=null,to=null){return state.points.filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to))).reduce((a,b)=>a+b.delta,0)}
-function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
-function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag||''}</div></div></div>`).join('')}
-
-
-function sharedKey(day,group,task){return `shared|${iso(day)}|${group}|${task}`}
-function sharedDone(day,group,task){return !!state.checks[sharedKey(day,group,task)]}
-
-function toggleSharedGirls(day,t){
- let k=sharedKey(day,'girls',t);
- let was=!!state.checks[k];
- if(was){
-   delete state.checks[k];
-   ['sole','calista'].forEach(p=>addPoint(p,-1,'Tâche commune décochée',day,true));
- }else{
-   state.checks[k]=true;
-   ['sole','calista'].forEach(p=>addPoint(p,1,'Tâche commune faite',day,true));
- }
- saveLocal(); renderAll();
-}
-
-function toggleTurtles(day){
- const p=turtlePerson(day).id, k=sharedKey(day,'turtles','turtles'), was=!!state.checks[k];
- if(was){delete state.checks[k];addPoint(p,-1,'Tortues décochées',day,true)}
- else{state.checks[k]=true;addPoint(p,1,'Tortues faites',day,true)}
- saveLocal();renderAll();
-}
-
-function roomKey(day,p){return sharedKey(day,p,'room')}
-function roomDone(day,p){return !!state.checks[roomKey(day,p)]}
-function toggleRoom(day,p){
- let k=roomKey(day,p),was=!!state.checks[k];
- if(was){delete state.checks[k];addPoint(p,-1,'Chambre décochée',day,true)}
- else{state.checks[k]=true;addPoint(p,1,'Chambre rangée',day,true)}
- saveLocal();renderAll();
-}
-
-function renderSharedTasks(){
- const turtle=turtlePerson(selectedDay);
- document.getElementById('turtlesCard').innerHTML=`
-   <h4>🐢 Tortues</h4>
-   <div class="task">
-    <button class="check ${sharedDone(selectedDay,'turtles','turtles')?'done':''}" onclick="toggleTurtles(selectedDay)"></button>
-    <div class="label">S’occuper des tortues<div class="tag">Cette semaine : ${turtle.name} • ⭐ +1 point</div></div>
-   </div>`;
- document.getElementById('girlsSharedCard').innerHTML=`
-   <h4>👧👧 Solé + Calista</h4>
-   ${GIRLS_SHARED.map(t=>`
-    <div class="task">
-     <button class="check ${sharedDone(selectedDay,'girls',t.id)?'done':''}" onclick="toggleSharedGirls(selectedDay,'${t.id}')"></button>
-     <div class="label">${t.icon} ${t.label}<div class="tag">Tâche commune • ⭐ +1 point chacune si cochée</div></div>
-    </div>`).join('')}`;
- document.getElementById('roomsCard').innerHTML=`
-   <h4>🛏️ Chambres</h4>
-   ${['sole','calista'].map(id=>{const p=PEOPLE.find(x=>x.id===id);return `
-    <div class="task">
-     <button class="check ${roomDone(selectedDay,id)?'done':''}" onclick="toggleRoom(selectedDay,'${id}')"></button>
-     <div class="label">${p.name} — ranger sa chambre<div class="tag">Tâche individuelle • ⭐ +1 point si cochée</div></div>
-    </div>`}).join('')}`;
-}
-
-const EVENING_ROUTINE=[
- {id:'teeth',icon:'🦷',label:'Se laver les dents',points:1},
- {id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure',points:0}
-];
-
-function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
-function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
-function toggleRoutine(day,p,t){
- let k=routineKey(day,p,t), was=!!state.checks[k];
- let item=EVENING_ROUTINE.find(x=>x.id===t);
- if(was){
-   delete state.checks[k];
-   if(item && item.points>0) addPoint(p,-item.points,item.label+' décoché',day,true);
- }else{
-   state.checks[k]=true;
-   if(item && item.points>0) addPoint(p,item.points,item.label,day,true);
- }
- saveLocal(); renderAll();
-}
-function renderEveningRoutine(){
- const girls=PEOPLE.filter(p=>p.id==='sole'||p.id==='calista');
- document.getElementById('eveningRoutine').innerHTML=girls.map(p=>`
-  <div class="point-card">
-   <h4>${p.name}</h4>
-   ${EVENING_ROUTINE.map(t=>`
-    <div class="task">
-     <button class="check ${routineDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggleRoutine(selectedDay,'${p.id}','${t.id}')"></button>
-     <div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne • ${t.points>0?`⭐ +${t.points} point`:`0 point`}</div></div>
-    </div>`).join('')}
-  </div>`).join('');
-}
-
-function renderToday(){let ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);document.getElementById('rangeTitle').textContent=rangeText(selectedDay);document.getElementById('weekNo').textContent='Sem. '+(weekIndex(selectedDay)+1);document.getElementById('todayLabel').textContent=selectedDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long'});
- document.getElementById('personCards').innerHTML=PEOPLE.map(p=>`<article class="person ${p.cls}"><div class="head"><span>${p.name}</span><span class="scorechip">⭐ ${scoreFor(p.id,m,s)}</span></div><div class="body">${personTasksHtml(p,ass[p.id])}</div></article>`).join('');
- document.getElementById('pointsCards').innerHTML=PEOPLE.map(p=>`<div class="point-card"><h4>${p.name}<span style="float:right">⭐ ${scoreFor(p.id,selectedDay,selectedDay)}</span></h4><div class="quick parentOnly"><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Repas sans cris')">+1 Repas calme</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Aide spontanée')">+1 Aide</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Bonne attitude')">+1 Positif</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Cris / ton agressif')">−1 Cris</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Manque de respect')">−1 Respect</button><button class="pbtn neutral" onclick="customPoint('${p.id}')">Autre…</button></div><div class="small">${parentUnlocked?'Mode parent : modification autorisée':'🔒 Points modifiables en mode parent'}</div></div>`).join('');
-}
-function customPoint(p){if(!parentUnlocked)return showPin('unlock');let reason=prompt('Raison du point :');if(!reason)return;let n=parseInt(prompt('Valeur (+1, -1, +2…)','1'),10);if(!Number.isFinite(n))return alert('Valeur invalide');addPoint(p,n,reason)}
-
-function renderDailyRoutineWeek(){
- const box=document.getElementById('dailyRoutineWeek'); if(!box)return;
- const m=monday(selectedDay), days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));
- let html='<div></div>'+days.map(d=>`<div class="dh">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- const girls=PEOPLE.filter(p=>p.id==='sole'||p.id==='calista');
- girls.forEach(p=>{
-   EVENING_ROUTINE.forEach(ti=>{
-     html+=`<div class="routine-label"><b>${p.name} — ${ti.icon} ${escapeHtml(ti.label)}</b><span>${ti.points>0?`⭐ +${ti.points} point`:'0 point'} • quotidien</span></div>`;
-     days.forEach(d=>{
-       const todayClass=iso(d)===iso(new Date())?' today-col':'';
-       html+=`<div class="daily-check-cell${todayClass}">
-         <button type="button" class="check ${routineDone(d,p.id,ti.id)?'done':''}" onclick="toggleRoutine(new Date(${d.getFullYear()},${d.getMonth()},${d.getDate()},12),'${p.id}','${ti.id}')"></button>
-       </div>`;
-     });
-   });
- });
- box.innerHTML=html;
-}
-
-function renderWeek(){let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);let h='<tr><th>Personne</th>'+days.map(d=>`<th>${formatDate(d)}</th>`).join('')+'<th>Score</th></tr>';h+=PEOPLE.map(p=>`<tr><td><b>${p.name}</b></td>`+days.map(d=>{let tasks=assignments(d)[p.id],done=tasks.filter(t=>isDone(d,p.id,t.id)).length;
-   let extra=0,totalExtra=0;
-   if(p.id==='sole'||p.id==='calista'){
-     totalExtra+=3;
-     if(roomDone(d,p.id))extra++;
-     GIRLS_SHARED.forEach(t=>{if(sharedDone(d,'girls',t.id))extra++});
-   }
-   if(turtlePerson(d).id===p.id){totalExtra++;if(sharedDone(d,'turtles','turtles'))extra++}
-   return `<td>${done+extra}/${tasks.length+totalExtra}<br><span class="small">⭐ ${scoreFor(p.id,d,d)}</span></td>`}).join('')+`<td><b>${scoreFor(p.id,m,addDays(m,6))}</b></td></tr>`).join('');document.getElementById('weekTable').innerHTML=h;
- document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d),line=PEOPLE.map(p=>`${p.name}: ${a[p.id].find(x=>['dishwasher','table','trash','salon'].includes(x.id))?.label||'—'}`).join('<br>'),t=turtlePerson(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${line}<br>🐢 Tortues : ${t.name}</div>`}).join('');
-}
-function renderPoints(){let m=monday(selectedDay),s=addDays(m,6);document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+PEOPLE.map(p=>`<div class="task"><div class="label">${p.name}</div><b style="font-size:22px">${scoreFor(p.id,m,s)>=0?'+':''}${scoreFor(p.id,m,s)} ⭐</b></div>`).join('');let recent=[...state.points].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,40);document.getElementById('history').innerHTML=recent.length?recent.map(x=>{let p=PEOPLE.find(p=>p.id===x.person);return `<div class="task"><div class="label">${p?.emoji||''} ${p?.name||x.person}<div class="tag">${x.date} — ${x.reason}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`}).join(''):'<div class="small">Aucun point enregistré.</div>'}
-
-let menuWeekDate=new Date(selectedDay);
-let menuEditDay=null, menuEditMeal='lunch';
-
-function menuBlank(){
- return {common:false,parents:{dish:'',protein:'',side:'',dessert:''},children:{dish:'',protein:'',side:'',dessert:''},shared:{dish:'',protein:'',side:'',dessert:''}};
-}
-function menuDayObj(day){
- const k=iso(day);
- if(!state.menus[k]) state.menus[k]={};
- return state.menus[k];
-}
-function menuEntry(day,meal){
- const obj=menuDayObj(day);
- if(!obj[meal]) obj[meal]=menuBlank();
- const e=obj[meal];
- e.parents=e.parents||{dish:'',protein:'',side:'',dessert:''};
- e.children=e.children||{dish:'',protein:'',side:'',dessert:''};
- e.shared=e.shared||{dish:'',protein:'',side:'',dessert:''};
- e.common=!!e.common;
- return e;
-}
-function mealLabel(meal){return meal==='lunch'?t('lunch'):t('dinner')}
-function menuSummary(o){
- const extras=[o.protein,o.side,o.dessert].filter(Boolean);
- return {main:o.dish||extras[0]||'',sub:extras.filter(x=>x!==o.dish).slice(0,2).join(' • ')};
-}
-function menuMiniHtml(kind,o){
- const s=menuSummary(o);
- const title=kind==='parents'?t('parents'):kind==='children'?t('children'):t('common_menu');
- return `<div class="menu-mini ${kind==='common'?'commonbox':kind}">
-   <div class="menu-mini-title">${kind==='parents'?'👨‍👩 ':kind==='children'?'👧👧 ':'👨‍👩‍👧‍👧 '}${title}</div>
-   ${s.main?`<div class="menu-main">${escapeHtml(s.main)}</div>${s.sub?`<div class="menu-sub">${escapeHtml(s.sub)}</div>`:''}`:'<div class="menu-empty">À définir</div>'}
- </div>`;
-}
-function escapeHtml(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function renderMenus(){
- const base=monday(menuWeekDate), days=[0,1,2,3,4,5,6].map(i=>addDays(base,i));
- const end=days[6];
- const range=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
- const title=document.getElementById('menuRangeTitle'); if(title) title.textContent=range;
- const grid=document.getElementById('menuGrid'); if(!grid)return;
- let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- ['lunch','dinner'].forEach(meal=>{
-   html+=`<div class="menu-meal-label">${meal==='lunch'?'☀️':'🌙'}<br>${mealLabel(meal)}</div>`;
-   days.forEach(d=>{
-     const e=menuEntry(d,meal);
-     html+=`<div class="menu-cell ${e.common?'common':''}">
-       ${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}
-       <button type="button" class="menu-edit" onclick="openMenuEditorIso('${iso(d)}','${meal}')">${t('edit')}</button>
-     </div>`;
-   });
- });
- grid.innerHTML=html;
-}
-function moveMenuWeek(n){menuWeekDate=addDays(menuWeekDate,n*7);renderMenus()}
-function openMenuEditorIso(dateStr,meal){
- const parts=dateStr.split('-').map(Number);
- const day=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0);
- openMenuEditor(day,meal);
-}
-function openMenuEditor(day,meal){
- menuEditDay=new Date(day); menuEditMeal=meal;
- const e=menuEntry(menuEditDay,menuEditMeal);
- document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+mealLabel(meal);
- document.getElementById('menuCommonToggle').checked=e.common;
- [['mp_',e.parents],['mc_',e.children],['mcom_',e.shared]].forEach(([pre,o])=>{
-   ['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||'');
- });
- toggleMenuEditorMode();
- const modal=document.getElementById('menuModal');
- modal.classList.add('show');
- setTimeout(()=>{ const first=document.querySelector('#menuModal input:not([type="checkbox"])'); if(first) first.focus(); },50);
-}
-function closeMenuEditor(){document.getElementById('menuModal').classList.remove('show')}
-function toggleMenuEditorMode(){
- const on=document.getElementById('menuCommonToggle').checked;
- document.getElementById('menuModalBox').classList.toggle('common-mode',on);
-}
-function readMealFields(pre){
- return {dish:document.getElementById(pre+'dish').value.trim(),protein:document.getElementById(pre+'protein').value.trim(),side:document.getElementById(pre+'side').value.trim(),dessert:document.getElementById(pre+'dessert').value.trim()};
-}
-function saveMenuEntry(){
- if(!menuEditDay)return;
- const e=menuEntry(menuEditDay,menuEditMeal);
- e.common=document.getElementById('menuCommonToggle').checked;
- e.parents=readMealFields('mp_'); e.children=readMealFields('mc_'); e.shared=readMealFields('mcom_');
- saveLocal(); closeMenuEditor(); renderMenus();
-}
-function clearMenuEntry(){
- if(!menuEditDay)return;
- if(!confirm(t('meal_deleted_confirm')))return;
- const k=iso(menuEditDay);
- if(state.menus[k]) delete state.menus[k][menuEditMeal];
- saveLocal(); closeMenuEditor(); renderMenus();
-}
-function copyMenuWeek(){
- const src=monday(menuWeekDate), dest=addDays(src,7);
- if(!confirm(t('week_copy_confirm')))return;
- for(let i=0;i<7;i++){
-   const sKey=iso(addDays(src,i)), dKey=iso(addDays(dest,i));
-   if(state.menus[sKey]) state.menus[dKey]=JSON.parse(JSON.stringify(state.menus[sKey]));
- }
- saveLocal(); alert(t('week_copied'));
-}
-
-
-
-const DEFAULT_TRANSPORTS=[
- {id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},
- {id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}
-];
-const CARE_OPTIONS=[
- {id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},
- {id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}
-];
-let editingPlannerId=null;
-function ensurePlannerState(){
+function ensureState(){
+ state.checks=state.checks||{};state.points=Array.isArray(state.points)?state.points:[];state.menus=state.menus||{};
  if(!state.planner||typeof state.planner!=='object')state.planner={};
  if(!Array.isArray(state.planner.events))state.planner.events=[];
  if(!Array.isArray(state.planner.places))state.planner.places=[];
  if(!Array.isArray(state.planner.transportModes)||!state.planner.transportModes.length)state.planner.transportModes=DEFAULT_TRANSPORTS.map(x=>({...x}));
  if(!state.planner.calendarSync)state.planner.calendarSync={google:{mode:'two-way'},outlook:{mode:'two-way'},apple:{mode:'two-way'}};
  ['google','outlook','apple'].forEach(k=>{if(!state.planner.calendarSync[k])state.planner.calendarSync[k]={mode:'two-way'}});
+ state.version=APP_VERSION;
 }
-function activeTransports(){ensurePlannerState();return state.planner.transportModes.filter(x=>x.enabled!==false)}
+ensureState();
+
+const I18N={
+ fr:{top_subtitle:'organisation familiale • tâches • planning • menus • points'},
+ en:{top_subtitle:'family organisation • tasks • planning • menus • points'},
+ es:{top_subtitle:'organización familiar • tareas • planificación • menús • puntos'},
+ it:{top_subtitle:'organizzazione familiare • compiti • pianificazione • menu • punti'},
+ de:{top_subtitle:'Familienorganisation • Aufgaben • Planung • Menüs • Punkte'}
+};
+function setLanguage(l){currentLang=l;localStorage.setItem('familyFlowLang',l);applyTranslations();renderAll()}
+function applyTranslations(){document.getElementById('langSelectTop').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{let k=el.dataset.i18n;if(I18N[currentLang]?.[k])el.textContent=I18N[currentLang][k]})}
+function currentLocale(){return {fr:'fr-CH',en:'en-GB',es:'es-ES',it:'it-IT',de:'de-CH'}[currentLang]||'fr-CH'}
+
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function monday(d){let x=new Date(d);x.setHours(12,0,0,0);let day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);return x}
+function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
+function weekIndex(d){return Math.floor((monday(d)-ANCHOR)/(7*86400000))}
+function formatDate(d){return d.toLocaleDateString(currentLocale(),{weekday:'short',day:'2-digit',month:'2-digit'})}
+function rangeText(d){let m=monday(d),s=addDays(m,6);return `Semaine ${weekIndex(d)+1} — du ${formatDate(m)} au ${formatDate(s)}`}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function saveLocal(){state.updatedAt=new Date().toISOString();state.version=APP_VERSION;localStorage.setItem('familyBoardV2',JSON.stringify(state));schedulePush()}
+
+function assignments(d){
+ let w=((weekIndex(d)%4)+4)%4;
+ let out={sole:[],calista:[],angela:[],yvan:[]};
+ PEOPLE.forEach((p,i)=>out[p.id].push({...ROTATION_TASKS[(i+w)%ROTATION_TASKS.length],tag:'Responsabilité principale de la semaine • ⭐ +2 points'}));
+ return out;
+}
+function turtlePerson(d){return PEOPLE[((weekIndex(d)%4)+4)%4]}
+function keyCheck(day,p,t){return `week|${iso(monday(day))}|${p}|${t}`}
+function isDone(day,p,t){return !!state.checks[keyCheck(day,p,t)]}
+function toggle(day,p,t){let k=keyCheck(day,p,t),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-2,'Responsabilité hebdomadaire décochée',day,true)}else{state.checks[k]=true;addPoint(p,2,'Responsabilité hebdomadaire faite',day,true)}saveLocal();renderAll()}
+function sharedKey(day,group,task){return `sharedweek|${iso(monday(day))}|${group}|${task}`}
+function sharedDone(day,group,task){return !!state.checks[sharedKey(day,group,task)]}
+function toggleSharedGirls(day,t){let k=sharedKey(day,'girls',t);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+function toggleTurtles(day){const p=turtlePerson(day).id,k=sharedKey(day,'turtles','turtles'),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-1,'Tortues décochées',day,true)}else{state.checks[k]=true;addPoint(p,1,'Tortues faites',day,true)}saveLocal();renderAll()}
+function roomKey(day,p){return sharedKey(day,p,'room')}
+function roomDone(day,p){return !!state.checks[roomKey(day,p)]}
+function toggleRoom(day,p){let k=roomKey(day,p);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
+function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
+function toggleRoutine(day,p,t){let k=routineKey(day,p,t);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+
+function addPoint(person,delta,reason,day=selectedDay,silent=false){
+ if(!parentUnlocked&&!silent)return showPin('unlock');
+ state.points.push({id:Date.now()+Math.random(),date:iso(day),person,delta,reason,ts:new Date().toISOString()});
+ saveLocal();if(!silent)renderAll()
+}
+function scoreFor(person,from=null,to=null){return state.points.filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to))).reduce((a,b)=>a+Number(b.delta||0),0)}
+function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
+function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag}</div></div></div>`).join('')}
+
+function renderToday(){
+ let ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);
+ document.getElementById('rangeTitle').textContent=rangeText(selectedDay);document.getElementById('weekNo').textContent='Sem. '+(weekIndex(selectedDay)+1);
+ document.getElementById('personCards').innerHTML=PEOPLE.map(p=>`<article class="person ${p.cls}"><div class="head"><span>${p.name}</span><span class="scorechip">⭐ ${scoreFor(p.id,m,s)}</span></div><div class="body">${personTasksHtml(p,ass[p.id])}</div></article>`).join('');
+ document.getElementById('pointsCards').innerHTML=PEOPLE.map(p=>`<div class="point-card"><h4>${p.name}</h4><div class="quick parentOnly"><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Comportement positif')">+1 positif</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Comportement à corriger')">−1</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Aide spontanée')">+1 aide</button><button class="pbtn neutral" onclick="addPoint('${p.id}',1,'Effort particulier')">+1 effort</button></div><div class="small">Score semaine : <b>${scoreFor(p.id,m,s)}</b></div></div>`).join('');
+ renderSharedTasks();renderEveningRoutine()
+}
+function renderSharedTasks(){
+ const turtle=turtlePerson(selectedDay);
+ document.getElementById('turtlesCard').innerHTML=`<h4>🐢 Tortues</h4><div class="task"><button class="check ${sharedDone(selectedDay,'turtles','turtles')?'done':''}" onclick="toggleTurtles(selectedDay)"></button><div class="label">S’occuper des tortues<div class="tag">Cette semaine : ${turtle.name} • ⭐ +1 point</div></div></div>`;
+ document.getElementById('girlsSharedCard').innerHTML=`<h4>👧👧 Solé + Calista</h4>${GIRLS_SHARED.map(t=>`<div class="task"><button class="check ${sharedDone(selectedDay,'girls',t.id)?'done':''}" onclick="toggleSharedGirls(selectedDay,'${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">Responsabilité commune • suivi uniquement • 0 point</div></div></div>`).join('')}`;
+ document.getElementById('roomsCard').innerHTML=`<h4>🛏️ Chambres</h4>${['sole','calista'].map(id=>`<div class="task"><button class="check ${roomDone(selectedDay,id)?'done':''}" onclick="toggleRoom(selectedDay,'${id}')"></button><div class="label">${PEOPLE.find(p=>p.id===id).name} — ranger sa propre chambre<div class="tag">Responsabilité personnelle • suivi uniquement • 0 point</div></div></div>`).join('')}`
+}
+function renderEveningRoutine(){document.getElementById('eveningRoutine').innerHTML=['sole','calista'].map(id=>`<div class="point-card"><h4>${PEOPLE.find(p=>p.id===id).name}</h4>${EVENING_ROUTINE.map(t=>`<div class="task"><button class="check ${routineDone(selectedDay,id,t.id)?'done':''}" onclick="toggleRoutine(selectedDay,'${id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne • 0 point</div></div></div>`).join('')}</div>`).join('')}
+
+function renderWeek(){
+ let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);
+ let h='<tr><th>Personne</th>'+days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')+'<th>Score</th></tr>';
+ h+=PEOPLE.map(p=>`<tr><td><b>${p.name}</b></td>${days.map(d=>`<td>${scoreFor(p.id,d,d)} ⭐</td>`).join('')}<td><b>${scoreFor(p.id,m,addDays(m,6))}</b></td></tr>`).join('');
+ document.getElementById('weekTable').innerHTML=h;
+ document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
+ let rh='<table class="weektable"><tr><th>Routine</th>'+days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}</th>`).join('')+'</tr>';
+ ['sole','calista'].forEach(id=>EVENING_ROUTINE.forEach(t=>{rh+=`<tr><td>${PEOPLE.find(p=>p.id===id).name} — ${t.icon} ${t.label}</td>${days.map(d=>`<td><button class="check ${routineDone(d,id,t.id)?'done':''}" onclick="toggleRoutine(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button></td>`).join('')}</tr>`}));
+ rh+='</table>';document.getElementById('dailyRoutineWeek').innerHTML=rh
+}
+
+function menuBlank(){return {common:false,parents:{dish:'',protein:'',side:'',dessert:''},children:{dish:'',protein:'',side:'',dessert:''},shared:{dish:'',protein:'',side:'',dessert:''}}}
+function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};return state.menus[k]}
+function menuEntry(day,meal){const obj=menuDayObj(day);if(!obj[meal])obj[meal]=menuBlank();let e=obj[meal];e.parents=e.parents||{};e.children=e.children||{};e.shared=e.shared||{};e.common=!!e.common;return e}
+function menuSummary(o){let extras=[o.protein,o.side,o.dessert].filter(Boolean);return {main:o.dish||extras[0]||'',sub:extras.filter(x=>x!==o.dish).slice(0,2).join(' • ')}}
+function menuMiniHtml(kind,o){let s=menuSummary(o),title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Menu commun';return `<div class="menu-mini ${kind==='common'?'commonbox':kind}"><div class="menu-mini-title">${kind==='parents'?'👨‍👩 ':kind==='children'?'👧👧 ':'👨‍👩‍👧‍👧 '}${title}</div>${s.main?`<div class="menu-main">${esc(s.main)}</div>${s.sub?`<div class="menu-sub">${esc(s.sub)}</div>`:''}`:'<div class="menu-empty">À définir</div>'}</div>`}
+function renderMenus(){let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
+ let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
+ ['lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='lunch'?'☀️<br>Midi':'🌙<br>Soir'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button class="btn secondary menu-edit" onclick="openMenuEditorIso('${iso(d)}','${meal}')">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html}
+function moveMenuWeek(n){menuWeekDate=addDays(menuWeekDate,n*7);renderMenus()}
+function openMenuEditorIso(dateStr,meal){let [y,m,d]=dateStr.split('-').map(Number);openMenuEditor(new Date(y,m-1,d,12),meal)}
+function openMenuEditor(day,meal){menuEditDay=new Date(day);menuEditMeal=meal;let e=menuEntry(menuEditDay,menuEditMeal);document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='lunch'?'Midi':'Soir');document.getElementById('menuCommonToggle').checked=e.common;
+ [['mp_',e.parents],['mc_',e.children],['mcom_',e.shared]].forEach(([pre,o])=>['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||''));toggleMenuEditorMode();document.getElementById('menuModal').classList.add('show')}
+function closeMenuEditor(){document.getElementById('menuModal').classList.remove('show')}
+function toggleMenuEditorMode(){document.getElementById('menuModalBox').classList.toggle('common-mode',document.getElementById('menuCommonToggle').checked)}
+function readMealFields(pre){return {dish:document.getElementById(pre+'dish').value.trim(),protein:document.getElementById(pre+'protein').value.trim(),side:document.getElementById(pre+'side').value.trim(),dessert:document.getElementById(pre+'dessert').value.trim()}}
+function saveMenuEntry(){if(!menuEditDay)return;let e=menuEntry(menuEditDay,menuEditMeal);e.common=document.getElementById('menuCommonToggle').checked;e.parents=readMealFields('mp_');e.children=readMealFields('mc_');e.shared=readMealFields('mcom_');saveLocal();closeMenuEditor();renderMenus()}
+function clearMenuEntry(){if(!menuEditDay||!confirm('Effacer ce repas ?'))return;let k=iso(menuEditDay);if(state.menus[k])delete state.menus[k][menuEditMeal];saveLocal();closeMenuEditor();renderMenus()}
+function copyMenuWeek(){let src=monday(menuWeekDate),dest=addDays(src,7);if(!confirm('Copier tous les menus de cette semaine vers la semaine suivante ?'))return;for(let i=0;i<7;i++){let sKey=iso(addDays(src,i)),dKey=iso(addDays(dest,i));if(state.menus[sKey])state.menus[dKey]=JSON.parse(JSON.stringify(state.menus[sKey]))}saveLocal();alert('✅ Semaine copiée.')}
+
+function activeTransports(){return state.planner.transportModes.filter(x=>x.enabled!==false)}
 function plannerPersonName(id){return PEOPLE.find(p=>p.id===id)?.name||id}
 function careName(id,personId){if(id==='alone')return `${plannerPersonName(personId)} part/rentre seul(e)`;return CARE_OPTIONS.find(x=>x.id===id)?.label||id}
-function placeById(id){ensurePlannerState();return state.planner.places.find(x=>x.id===id)}
-function transportById(id){ensurePlannerState();return state.planner.transportModes.find(x=>x.id===id)}
+function placeById(id){return state.planner.places.find(x=>x.id===id)}
+function transportById(id){return state.planner.transportModes.find(x=>x.id===id)}
 function minutesText(n){let v=parseInt(n,10);return Number.isFinite(v)&&v>0?`${v} min`:'à calculer'}
-function departureTime(start,mins){if(!start||!mins)return '';let [h,m]=start.split(':').map(Number),d=new Date(2000,0,1,h,m);d.setMinutes(d.getMinutes()-Number(mins));return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-function renderPlanner(){
- ensurePlannerState();
- let range=document.getElementById('plannerWeekRange'), list=document.getElementById('plannerEvents');
- if(!range||!list)return;
- let m=monday(selectedDay),sun=addDays(m,6);range.textContent=rangeText(selectedDay);
- let ev=state.planner.events.filter(e=>e.date>=iso(m)&&e.date<=iso(sun)).sort((a,b)=>(a.date+(a.start||'')).localeCompare(b.date+(b.start||'')));
- list.innerHTML=ev.length?ev.map(e=>{
-   let p=placeById(e.placeId),to=transportById(e.transportOut),tb=transportById(e.transportBack),dep=departureTime(e.start,e.outMinutes);
-   return `<div class="event-card"><div class="event-top"><div><div class="event-title">${plannerPersonName(e.personId)} · ${escapeHtmlPlanner(e.title)}</div><div class="event-meta">📅 ${e.date} · ${e.start||'—'}–${e.end||'—'}<br>📍 ${p?escapeHtmlPlanner(p.name)+' — '+escapeHtmlPlanner(p.address):'Lieu non défini'}<br>${to?.label||'🚗'} Aller : ${careName(e.outCare,e.personId)} · ${minutesText(e.outMinutes)}${dep?` · départ ${dep}`:''}<br>${tb?.label||'🚗'} Retour : ${careName(e.backCare,e.personId)} · ${minutesText(e.backMinutes)}${e.notes?`<br>🎒 ${escapeHtmlPlanner(e.notes)}`:''}</div></div><span class="status-badge">Family Flow</span></div><div class="event-actions parentOnly"><button class="btn secondary" onclick="editPlannerEvent('${e.id}')">Modifier</button><button class="btn danger" onclick="deletePlannerEvent('${e.id}')">Supprimer</button></div></div>`
- }).join(''):'<div class="empty-state">Aucune activité enregistrée cette semaine.</div>';
- renderPlaces();renderTransportModes();renderCalendarConnections();populatePlannerForm();
+function departureTime(start,mins,margin=0){if(!start||!mins)return '';let [h,m]=start.split(':').map(Number),d=new Date(2000,0,1,h,m);d.setMinutes(d.getMinutes()-Number(mins)-Number(margin||0));return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function renderPlanner(){ensureState();let m=monday(selectedDay),sun=addDays(m,6);document.getElementById('plannerWeekRange').textContent=rangeText(selectedDay);let ev=state.planner.events.filter(e=>e.date>=iso(m)&&e.date<=iso(sun)).sort((a,b)=>(a.date+(a.start||'')).localeCompare(b.date+(b.start||'')));
+ document.getElementById('plannerEvents').innerHTML=ev.length?ev.map(e=>{let p=placeById(e.placeId),sp=placeById(e.startPlaceId),to=transportById(e.transportOut),tb=transportById(e.transportBack),dep=departureTime(e.start,e.outMinutes,e.margin);return `<div class="event-card"><div class="event-top"><div><div class="event-title">${plannerPersonName(e.personId)} · ${esc(e.title)}</div><div class="event-meta">📅 ${e.date} · ${e.start||'—'}–${e.end||'—'}<br>📍 ${p?esc(p.name)+' — '+esc(p.address):'Lieu non défini'}<br>🏠 Départ : ${sp?esc(sp.name):'Non défini'}${dep?` · conseillé ${dep}`:''}<br>${to?.label||'🚗'} Aller : ${careName(e.outCare,e.personId)} · ${minutesText(e.outMinutes)} · marge ${e.margin||0} min<br>${tb?.label||'🚗'} Retour : ${careName(e.backCare,e.personId)} · ${minutesText(e.backMinutes)}${e.notes?`<br>🎒 ${esc(e.notes)}`:''}</div></div><span class="status-badge">Family Flow</span></div><div class="event-actions parentOnly"><button class="btn secondary" onclick="editPlannerEvent('${e.id}')">Modifier</button><button class="btn danger" onclick="deletePlannerEvent('${e.id}')">Supprimer</button></div></div>`}).join(''):'<div class="empty-state">Aucune activité enregistrée cette semaine.</div>';
+ renderPlaces();renderTransportModes();renderCalendarConnections();populatePlannerForm()
 }
-function escapeHtmlPlanner(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function populatePlannerForm(){
- let person=document.getElementById('plPerson'),place=document.getElementById('plPlace'),tout=document.getElementById('plTransportOut'),tback=document.getElementById('plTransportBack'),oc=document.getElementById('plOutCare'),bc=document.getElementById('plBackCare');
- if(!person||!place||!tout||!tback||!oc||!bc)return;
- let keep={person:person.value,place:place.value,to:tout.value,tb:tback.value,oc:oc.value,bc:bc.value};
- person.innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
- place.innerHTML='<option value="">— Choisir un lieu —</option>'+state.planner.places.map(p=>`<option value="${p.id}">${escapeHtmlPlanner(p.name)}</option>`).join('');
- let opts=activeTransports().map(t=>`<option value="${t.id}">${t.label}</option>`).join('');tout.innerHTML=opts;tback.innerHTML=opts;
- let care=CARE_OPTIONS.map(x=>`<option value="${x.id}">${x.label}</option>`).join('');oc.innerHTML=care;bc.innerHTML=care;
- if(keep.person)person.value=keep.person;if(keep.place)place.value=keep.place;if(keep.to)tout.value=keep.to;if(keep.tb)tback.value=keep.tb;if(keep.oc)oc.value=keep.oc;if(keep.bc)bc.value=keep.bc;
- let date=document.getElementById('plDate');if(date&&!date.value)date.value=iso(selectedDay);
+function populatePlannerForm(){let person=document.getElementById('plPerson'),place=document.getElementById('plPlace'),startPlace=document.getElementById('plStartPlace'),tout=document.getElementById('plTransportOut'),tback=document.getElementById('plTransportBack'),oc=document.getElementById('plOutCare'),bc=document.getElementById('plBackCare');if(!person)return;
+ let keep={person:person.value,place:place.value,startPlace:startPlace.value,to:tout.value,tb:tback.value,oc:oc.value,bc:bc.value};person.innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');let placeOpts='<option value="">— Choisir un lieu —</option>'+state.planner.places.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');place.innerHTML=placeOpts;startPlace.innerHTML=placeOpts;
+ let opts=activeTransports().map(t=>`<option value="${t.id}">${t.label}</option>`).join('');tout.innerHTML=opts;tback.innerHTML=opts;let care=CARE_OPTIONS.map(x=>`<option value="${x.id}">${x.label}</option>`).join('');oc.innerHTML=care;bc.innerHTML=care;
+ Object.entries(keep).forEach(([k,v])=>{let el={person,place,startPlace,to:tout,tb:tback,oc,bc}[k];if(v&&el)el.value=v});if(!document.getElementById('plDate').value)document.getElementById('plDate').value=iso(selectedDay)
 }
-function resetPlannerForm(){editingPlannerId=null;let title=document.getElementById('plannerFormTitle');if(title)title.textContent='➕ Ajouter une activité';['plTitle','plStart','plEnd','plOutMinutes','plBackMinutes','plNotes'].forEach(id=>{let e=document.getElementById(id);if(e)e.value=''});let d=document.getElementById('plDate');if(d)d.value=iso(selectedDay);populatePlannerForm()}
-function savePlannerEvent(){
- if(!parentUnlocked)return showPin('unlock');ensurePlannerState();let title=document.getElementById('plTitle').value.trim(),date=document.getElementById('plDate').value;if(!title||!date)return alert('Indique au minimum une activité et une date.');
- let data={id:editingPlannerId||('ev-'+Date.now()),personId:document.getElementById('plPerson').value,title,date,start:document.getElementById('plStart').value,end:document.getElementById('plEnd').value,placeId:document.getElementById('plPlace').value,transportOut:document.getElementById('plTransportOut').value,transportBack:document.getElementById('plTransportBack').value,outCare:document.getElementById('plOutCare').value,backCare:document.getElementById('plBackCare').value,outMinutes:document.getElementById('plOutMinutes').value,backMinutes:document.getElementById('plBackMinutes').value,notes:document.getElementById('plNotes').value.trim(),updatedAt:new Date().toISOString(),externalIds:{}};
- let i=state.planner.events.findIndex(x=>x.id===editingPlannerId);if(i>=0)state.planner.events[i]={...state.planner.events[i],...data};else state.planner.events.push(data);saveLocal();resetPlannerForm();renderPlanner();
-}
-function editPlannerEvent(id){let e=state.planner.events.find(x=>x.id===id);if(!e)return;editingPlannerId=id;document.getElementById('plannerFormTitle').textContent='✏️ Modifier l’activité';populatePlannerForm();let map={plPerson:'personId',plTitle:'title',plDate:'date',plStart:'start',plEnd:'end',plPlace:'placeId',plTransportOut:'transportOut',plTransportBack:'transportBack',plOutCare:'outCare',plBackCare:'backCare',plOutMinutes:'outMinutes',plBackMinutes:'backMinutes',plNotes:'notes'};Object.entries(map).forEach(([id,k])=>document.getElementById(id).value=e[k]??'')}
+function resetPlannerForm(){editingPlannerId=null;document.getElementById('plannerFormTitle').textContent='➕ Ajouter une activité';['plTitle','plStart','plEnd','plOutMinutes','plBackMinutes','plNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('plMargin').value='10';document.getElementById('plDate').value=iso(selectedDay);populatePlannerForm()}
+function savePlannerEvent(){if(!parentUnlocked)return showPin('unlock');let title=document.getElementById('plTitle').value.trim(),date=document.getElementById('plDate').value;if(!title||!date)return alert('Indique au minimum une activité et une date.');
+ let data={id:editingPlannerId||('ev-'+Date.now()),personId:document.getElementById('plPerson').value,title,date,start:document.getElementById('plStart').value,end:document.getElementById('plEnd').value,placeId:document.getElementById('plPlace').value,startPlaceId:document.getElementById('plStartPlace').value,margin:document.getElementById('plMargin').value||0,transportOut:document.getElementById('plTransportOut').value,transportBack:document.getElementById('plTransportBack').value,outCare:document.getElementById('plOutCare').value,backCare:document.getElementById('plBackCare').value,outMinutes:document.getElementById('plOutMinutes').value,backMinutes:document.getElementById('plBackMinutes').value,notes:document.getElementById('plNotes').value.trim(),updatedAt:new Date().toISOString(),externalIds:{}};
+ let i=state.planner.events.findIndex(x=>x.id===editingPlannerId);if(i>=0)state.planner.events[i]={...state.planner.events[i],...data};else state.planner.events.push(data);saveLocal();resetPlannerForm();renderPlanner()}
+function editPlannerEvent(id){let e=state.planner.events.find(x=>x.id===id);if(!e)return;editingPlannerId=id;document.getElementById('plannerFormTitle').textContent='✏️ Modifier l’activité';populatePlannerForm();let map={plPerson:'personId',plTitle:'title',plDate:'date',plStart:'start',plEnd:'end',plPlace:'placeId',plStartPlace:'startPlaceId',plMargin:'margin',plTransportOut:'transportOut',plTransportBack:'transportBack',plOutCare:'outCare',plBackCare:'backCare',plOutMinutes:'outMinutes',plBackMinutes:'backMinutes',plNotes:'notes'};Object.entries(map).forEach(([id,k])=>document.getElementById(id).value=e[k]??'')}
 function deletePlannerEvent(id){if(!parentUnlocked)return;if(confirm('Supprimer cette activité ?')){state.planner.events=state.planner.events.filter(x=>x.id!==id);saveLocal();renderPlanner()}}
 function addPlace(){if(!parentUnlocked)return;let n=document.getElementById('placeName').value.trim(),a=document.getElementById('placeAddress').value.trim();if(!n||!a)return alert('Indique un nom et une adresse.');state.planner.places.push({id:'pl-'+Date.now(),name:n,address:a});document.getElementById('placeName').value='';document.getElementById('placeAddress').value='';saveLocal();renderPlanner()}
-function deletePlace(id){if(!parentUnlocked)return;if(state.planner.events.some(e=>e.placeId===id))return alert('Ce lieu est utilisé par une activité. Modifie d’abord l’activité.');state.planner.places=state.planner.places.filter(x=>x.id!==id);saveLocal();renderPlanner()}
-function renderPlaces(){let el=document.getElementById('placesList');if(!el)return;el.innerHTML=state.planner.places.length?state.planner.places.map(p=>`<div class="task"><div class="label">📍 ${escapeHtmlPlanner(p.name)}<div class="tag">${escapeHtmlPlanner(p.address)}</div></div><button class="btn secondary parentOnly" onclick="deletePlace('${p.id}')">×</button></div>`).join(''):'<div class="small">Aucun lieu enregistré.</div>'}
-function toggleTransport(id){if(!parentUnlocked)return showPin('unlock');let t=state.planner.transportModes.find(x=>x.id===id);if(t){t.enabled=t.enabled===false;saveLocal();renderPlanner()}}
-function renderTransportModes(){let el=document.getElementById('transportModes');if(!el)return;el.innerHTML=state.planner.transportModes.map(t=>`<button class="transport-pill ${t.enabled===false?'off':''}" onclick="toggleTransport('${t.id}')">${t.label}</button>`).join('')}
-function setCalendarMode(provider,mode){if(!parentUnlocked)return;state.planner.calendarSync[provider].mode=mode;saveLocal();renderCalendarConnections()}
-function renderCalendarConnections(){let el=document.getElementById('calendarConnections');if(!el)return;let labels={google:'Google Calendar',outlook:'Outlook / Microsoft 365',apple:'Apple Calendar'};el.innerHTML=Object.keys(labels).map(k=>`<div class="calendar-row"><div><b>${labels[k]}</b><div class="small">Connexion API à activer</div></div><select onchange="setCalendarMode('${k}',this.value)"><option value="read" ${state.planner.calendarSync[k].mode==='read'?'selected':''}>Lecture seule</option><option value="push" ${state.planner.calendarSync[k].mode==='push'?'selected':''}>Family Flow → calendrier</option><option value="two-way" ${state.planner.calendarSync[k].mode==='two-way'?'selected':''}>Bidirectionnel</option></select></div>`).join('')}
+function deletePlace(id){if(!parentUnlocked)return;if(state.planner.events.some(e=>e.placeId===id||e.startPlaceId===id))return alert('Ce lieu est utilisé par une activité. Modifie d’abord l’activité.');state.planner.places=state.planner.places.filter(x=>x.id!==id);saveLocal();renderPlanner()}
+function renderPlaces(){document.getElementById('placesList').innerHTML=state.planner.places.length?state.planner.places.map(p=>`<div class="task"><div class="label">📍 ${esc(p.name)}<div class="tag">${esc(p.address)}</div></div><button class="btn secondary parentOnly" onclick="deletePlace('${p.id}')">×</button></div>`).join(''):'<div class="small">Aucun lieu enregistré.</div>'}
+function renderTransportModes(){document.getElementById('transportModes').innerHTML=state.planner.transportModes.map(t=>`<button class="transport-pill ${t.enabled===false?'off':''}" onclick="toggleTransport('${t.id}')">${t.label}</button>`).join('')}
+function toggleTransport(id){if(!parentUnlocked)return showPin('unlock');let t=state.planner.transportModes.find(x=>x.id===id);if(t){t.enabled=t.enabled===false?true:false;saveLocal();renderPlanner()}}
+function renderCalendarConnections(){let names={google:'Google Calendar',outlook:'Outlook / Microsoft 365',apple:'Apple Calendar'};document.getElementById('calendarConnections').innerHTML=Object.keys(names).map(k=>`<div class="syncrow"><div><b>${names[k]}</b><div class="small">Mode prévu : bidirectionnel</div></div><span class="status-badge">À connecter</span></div>`).join('')}
 
-function renderAll(){ensurePlannerState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderPlanner();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
+function renderPoints(){let m=monday(selectedDay),s=addDays(m,6),scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score);document.getElementById('rankCards').innerHTML=scores.map((x,i)=>`<div class="rankcard"><div class="small">#${i+1}</div><b>${x.p.name}</b><div class="score">${x.score} ⭐</div></div>`).join('');
+ document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+PEOPLE.map(p=>`<div class="task"><div class="label">${p.name}</div><b style="font-size:22px">${scoreFor(p.id,m,s)>=0?'+':''}${scoreFor(p.id,m,s)} ⭐</b></div>`).join('');
+ let recent=[...state.points].sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
+}
 
 function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
 function showPin(mode){pinMode=mode;pinBuffer='';document.getElementById('pinView').textContent='';document.getElementById('pinHelp').textContent=mode==='change'?'Saisis le nouveau code PIN (4 chiffres).':'Saisis le code PIN parent.';document.getElementById('pinModal').classList.add('show')}
@@ -982,38 +433,27 @@ document.getElementById('pinPad').innerHTML=['1','2','3','4','5','6','7','8','9'
 function loadCloudFields(){document.getElementById('sbUrl').value=cloud.url||'';document.getElementById('sbKey').value=cloud.key||'';document.getElementById('familyCode').value=cloud.familyCode||''}
 function saveCloudSettings(){if(!parentUnlocked)return;cloud={url:document.getElementById('sbUrl').value.trim().replace(/\/$/,''),key:document.getElementById('sbKey').value.trim(),familyCode:document.getElementById('familyCode').value.trim()};localStorage.setItem('familyCloudV2',JSON.stringify(cloud));updateSyncUI();document.getElementById('cloudMsg').textContent='Configuration enregistrée sur cet appareil.'}
 function cloudReady(){return cloud.url&&cloud.key&&cloud.familyCode}
-function updateSyncUI(){let dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');if(!navigator.onLine){dot.className='syncdot off';txt.textContent=t('offline_local')}else if(cloudReady()){dot.className='syncdot ok';txt.textContent=t('cloud_configured')}else{dot.className='syncdot off';txt.textContent=t('local_mode')}}
+function updateSyncUI(){let dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');if(!navigator.onLine){dot.className='syncdot';txt.textContent='Hors ligne — sauvegarde locale'}else if(cloudReady()){dot.className='syncdot ok';txt.textContent='Cloud configuré'}else{dot.className='syncdot';txt.textContent='Mode local'}}
 async function api(method,body=null){let u=`${cloud.url}/rest/v1/family_boards?family_code=eq.${encodeURIComponent(cloud.familyCode)}`,headers={'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'};let r=await fetch(u,{method,headers,body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(await r.text());return r.status===204?[]:await r.json()}
-async function pushCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Envoi…');let existing=await api('GET');if(existing.length){await api('PATCH',{payload:state,updated_at:new Date().toISOString()})}else{let r=await fetch(`${cloud.url}/rest/v1/family_boards`,{method:'POST',headers:{'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({family_code:cloud.familyCode,payload:state})});if(!r.ok)throw new Error(await r.text())}msg('✅ Synchronisé vers le cloud.')}catch(e){msg('❌ '+e.message)}}
-async function pullCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Récupération…');let arr=await api('GET');if(!arr.length)return msg('Aucune donnée cloud pour ce code famille.');let remote=arr[0].payload;if(remote){state=remote;localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();msg('✅ Données cloud récupérées.')}}catch(e){msg('❌ '+e.message)}}
+async function pushCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Envoi…');let existing=await api('GET');if(existing.length)await api('PATCH',{payload:state,updated_at:new Date().toISOString()});else{let r=await fetch(`${cloud.url}/rest/v1/family_boards`,{method:'POST',headers:{'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({family_code:cloud.familyCode,payload:state})});if(!r.ok)throw new Error(await r.text())}msg('✅ Synchronisé vers le cloud.')}catch(e){msg('❌ '+e.message)}}
+async function pullCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Récupération…');let arr=await api('GET');if(!arr.length)return msg('Aucune donnée cloud pour ce code famille.');if(arr[0].payload){state=arr[0].payload;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();msg('✅ Données cloud récupérées.')}}catch(e){msg('❌ '+e.message)}}
 async function testCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{await api('GET');msg('✅ Connexion Supabase réussie.')}catch(e){msg('❌ '+e.message)}}
 function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-20-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
+function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
+function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
+function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales : tâches, points, menus, planning, lieux et transports ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};ensureState();saveLocal();renderAll()}}
 
-function resetCurrentWeek(){
- if(!parentUnlocked)return showPin('unlock');
- if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus sont conservés.'))return;
- const m=monday(selectedDay), s=addDays(m,6), from=iso(m), to=iso(s);
- Object.keys(state.checks||{}).forEach(k=>{
-   const match=k.match(/(\d{4}-\d{2}-\d{2})/);
-   if(match && match[1]>=from && match[1]<=to) delete state.checks[k];
- });
- state.points=(state.points||[]).filter(x=>x.date<from||x.date>to);
- saveLocal();renderAll();
-}
-function resetPointsOnly(){
- if(!parentUnlocked)return showPin('unlock');
- if(confirm('Effacer tous les points enregistrés ? Les tâches cochées et les menus sont conservés.')){
-   state.points=[];saveLocal();renderAll();
- }
-}
+function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
+function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderPlanner();renderMenus();renderPoints();loadCloudFields();updateSyncUI();applyTranslations()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
-function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales (tâches, points, menus, planning, lieux et réglages de transport) ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:2.19,updatedAt:new Date().toISOString()};saveLocal();renderAll()}}
-migrateV21ToV22();ensurePlannerState();state.version=2.19;applyTranslations();if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
+renderAll();
+if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
 </script>
 </body>
 </html>
