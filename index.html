@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.22 — Carballes</title>
+<title>Family Flow V2.23 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -247,7 +247,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.22</b> • Correctif Chrome desktop pour l’édition des menus • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.23</b> • Correction des responsabilités de la semaine en cours • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -277,7 +277,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </div>
 
 <script>
-const APP_VERSION=2.22;
+const APP_VERSION=2.23;
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -334,6 +334,23 @@ function saveLocal(){state.updatedAt=new Date().toISOString();state.version=APP_
 function assignments(d){
  let w=((weekIndex(d)%4)+4)%4;
  let out={sole:[],calista:[],angela:[],yvan:[]};
+
+ // Correction de la semaine de référence actuelle :
+ // Solé = salon + couloirs ; Calista = table ; Angela = poubelles ; Yvan = lave-vaisselle.
+ if(iso(monday(d))==='2026-08-24'){
+   const fixed={
+     sole:'salon',
+     calista:'table',
+     angela:'trash',
+     yvan:'dishwasher'
+   };
+   PEOPLE.forEach(p=>{
+     const task=ROTATION_TASKS.find(t=>t.id===fixed[p.id]);
+     out[p.id].push({...task,tag:'Responsabilité principale de la semaine • ⭐ +2 points'});
+   });
+   return out;
+ }
+
  PEOPLE.forEach((p,i)=>out[p.id].push({...ROTATION_TASKS[(i+w)%ROTATION_TASKS.length],tag:'Responsabilité principale de la semaine • ⭐ +2 points'}));
  return out;
 }
@@ -492,7 +509,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-22-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-23-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
