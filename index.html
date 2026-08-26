@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.17 — Carballes</title>
+<title>Family Flow V2.18 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -162,15 +162,6 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 }
 
 
-.daily-track-wrap{overflow-x:auto;padding-bottom:4px}
-.daily-track{min-width:760px;display:grid;grid-template-columns:170px repeat(7,minmax(72px,1fr));gap:6px;align-items:stretch}
-.daily-track .dh{font-size:11px;font-weight:850;text-align:center;padding:7px 3px;color:#33455f;background:#eef3fa;border-radius:10px}
-.daily-track .routine-label{display:flex;flex-direction:column;justify-content:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#fbfcfe}
-.daily-track .routine-label b{font-size:13px}
-.daily-track .routine-label span{font-size:10px;color:var(--muted);margin-top:2px}
-.daily-check-cell{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:12px;background:white;min-height:52px}
-.daily-check-cell .check{width:30px;height:30px}
-.daily-check-cell.today-col{box-shadow:inset 0 0 0 2px #c6d9f1;background:#f8fbff}
 .menu-edit{touch-action:manipulation;position:relative;z-index:2}
 
 </style>
@@ -209,7 +200,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3 data-i18n="evening_routine">🌙 Routine du soir — Solé & Calista</h3>
-  <div class="small" style="margin-bottom:10px">Rappels quotidiens • une case par jour • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
+  <div class="small" style="margin-bottom:10px">Rappels quotidiens • 🦷 dents = ⭐ +1 point • 🌙 coucher = 0 point</div>
   <div class="points-grid" id="eveningRoutine"></div>
  </div>
 
@@ -305,11 +296,6 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
  <div class="weekhead"><div><h2 data-i18n="week_tracking">📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
  <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
  <div class="section"><h3 data-i18n="rotation_6w">🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
- <div class="section">
-  <h3 data-i18n="daily_habits_week">🗓️ Habitudes quotidiennes — suivi jour par jour</h3>
-  <div class="small" data-i18n="daily_habits_help" style="margin-bottom:10px">Contrairement aux tâches hebdomadaires, ces habitudes ont une case pour chaque jour de la semaine.</div>
-  <div class="daily-track-wrap"><div class="daily-track" id="dailyRoutineWeek"></div></div>
- </div>
 </section>
 
 <section id="points" class="view">
@@ -376,7 +362,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 
 <footer class="footerinfo">
- Version <b>2.17</b> • Dernière mise à jour : <b>26/08/2026</b>
+ Version <b>2.18</b> • Dernière mise à jour : <b>26/08/2026</b>
 </footer>
 
 <nav class="nav">
@@ -554,7 +540,7 @@ function setLanguage(lang){
 
 function currentLocale(){return {fr:'fr-CH',en:'en-GB',es:'es-ES',it:'it-IT',de:'de-CH'}[currentLang]||'fr-CH'}
 
-const PEOPLE=[{id:'angela',name:'Angela',emoji:'',cls:'angela'},{id:'yvan',name:'Yvan',emoji:'',cls:'yvan'},{id:'sole',name:'Solé',emoji:'',cls:'sole'},{id:'calista',name:'Calista',emoji:'',cls:'calista'}];
+const PEOPLE=[{id:'sole',name:'Solé',emoji:'',cls:'sole'},{id:'calista',name:'Calista',emoji:'',cls:'calista'},{id:'angela',name:'Angela',emoji:'',cls:'angela'},{id:'yvan',name:'Yvan',emoji:'',cls:'yvan'}];
 const SHARED=[{id:'table',icon:'🍴',label:'Mettre la table + nettoyer la table'},{id:'trash',icon:'🗑️',label:'Poubelles + cartons'},{id:'salon',icon:'🧹',label:'Rangement couloirs + salon'}];
 const GIRL_ROOM={id:'room',icon:'🛏️',label:'Ranger sa chambre'};
 const GIRLS_SHARED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'},{id:'bath',icon:'🛁',label:'Garder la salle de bain rangée'}];
@@ -845,7 +831,7 @@ function copyMenuWeek(){
  saveLocal(); alert(t('week_copied'));
 }
 
-function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderDailyRoutineWeek();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
+function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
