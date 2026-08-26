@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.31 — Carballes</title>
+<title>Family Flow V2.32 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -62,7 +62,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .rulegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule{background:white;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:750;font-size:14px}
 .settingrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.settingrow input,.settingrow select{padding:9px 10px;border:1px solid var(--line);border-radius:10px;min-width:200px}
 .btn{border:0;border-radius:10px;padding:9px 12px;font-weight:850;background:var(--navy);color:white;font-size:13px}.btn.secondary{background:#e8eef7;color:#18385e}.btn.danger{background:#a92f37}.btn.good{background:#1e8a4a}
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
 .nav button{border:0;background:transparent;padding:8px 3px 6px;color:#60708b;font-weight:780;font-size:10px}.nav button.active{color:var(--navy)}.nav .ico{display:block;font-size:19px;margin-bottom:2px}
 .rotabox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.rotacell{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;font-size:13px}.rotacell b{display:block;margin-bottom:5px}
 .notice{background:#eef7ff;border:1px solid #b8d8f5;border-radius:13px;padding:11px;font-size:13px}.warn{background:#fff8e6;border-color:#ecd187}.okbox{background:#edf9f1;border-color:#b8dfc6}
@@ -171,7 +171,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .menu-form-card{padding:7px}
   .menu-field{margin:5px 0}
   .menu-field input{padding:7px}
-  .nav{grid-template-columns:repeat(7,1fr)}
+  .nav{grid-template-columns:repeat(6,1fr)}
   .nav button{padding:5px 1px 4px;font-size:7px}
   .nav .ico{font-size:15px;margin-bottom:1px}
   .footerinfo{font-size:9px;padding-bottom:78px}
@@ -417,6 +417,19 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  .food-picker-title{font-size:10px}
 }
 
+
+.setup-steps{display:grid;gap:7px;margin-top:10px}
+.setup-steps>div{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe;font-size:12px}
+.family-account-card{border:1px solid var(--line);border-radius:13px;padding:11px;background:#fbfcfe}
+.family-account-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.family-status{font-size:10px;font-weight:900;border-radius:999px;padding:4px 7px;background:#edf3fb}
+.family-status.ready{background:#e7f7ed;color:#14683a}
+.family-members-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.family-member-preview{border:1px solid var(--line);border-radius:9px;padding:7px;text-align:center;font-size:10px;background:white}
+.family-member-preview b{display:block;font-size:11px}
+.family-account-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+@media(max-width:560px){.family-members-preview{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -429,7 +442,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div class="title"><div class="family-title"><span>Family Flow</span><span class="family-flags">🇪🇸 🇮🇹</span></div></div>
   <button class="pill" onclick="parentButton()" id="parentBtn">🔒 Parent</button>
  </div>
- <div class="subtitle"><span class="syncdot" id="syncDot"></span><span id="syncText">Mode local</span> • <span data-i18n="top_subtitle">organisation familiale • tâches • planning • menus • points</span></div>
+ <div class="subtitle"><span class="syncdot" id="syncDot"></span><span id="syncText">Mode local</span> • <span data-i18n="top_subtitle">organisation familiale • tâches • menus • points</span></div>
 </header>
 
 <main>
@@ -475,45 +488,6 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
  <div class="section"><h3>🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
  <div class="section"><h3>🗓️ Habitudes quotidiennes</h3><div class="small">Dents et coucher restent des rappels quotidiens, sans impact automatique sur le score.</div><div id="dailyRoutineWeek" style="overflow:auto;margin-top:8px"></div></div>
-</section>
-
-<section id="planner" class="view">
- <div class="weekhead"><div><h2>🗓️ Planning enfants & activités</h2><div class="small" id="plannerWeekRange"></div></div><button class="btn secondary" onclick="goToday()">Aujourd’hui</button></div>
- <div class="planner-layout">
-  <div>
-   <div class="section" style="margin-top:0"><h3>📌 Activités de la semaine</h3><div id="plannerEvents"></div></div>
-   <div class="section parentOnly block">
-    <h3 id="plannerFormTitle">➕ Ajouter une activité</h3>
-    <div class="formgrid">
-     <div><div class="fieldlabel">Enfant / membre</div><select id="plPerson"></select></div>
-     <div><div class="fieldlabel">Activité</div><input id="plTitle" placeholder="Ex. Natation"></div>
-     <div><div class="fieldlabel">Date</div><input id="plDate" type="date"></div>
-     <div><div class="fieldlabel">Début</div><input id="plStart" type="time"></div>
-     <div><div class="fieldlabel">Fin</div><input id="plEnd" type="time"></div>
-     <div><div class="fieldlabel">Lieu enregistré</div><select id="plPlace"></select></div>
-     <div><div class="fieldlabel">Point de départ</div><select id="plStartPlace"></select></div>
-     <div><div class="fieldlabel">Marge avant départ (min)</div><input id="plMargin" type="number" min="0" max="120" value="10"></div>
-     <div><div class="fieldlabel">Transport aller</div><select id="plTransportOut"></select></div>
-     <div><div class="fieldlabel">Transport retour</div><select id="plTransportBack"></select></div>
-     <div><div class="fieldlabel">Qui accompagne à l’aller ?</div><select id="plOutCare"></select></div>
-     <div><div class="fieldlabel">Qui s’occupe du retour ?</div><select id="plBackCare"></select></div>
-     <div><div class="fieldlabel">Temps trajet aller (min)</div><input id="plOutMinutes" type="number" min="0" max="300" placeholder="Manuel / API plus tard"></div>
-     <div><div class="fieldlabel">Temps trajet retour (min)</div><input id="plBackMinutes" type="number" min="0" max="300" placeholder="Manuel / API plus tard"></div>
-     <div class="wide"><div class="fieldlabel">À prendre / notes</div><textarea id="plNotes" placeholder="Sac, gourde, équipement, informations utiles…"></textarea></div>
-    </div>
-    <div class="settingrow"><button class="btn good" onclick="savePlannerEvent()">Enregistrer</button><button class="btn secondary" onclick="resetPlannerForm()">Annuler</button></div>
-    <div class="small">Le modèle calcule l’heure de départ conseillée à partir du temps de trajet + marge. Le calcul automatique du trajet pourra être relié à un service cartographique dans une version connectée.</div>
-   </div>
-  </div>
-  <div>
-   <div class="section" style="margin-top:0"><h3>📍 Lieux enregistrés</h3><div id="placesList"></div>
-    <div class="formgrid parentOnly block" style="margin-top:10px"><div><div class="fieldlabel">Nom</div><input id="placeName" placeholder="Ex. Maison"></div><div><div class="fieldlabel">Adresse</div><input id="placeAddress" placeholder="Rue, NPA, ville"></div></div>
-    <button class="btn parentOnly" onclick="addPlace()" style="margin-top:8px">+ Enregistrer le lieu</button>
-   </div>
-   <div class="section"><h3>🚗 Modes de transport</h3><div class="transport-pills" id="transportModes"></div><div class="small" style="margin-top:8px">En mode parent, touche un mode pour le masquer ou le réactiver.</div></div>
-   <div class="section parentOnly block"><h3>🔄 Calendriers externes</h3><div class="notice">Architecture prévue en <b>bidirectionnel</b> pour Google Calendar, Outlook / Microsoft 365 et Apple Calendar. Les connexions OAuth/API ne sont pas encore actives dans ce fichier autonome.</div><div id="calendarConnections"></div></div>
-  </div>
- </div>
 </section>
 
 <section id="menus" class="view">
@@ -562,7 +536,25 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 <section id="settings" class="view">
  <div class="weekhead"><div><h2>⚙️ Réglages</h2><div class="small">Sauvegarde locale + synchronisation Supabase facultative.</div></div></div>
  <div class="section"><h3>🔐 Mode parent</h3><div class="notice">Les tâches restent cochables par tout le monde. Les ajouts/retraits manuels de points, le planning, les réglages et les suppressions sensibles nécessitent le mode parent.</div><div class="settingrow"><button class="btn secondary parentOnly" onclick="changePin()">Changer le PIN</button><button class="btn secondary parentOnly" onclick="lockParent()">Verrouiller</button></div></div>
- <div class="section parentOnly block"><h3>☁️ Synchronisation iPhone ↔ iPad</h3><div class="notice">Utilise le même <b>Code famille</b> sur tous les appareils. La table Supabase attendue est <code>family_boards</code> avec <code>family_code</code>, <code>payload</code> et <code>updated_at</code>.</div>
+ 
+ <div class="section">
+  <h3>👨‍👩‍👧‍👧 Compte familial</h3>
+  <div id="familyAccountPanel"></div>
+ </div>
+ <div class="section">
+  <h3>🚀 Mise en service</h3>
+  <div class="notice okbox">
+   <b>Objectif :</b> après la configuration initiale du projet, un nouvel appareil ne devra plus saisir l’URL Supabase, la clé publique ni un code technique.
+  </div>
+  <div class="setup-steps">
+   <div><b>1.</b> Configurer Supabase une seule fois côté déploiement.</div>
+   <div><b>2.</b> Créer le compte d’un parent et la famille.</div>
+   <div><b>3.</b> Ajouter Angela/Yvan comme parents et Solé/Calista comme profils enfants.</div>
+   <div><b>4.</b> Sur un nouvel appareil : « Rejoindre ma famille » via invitation/QR (prochaine étape backend).</div>
+  </div>
+  <div class="small" style="margin-top:8px">Le guide complet est fourni avec cette version. Les invitations/QR nécessitent les nouvelles tables Supabase et seront activées après la configuration du backend.</div>
+ </div>
+<div class="section parentOnly block"><h3>🛠️ Configuration administrateur Supabase</h3><div class="notice">Cette zone est temporaire et réservée à la mise en service. Dans la version finale, les appareils rejoindront la famille via compte/invitation et cette configuration technique disparaîtra de l’usage courant.</div>
   <div class="settingrow"><input id="sbUrl" placeholder="https://xxxxx.supabase.co"><input id="sbKey" placeholder="Clé anon/public"></div>
   <div class="settingrow"><input id="familyCode" placeholder="Code famille"><button class="btn" onclick="saveCloudSettings()">Enregistrer</button></div>
   <div class="settingrow"><button class="btn good" onclick="pushCloud()">Envoyer vers le cloud</button><button class="btn secondary" onclick="pullCloud()">Récupérer du cloud</button><button class="btn secondary" onclick="testCloud()">Tester</button></div><div id="cloudMsg" class="small"></div>
@@ -575,12 +567,11 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.31</b> • Catalogue d’aliments par groupes + sélection des repas • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.32</b> • Compte familial préparé • Planning retiré temporairement • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
  <button data-view="week"><span class="ico">📅</span>Semaine</button>
- <button data-view="planner"><span class="ico">🗓️</span>Planning</button>
  <button data-view="menus"><span class="ico">🍽️</span>Menus</button>
  <button data-view="points"><span class="ico">⭐</span>Points</button>
  <button data-view="rules"><span class="ico">🛡️</span>Règles</button>
@@ -629,7 +620,14 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.31;
+const APP_VERSION=2.32;
+/*
+  CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
+  Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
+  Utiliser uniquement la clé publique/publishable (jamais la service_role).
+*/
+const DEPLOY_SUPABASE_URL='';
+const DEPLOY_SUPABASE_PUBLISHABLE_KEY='';
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -664,6 +662,8 @@ if(!localStorage.getItem('familyParentPin'))localStorage.setItem('familyParentPi
 
 let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};
 let cloud=JSON.parse(localStorage.getItem('familyCloudV2')||'null')||{url:'',key:'',familyCode:''};
+if(DEPLOY_SUPABASE_URL)cloud.url=DEPLOY_SUPABASE_URL.replace(/\/$/,'');
+if(DEPLOY_SUPABASE_PUBLISHABLE_KEY)cloud.key=DEPLOY_SUPABASE_PUBLISHABLE_KEY;
 
 function ensureState(){
  state.checks=state.checks||{};state.points=Array.isArray(state.points)?state.points:[];state.menus=state.menus||{};
@@ -680,11 +680,11 @@ function ensureState(){
 ensureState();
 
 const I18N={
- fr:{top_subtitle:'organisation familiale • tâches • planning • menus • points'},
- en:{top_subtitle:'family organisation • tasks • planning • menus • points'},
- es:{top_subtitle:'organización familiar • tareas • planificación • menús • puntos'},
- it:{top_subtitle:'organizzazione familiare • compiti • pianificazione • menu • punti'},
- de:{top_subtitle:'Familienorganisation • Aufgaben • Planung • Menüs • Punkte'}
+ fr:{top_subtitle:'organisation familiale • tâches • menus • points'},
+ en:{top_subtitle:'family organisation • tasks • menus • points'},
+ es:{top_subtitle:'organización familiar • tareas • menús • puntos'},
+ it:{top_subtitle:'organizzazione familiare • compiti • menu • punti'},
+ de:{top_subtitle:'Familienorganisation • Aufgaben • Menüs • Punkte'}
 };
 function setLanguage(l){currentLang=l;localStorage.setItem('familyFlowLang',l);applyTranslations();renderAll()}
 function applyTranslations(){document.getElementById('langSelectTop').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{let k=el.dataset.i18n;if(I18N[currentLang]?.[k])el.textContent=I18N[currentLang][k]})}
@@ -1099,7 +1099,36 @@ function pinPress(v){if(v==='C'){pinBuffer=''}else if(v==='OK'){if(pinMode==='un
 function changePin(){if(parentUnlocked)showPin('change')}function lockParent(){parentUnlocked=false;renderAll()}
 document.getElementById('pinPad').innerHTML=['1','2','3','4','5','6','7','8','9','C','0','OK'].map(x=>`<button onclick="pinPress('${x}')">${x}</button>`).join('');
 
-function loadCloudFields(){document.getElementById('sbUrl').value=cloud.url||'';document.getElementById('sbKey').value=cloud.key||'';document.getElementById('familyCode').value=cloud.familyCode||''}
+
+function renderFamilyAccount(){
+ const host=document.getElementById('familyAccountPanel');if(!host)return;
+ const deployReady=!!(DEPLOY_SUPABASE_URL&&DEPLOY_SUPABASE_PUBLISHABLE_KEY);
+ const cloudConfigured=cloudReady();
+ host.innerHTML=`<div class="family-account-card">
+   <div class="family-account-top">
+    <div><b>Famille Carballes</b><div class="small">${deployReady?'Configuration Supabase intégrée au déploiement':'Configuration de déploiement à terminer'}</div></div>
+    <span class="family-status ${deployReady||cloudConfigured?'ready':''}">${deployReady||cloudConfigured?'● prêt':'○ à configurer'}</span>
+   </div>
+   <div class="family-members-preview">
+    <div class="family-member-preview"><b>Yvan</b>Parent</div>
+    <div class="family-member-preview"><b>Angela</b>Parent</div>
+    <div class="family-member-preview"><b>Solé</b>Enfant</div>
+    <div class="family-member-preview"><b>Calista</b>Enfant</div>
+   </div>
+   <div class="family-account-actions">
+    <button class="btn secondary" type="button" onclick="alert('Cette fonction sera activée avec Supabase Auth après la création des tables du guide V2.32.')">Se connecter</button>
+    <button class="btn secondary parentOnly" type="button" onclick="alert('Invitation/QR prévue à l’étape suivante après activation du backend familial.')">＋ Ajouter un appareil</button>
+   </div>
+   <div class="small" style="margin-top:7px">Les profils enfants ne nécessiteront pas d’adresse e-mail. Les comptes authentifiés seront réservés aux parents.</div>
+  </div>`;
+}
+
+function loadCloudFields(){
+ let u=document.getElementById('sbUrl'),k=document.getElementById('sbKey'),f=document.getElementById('familyCode');
+ if(u)u.value=cloud.url||'';if(k)k.value=cloud.key||'';if(f)f.value=cloud.familyCode||'';
+ if(u&&DEPLOY_SUPABASE_URL){u.disabled=true;u.placeholder='Intégré au déploiement'}
+ if(k&&DEPLOY_SUPABASE_PUBLISHABLE_KEY){k.disabled=true;k.placeholder='Intégré au déploiement'}
+}
 function saveCloudSettings(){if(!parentUnlocked)return;cloud={url:document.getElementById('sbUrl').value.trim().replace(/\/$/,''),key:document.getElementById('sbKey').value.trim(),familyCode:document.getElementById('familyCode').value.trim()};localStorage.setItem('familyCloudV2',JSON.stringify(cloud));updateSyncUI();document.getElementById('cloudMsg').textContent='Configuration enregistrée sur cet appareil.'}
 function cloudReady(){return cloud.url&&cloud.key&&cloud.familyCode}
 function updateSyncUI(){let dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');if(!navigator.onLine){dot.className='syncdot';txt.textContent='Hors ligne — sauvegarde locale'}else if(cloudReady()){dot.className='syncdot ok';txt.textContent='Cloud configuré'}else{dot.className='syncdot';txt.textContent='Mode local'}}
@@ -1111,14 +1140,14 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-31-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-32-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
 function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales : tâches, points, menus, planning, lieux et transports ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};ensureState();saveLocal();renderAll()}}
 
 function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
-function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderPlanner();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();applyTranslations()}
+function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 /* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
