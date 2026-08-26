@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.25 — Carballes</title>
+<title>Family Flow V2.28 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -105,6 +105,222 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .desktop-menu-editor-host .modal{max-width:none;width:100%;max-height:none;box-shadow:none;border:1px solid var(--line);padding:16px}
 @media(max-width:900px){.menu-desktop-tools{display:none}.desktop-menu-editor-host{display:none!important}}
 
+
+@media(max-width:560px){
+  main{padding:7px 7px 82px}
+  .topbar{padding-top:calc(16px + env(safe-area-inset-top));padding-bottom:7px}
+  .toprow{gap:4px}
+  .title{font-size:15px}
+  .family-flags{font-size:.62em}
+  .subtitle{font-size:9px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pill,.lang-select{font-size:9px;padding:6px 6px;min-height:31px}
+  .weekhead{margin-bottom:7px;gap:5px}
+  .weekhead h2{font-size:16px}
+  .weekhead .small{font-size:10px;line-height:1.25}
+  .cards{grid-template-columns:1fr 1fr;gap:6px}
+  .person{border-radius:12px}
+  .person .head{padding:6px 8px;font-size:14px}
+  .scorechip{font-size:10px;padding:2px 6px}
+  .body{padding:3px 5px}
+  .task{gap:6px;padding:5px 3px;min-height:34px}
+  .task .label{font-size:11px;line-height:1.15}
+  .tag{font-size:8.5px;margin-top:1px;line-height:1.15}
+  .check{width:22px;height:22px;border-radius:6px}
+  .check.done:after{font-size:14px}
+  .check.missed:after{font-size:13px}
+  .section{margin-top:7px;border-radius:12px;padding:8px}
+  .section h3{font-size:14px;margin-bottom:5px}
+  .points-grid{grid-template-columns:1fr 1fr;gap:6px}
+  .point-card{padding:6px;border-radius:10px}
+  .point-card h4{font-size:12px;margin-bottom:3px}
+  .quick{gap:4px}
+  .pbtn{padding:6px 4px;font-size:10px;border-radius:8px}
+  .familychallenge{padding:7px;border-radius:10px;gap:7px}
+  .familychallenge .big{font-size:18px}
+  .small{font-size:9.5px}
+  .rulegrid{grid-template-columns:1fr 1fr;gap:6px}
+  .rule{padding:7px;font-size:11px;border-radius:9px}
+  .rank{grid-template-columns:repeat(4,1fr);gap:5px}
+  .rankcard{padding:7px 3px;border-radius:10px}
+  .rankcard .score{font-size:19px}
+  .weektable{min-width:640px}
+  .weektable th,.weektable td{padding:5px 4px;font-size:10px}
+  .rotabox{grid-template-columns:1fr 1fr;gap:5px}
+  .rotacell{padding:7px;font-size:10px;border-radius:9px}
+  .menu-toolbar{gap:5px;margin-bottom:7px}
+  .menu-legend{font-size:9px;gap:6px}
+  .menu-grid{min-width:760px;grid-template-columns:52px repeat(7,minmax(94px,1fr));gap:4px}
+  .menu-dayhead{font-size:9px;padding:5px;border-radius:8px}
+  .menu-meal-label{font-size:9px;padding:5px 2px}
+  .menu-cell{min-height:100px;padding:4px;border-radius:9px;gap:3px}
+  .menu-mini{padding:5px;font-size:9px;border-radius:7px}
+  .menu-mini-title{font-size:9px;margin-bottom:2px}
+  .menu-main{font-size:9.5px}
+  .menu-sub{font-size:8.5px}
+  .menu-edit{padding:5px 4px;font-size:9px;border-radius:7px}
+  .menu-actions{gap:5px}
+  .btn{padding:7px 8px;font-size:10px;border-radius:8px}
+  .planner-layout{grid-template-columns:1fr}
+  .event-card{padding:7px;border-radius:10px}
+  .event-title{font-size:12px}
+  .event-meta{font-size:9.5px;line-height:1.35}
+  .formgrid{grid-template-columns:1fr}
+  .modalback{padding:8px}
+  .modal{padding:11px;border-radius:13px;max-height:95vh}
+  .menu-form-grid{grid-template-columns:1fr}
+  .menu-form-card{padding:7px}
+  .menu-field{margin:5px 0}
+  .menu-field input{padding:7px}
+  .nav{grid-template-columns:repeat(7,1fr)}
+  .nav button{padding:5px 1px 4px;font-size:7px}
+  .nav .ico{font-size:15px;margin-bottom:1px}
+  .footerinfo{font-size:9px;padding-bottom:78px}
+}
+
+
+.mobile-dashboard{display:none}
+@media(max-width:560px){
+  .mobile-dashboard{display:block}
+  .desktop-today-head,.detailed-today{display:none!important}
+  #today{padding-top:1px}
+  .mobile-dash-head{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    margin-bottom:6px
+  }
+  .mobile-dash-title{font-size:13px;font-weight:900}
+  .mobile-dash-week{font-size:9px;color:var(--muted)}
+  .mobile-people-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px
+  }
+  .mobile-person{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;
+    min-height:78px
+  }
+  .mobile-person-head{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:4px}
+  .mobile-person-name{font-size:12px;font-weight:900}
+  .mobile-person-score{font-size:9px;font-weight:900;padding:2px 5px;border-radius:999px;background:#eef3fa}
+  .mobile-task-line{
+    display:flex;align-items:center;gap:5px;font-size:10px;font-weight:750;line-height:1.15
+  }
+  .mobile-task-line .check{width:20px;height:20px;border-radius:5px}
+  .mobile-task-line .check.done:after{font-size:12px}
+  .mobile-dash-section{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;margin-bottom:5px
+  }
+  .mobile-dash-section h4{margin:0 0 5px;font-size:11px}
+  .mobile-shared-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .mobile-shared-item{
+    display:flex;align-items:center;gap:5px;padding:4px;border-radius:7px;background:#f8fafc;
+    font-size:9.5px;font-weight:750;line-height:1.15
+  }
+  .mobile-shared-item .check{width:19px;height:19px;border-radius:5px}
+  .mobile-routine-row{
+    display:grid;grid-template-columns:52px 1fr 1fr;align-items:center;gap:4px;
+    padding:3px 0;border-top:1px solid #edf1f6;font-size:9px
+  }
+  .mobile-routine-row:first-child{border-top:0}
+  .mobile-routine-person{font-weight:900}
+  .mobile-routine-item{display:flex;align-items:center;gap:4px}
+  .mobile-routine-item .check{width:18px;height:18px;border-radius:5px}
+  .mobile-quick-actions{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:4px
+  }
+  .mobile-quick-actions button{
+    border:0;border-radius:8px;padding:6px 2px;font-size:9px;font-weight:850
+  }
+  .mobile-meal{
+    display:flex;align-items:center;gap:6px;background:#fff9e7;border:1px solid #f0d273;
+    border-radius:9px;padding:6px;margin-bottom:5px;font-size:9.5px
+  }
+  .mobile-meal .btn{margin-left:auto;padding:5px 6px;font-size:9px}
+}
+
+
+/* V2.28 : vraie vue iPhone distincte, activée aussi par JavaScript (.mobile-ui) */
+.mobile-overview,.mobile-view-switch{display:none}
+.mobile-ui #today .desktop-today-head,
+.mobile-ui #today .detailed-today{display:none!important}
+.mobile-ui .mobile-overview{display:block!important}
+.mobile-ui .mobile-view-switch{display:flex!important}
+.mobile-ui.mobile-detail #today .desktop-today-head,
+.mobile-ui.mobile-detail #today .detailed-today{display:block!important}
+.mobile-ui.mobile-detail .mobile-overview{display:none!important}
+
+.mobile-ui main{padding:5px 5px 72px}
+.mobile-ui .topbar{padding-top:calc(10px + env(safe-area-inset-top));padding-bottom:5px}
+.mobile-ui .title{font-size:14px}
+.mobile-ui .subtitle{display:none}
+.mobile-ui .pill,.mobile-ui .lang-select{font-size:9px;padding:5px 6px;min-height:29px}
+.mobile-ui .nav button{font-size:7px;padding:4px 1px 3px}
+.mobile-ui .nav .ico{font-size:14px}
+
+.mobile-view-switch{
+  margin:0 0 5px;gap:3px;background:#e9eef5;border-radius:9px;padding:3px
+}
+.mobile-view-switch button{
+  flex:1;border:0;background:transparent;padding:5px 3px;border-radius:7px;
+  font-size:9px;font-weight:850;color:#60708b
+}
+.mobile-view-switch button.active{background:white;color:var(--navy);box-shadow:0 1px 4px #0001}
+
+.moverview-head{
+  display:flex;justify-content:space-between;align-items:center;gap:6px;
+  margin:1px 1px 5px
+}
+.moverview-head strong{font-size:12px}
+.moverview-head span{font-size:8.5px;color:var(--muted)}
+.moverview-block{
+  background:white;border:1px solid var(--line);border-radius:9px;
+  margin-bottom:5px;overflow:hidden
+}
+.moverview-block-title{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 7px;background:#f4f7fb;border-bottom:1px solid #e7edf5;
+  font-size:9px;font-weight:900
+}
+.moverview-row{
+  display:grid;grid-template-columns:56px 22px minmax(0,1fr) 34px;
+  align-items:center;gap:4px;padding:5px 6px;border-bottom:1px solid #edf1f6;
+  min-height:31px
+}
+.moverview-row:last-child{border-bottom:0}
+.moverview-name{font-size:10px;font-weight:900;white-space:nowrap}
+.moverview-task{font-size:9.5px;font-weight:720;line-height:1.08;min-width:0}
+.moverview-score{text-align:right;font-size:9px;font-weight:900;white-space:nowrap}
+.moverview-row .check{width:20px;height:20px;border-radius:5px}
+.moverview-row .check.done:after{font-size:12px}
+
+.moverview-common{
+  display:grid;grid-template-columns:1fr 1fr;gap:0
+}
+.moverview-common .moverview-common-item{
+  display:grid;grid-template-columns:22px 1fr;align-items:center;gap:4px;
+  padding:5px 6px;border-bottom:1px solid #edf1f6;font-size:9px;font-weight:720;
+  min-height:31px
+}
+.moverview-common .moverview-common-item:nth-child(odd){border-right:1px solid #edf1f6}
+.moverview-common .check{width:20px;height:20px;border-radius:5px}
+
+.mroutine{
+  width:100%;border-collapse:collapse;font-size:9px
+}
+.mroutine th,.mroutine td{padding:4px;border-bottom:1px solid #edf1f6;text-align:center}
+.mroutine th:first-child,.mroutine td:first-child{text-align:left;padding-left:7px}
+.mroutine tr:last-child td{border-bottom:0}
+.mroutine .check{width:18px;height:18px;border-radius:5px;margin:auto}
+.mroutine-label{font-weight:850}
+.mroutine-sub{font-size:8px;color:var(--muted)}
+
+.moverview-meal{
+  display:flex;align-items:center;gap:5px;padding:5px 6px;
+  font-size:9px;font-weight:760
+}
+.moverview-meal .btn{margin-left:auto;padding:4px 6px;font-size:8px}
+
+@media(min-width:701px){
+  .mobile-overview,.mobile-view-switch{display:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -122,21 +338,26 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <main>
 <section id="today" class="view active">
- <div class="weekhead"><div><h2 id="rangeTitle"></h2><div class="small">1 responsabilité principale par personne • enfants affichés avant les adultes • extras sans surcharge de points</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
- <div class="cards" id="personCards"></div>
+ <div id="mobileOverview" class="mobile-overview"></div>
+ <div id="mobileViewSwitch" class="mobile-view-switch">
+   <button type="button" id="mobileOverviewBtn" class="active">Vue globale</button>
+   <button type="button" id="mobileDetailBtn">Vue détaillée</button>
+ </div>
+ <div class="weekhead desktop-today-head"><div><h2 id="rangeTitle"></h2><div class="small">1 responsabilité principale par personne • enfants affichés avant les adultes • extras sans surcharge de points</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
+ <div class="cards detailed-today" id="personCards"></div>
 
- <div class="section">
+ <div class="section detailed-today">
   <h3>🏠 Tâches spécifiques & communes</h3>
   <div class="points-grid"><div class="point-card" id="turtlesCard"></div><div class="point-card" id="girlsSharedCard"></div><div class="point-card" id="roomsCard"></div></div>
  </div>
 
- <div class="section">
+ <div class="section detailed-today">
   <h3>🌙 Routine du soir — Solé & Calista</h3>
   <div class="small" style="margin-bottom:10px">Rappels simples : cases quotidiennes, sans point automatique.</div>
   <div class="points-grid" id="eveningRoutine"></div>
  </div>
 
- <div class="section">
+ <div class="section detailed-today">
   <h3>ℹ️ Comment fonctionnent les points ?</h3>
   <div class="small" style="line-height:1.6">
    <b>Responsabilité principale de la semaine :</b> ⭐ +2 quand elle est faite.<br>
@@ -146,7 +367,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div>
  </div>
 
- <div class="section">
+ <div class="section detailed-today">
   <h3>⭐ Points du jour — comportement & attitude</h3>
   <div class="points-grid" id="pointsCards"></div>
   <div class="familychallenge"><div class="big">🍽️🤫</div><div style="flex:1"><strong>Défi repas sans cris</strong><span class="small">Repas calme du début à la fin : +1 point à chacun.</span></div><button class="btn good parentOnly" onclick="mealNoShouting()">+1 à tous</button></div>
@@ -247,7 +468,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.25</b> • Ajout du rangement de la salle de bain commune des filles • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.28</b> • Vue mobile globale dédiée iPhone • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -277,7 +498,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </div>
 
 <script>
-const APP_VERSION=2.25;
+const APP_VERSION=2.28;
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -394,7 +615,68 @@ function scoreFor(person,from=null,to=null){return state.points.filter(x=>x.pers
 function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
 function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag}</div></div></div>`).join('')}
 
+
+function renderMobileDashboard(){
+ const host=document.getElementById('mobileOverview'); if(!host)return;
+ const ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);
+ const turtle=turtlePerson(selectedDay);
+
+ const peopleRows=PEOPLE.map(p=>{
+   const t=ass[p.id][0];
+   return `<div class="moverview-row">
+     <div class="moverview-name">${p.name}</div>
+     <button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button>
+     <div class="moverview-task">${t.icon} ${t.label}</div>
+     <div class="moverview-score">⭐ ${scoreFor(p.id,m,s)}</div>
+   </div>`;
+ }).join('');
+
+ const commonItems=[
+   `<div class="moverview-common-item"><button class="check ${sharedDone(selectedDay,'turtles','turtles')?'done':''}" onclick="toggleTurtles(selectedDay)"></button><span>🐢 Tortues — ${turtle.name}</span></div>`,
+   ...GIRLS_SHARED.map(t=>`<div class="moverview-common-item"><button class="check ${sharedDone(selectedDay,'girls',t.id)?'done':''}" onclick="toggleSharedGirls(selectedDay,'${t.id}')"></button><span>${t.icon} ${t.label.replace('Ranger la ','')}</span></div>`),
+   ...['sole','calista'].map(id=>`<div class="moverview-common-item"><button class="check ${roomDone(selectedDay,id)?'done':''}" onclick="toggleRoom(selectedDay,'${id}')"></button><span>🛏️ Chambre ${PEOPLE.find(p=>p.id===id).name}</span></div>`)
+ ].join('');
+
+ const routineRows=['sole','calista'].map(id=>{
+   const p=PEOPLE.find(p=>p.id===id);
+   return `<tr>
+     <td><div class="mroutine-label">${p.name}</div></td>
+     <td><button class="check ${routineDone(selectedDay,id,'teeth')?'done':''}" onclick="toggleRoutine(selectedDay,'${id}','teeth')"></button></td>
+     <td><button class="check ${routineDone(selectedDay,id,'bedtime')?'done':''}" onclick="toggleRoutine(selectedDay,'${id}','bedtime')"></button></td>
+   </tr>`;
+ }).join('');
+
+ host.innerHTML=`
+   <div class="moverview-head">
+     <strong>Vue d’ensemble</strong>
+     <span>${m.toLocaleDateString(currentLocale(),{day:'2-digit',month:'2-digit'})} → ${s.toLocaleDateString(currentLocale(),{day:'2-digit',month:'2-digit'})}</span>
+   </div>
+
+   <div class="moverview-block">
+     <div class="moverview-block-title"><span>RESPONSABILITÉS</span><span>score semaine</span></div>
+     ${peopleRows}
+   </div>
+
+   <div class="moverview-block">
+     <div class="moverview-block-title"><span>COMMUN / PERSONNEL</span><span>0 pt sauf tortues</span></div>
+     <div class="moverview-common">${commonItems}</div>
+   </div>
+
+   <div class="moverview-block">
+     <div class="moverview-block-title"><span>ROUTINES DU SOIR</span><span>aujourd’hui</span></div>
+     <table class="mroutine">
+       <thead><tr><th></th><th>🦷<div class="mroutine-sub">Dents</div></th><th>🌙<div class="mroutine-sub">Coucher</div></th></tr></thead>
+       <tbody>${routineRows}</tbody>
+     </table>
+   </div>
+
+   <div class="moverview-block">
+     <div class="moverview-meal"><span>🍽️ Repas sans cris = +1 chacun</span><button class="btn good parentOnly" onclick="mealNoShouting()">+1 tous</button></div>
+   </div>
+ `;
+}
 function renderToday(){
+ renderMobileDashboard();
  let ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);
  document.getElementById('rangeTitle').textContent=rangeText(selectedDay);document.getElementById('weekNo').textContent='Sem. '+(weekIndex(selectedDay)+1);
  document.getElementById('personCards').innerHTML=PEOPLE.map(p=>`<article class="person ${p.cls}"><div class="head"><span>${p.name}</span><span class="scorechip">⭐ ${scoreFor(p.id,m,s)}</span></div><div class="body">${personTasksHtml(p,ass[p.id])}</div></article>`).join('');
@@ -525,7 +807,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-25-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-28-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -563,6 +845,26 @@ window.addEventListener('resize',function(){
    const wasOpen=document.getElementById('menuModal').classList.contains('show')||document.getElementById('desktopMenuEditorHost').classList.contains('active');
    if(wasOpen){placeMenuEditorForViewport();if(isDesktopMenuMode())document.getElementById('desktopMenuEditorHost').classList.add('active');else document.getElementById('menuModal').classList.add('show')}
  }
+});
+
+
+function applyMobileUI(){
+ const isPhone = window.innerWidth <= 700 || (navigator.maxTouchPoints>0 && Math.min(screen.width,screen.height)<=700);
+ document.documentElement.classList.toggle('mobile-ui',isPhone);
+ if(!isPhone)document.documentElement.classList.remove('mobile-detail');
+}
+applyMobileUI();
+window.addEventListener('resize',applyMobileUI);
+
+document.getElementById('mobileOverviewBtn')?.addEventListener('click',()=>{
+ document.documentElement.classList.remove('mobile-detail');
+ document.getElementById('mobileOverviewBtn').classList.add('active');
+ document.getElementById('mobileDetailBtn').classList.remove('active');
+});
+document.getElementById('mobileDetailBtn')?.addEventListener('click',()=>{
+ document.documentElement.classList.add('mobile-detail');
+ document.getElementById('mobileDetailBtn').classList.add('active');
+ document.getElementById('mobileOverviewBtn').classList.remove('active');
 });
 
 renderAll();
