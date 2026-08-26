@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.37 — Carballes</title>
+<title>Family Flow V2.38 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -583,6 +583,65 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .menu-day-repeat-head > div{padding:5px 3px}
 }
 
+
+/* V2.38 : catégories alimentaires colorées + distinction Parents/Enfants */
+.food-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 6px;border-radius:999px;
+  font-size:9px;font-weight:850;line-height:1.1;
+  border:1px solid transparent;margin:2px 2px 0 0;
+}
+.food-tag-proteins{background:#fdeaea;border-color:#e7b2b2;color:#8a2e2e}
+.food-tag-vegetables{background:#eaf7ec;border-color:#b5d8ba;color:#276438}
+.food-tag-starches{background:#fff4dd;border-color:#e3c681;color:#7b5b13}
+.food-tag-soups{background:#efedff;border-color:#c2bde6;color:#514a87}
+.food-tag-fruits{background:#eaf8f8;border-color:#a9d5d6;color:#2c686b}
+.food-tag-desserts{background:#fff7d9;border-color:#e0cf87;color:#715d12}
+.food-tag-drinks{background:#eef1f4;border-color:#c8cdd2;color:#46515c}
+.food-tag-dairy{background:#eaf2ff;border-color:#b6cae8;color:#365d8b}
+.food-tag-other{background:#f5ecf8;border-color:#d2b9da;color:#6b4d73}
+
+.menu-meal-card{
+  border-width:2px;
+}
+.menu-meal-card.parents{
+  background:#edf5ff;
+  border-color:#9ec0e8;
+}
+.menu-meal-card.children{
+  background:#eefaf0;
+  border-color:#a7d7ae;
+}
+.menu-meal-card.commonbox{
+  background:#f3efff;
+  border-color:#c0afe8;
+}
+.menu-meal-title{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:4px;margin-bottom:2px;border-bottom:1px solid #ffffffaa;
+}
+.menu-meal-title.parents-label{color:#24598a}
+.menu-meal-title.children-label{color:#2e6f3f}
+.menu-meal-title.common-label{color:#614c8a}
+.menu-food-groups{
+  display:flex;flex-wrap:wrap;gap:2px;margin-top:2px
+}
+.menu-person-label{
+  font-size:9px;font-weight:900;letter-spacing:.02em
+}
+.menu-person-hint{
+  font-size:8px;font-weight:800;opacity:.8
+}
+.menu-legend-foods{
+  display:flex;flex-wrap:wrap;gap:5px;margin-top:8px
+}
+.menu-legend-foods .food-tag{font-size:8px;padding:3px 5px}
+@media(max-width:700px){
+ .food-tag{font-size:8px;padding:3px 5px}
+ .menu-person-label{font-size:8px}
+ .menu-person-hint{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -671,6 +730,20 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div>
   <div id="foodCatalogList"></div>
  </div>
+<div class="section">
+  <h3>🎨 Code couleur des aliments</h3>
+  <div class="menu-legend-foods">
+    <span class="food-tag food-tag-proteins">🥩 Protéines</span>
+    <span class="food-tag food-tag-vegetables">🥦 Légumes</span>
+    <span class="food-tag food-tag-starches">🍚 Féculents</span>
+    <span class="food-tag food-tag-soups">🥣 Soupes</span>
+    <span class="food-tag food-tag-fruits">🍎 Fruits</span>
+    <span class="food-tag food-tag-desserts">🍰 Desserts</span>
+    <span class="food-tag food-tag-drinks">🥤 Boissons</span>
+    <span class="food-tag food-tag-dairy">🥛 Produits laitiers</span>
+    <span class="food-tag food-tag-other">🍽️ Autres</span>
+  </div>
+ </div>
 <div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> utilise le bouton « ✏️ Modifier » dans la cellule du repas souhaité.</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
 </section>
 
@@ -721,7 +794,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.37</b> • Entêtes Petit-déjeuner / Déjeuner / Dîner répétés pour chaque jour • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.38</b> • Codes couleur par groupe alimentaire + meilleure distinction Parents/Enfants • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -774,7 +847,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.37;
+const APP_VERSION=2.38;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1045,13 +1118,38 @@ function splitMealValue(obj){
   const parts = vals.split(' • ');
   return {main:parts[0]||'',sub:parts.slice(1).join(' • ')};
 }
+
+function selectedFoodItems(o){
+  let selected=(o&&Array.isArray(o.selected))?o.selected:[];
+  return selected.map(id=>foodItemById(id)).filter(Boolean);
+}
+function foodCategoryMeta(id){
+  return FOOD_CATEGORIES.find(c=>c.id===id)||{id:'other',label:'Autres',icon:'🍽️'};
+}
+function mealFoodTags(obj){
+  let items=selectedFoodItems(obj);
+  if(!items.length){
+    let fallback=selectedFoodNames(obj);
+    return fallback.length?fallback.map(n=>`<span class="food-tag food-tag-other">${esc(n)}</span>`).join(''):'';
+  }
+  return items.map(item=>{
+    let cat=foodCategoryMeta(item.category);
+    return `<span class="food-tag food-tag-${cat.id}" title="${esc(cat.label)}">${cat.icon} ${esc(item.name)}</span>`;
+  }).join('');
+}
 function menuMealCard(kind,obj){
-  const data=splitMealValue(obj);
+  const tags=mealFoodTags(obj);
   const cls=kind==='parents'?'parents':kind==='children'?'children':'commonbox';
-  const title=kind==='parents'?'👨‍👩 Parents':kind==='children'?'👧👧 Enfants':'👨‍👩‍👧‍👧 Commun';
+  const labelCls=kind==='parents'?'parents-label':kind==='children'?'children-label':'common-label';
+  const title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Commun';
+  const icon=kind==='parents'?'👨‍👩':kind==='children'?'👧👧':'👨‍👩‍👧‍👧';
+  const hint=kind==='parents'?'Menu parents':kind==='children'?'Menu enfants':'Même menu pour tous';
   return `<div class="menu-meal-card ${cls}">
-    <div class="menu-meal-title">${title}</div>
-    ${data.main?`<div class="menu-meal-main">${esc(data.main)}</div>${data.sub?`<div class="menu-meal-sub">${esc(data.sub)}</div>`:''}`:`<div class="menu-meal-empty">À définir</div>`}
+    <div class="menu-meal-title ${labelCls}">
+      <span class="menu-person-label">${icon} ${title}</span>
+      <span class="menu-person-hint">${hint}</span>
+    </div>
+    ${tags?`<div class="menu-food-groups">${tags}</div>`:`<div class="menu-meal-empty">À définir</div>`}
   </div>`;
 }
 function menuMealCellHtml(day,meal){
@@ -1320,7 +1418,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-37-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-38-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
