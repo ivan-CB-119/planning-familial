@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.18 — Carballes</title>
+<title>Family Flow V2.19 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -57,7 +57,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 .rulegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule{background:white;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:700;font-size:14px}
 .settingrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}.settingrow input{padding:9px 10px;border:1px solid var(--line);border-radius:10px;min-width:210px}
 .btn{border:0;border-radius:10px;padding:9px 12px;font-weight:800;background:var(--navy);color:white;font-size:13px}.btn.secondary{background:#e8eef7;color:#18385e}.btn.danger{background:#a92f37}.btn.good{background:#1e8a4a}
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);padding-bottom:max(6px,env(safe-area-inset-bottom));box-shadow:0 -3px 15px #0f274818}
 .nav button{border:0;background:transparent;padding:8px 3px 6px;color:#60708b;font-weight:750;font-size:11px}.nav button.active{color:var(--navy)}.nav .ico{display:block;font-size:20px;margin-bottom:2px}
 .rotabox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.rotacell{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;font-size:13px}.rotacell b{display:block;margin-bottom:5px}
 .notice{background:#eef7ff;border:1px solid #b8d8f5;border-radius:13px;padding:11px;font-size:13px}.warn{background:#fff8e6;border-color:#ecd187}.okbox{background:#edf9f1;border-color:#b8dfc6}
@@ -163,6 +163,23 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 
 .menu-edit{touch-action:manipulation;position:relative;z-index:2}
+
+/* Planning & trajets */
+.planner-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:12px}
+.planner-list{display:grid;gap:9px}
+.event-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fff}
+.event-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.event-title{font-weight:850;font-size:15px}.event-meta{font-size:12px;color:var(--muted);line-height:1.5;margin-top:5px}
+.event-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.event-actions button{padding:6px 9px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formgrid .wide{grid-column:1/-1}
+.formgrid input,.formgrid select,.formgrid textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--text)}
+.formgrid textarea{min-height:70px;resize:vertical}.fieldlabel{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.transport-pills{display:flex;gap:6px;flex-wrap:wrap}.transport-pill{border:1px solid var(--line);background:#f7f9fc;color:var(--text);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:750}.transport-pill.off{opacity:.45;text-decoration:line-through}
+.calendar-row{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid #edf1f6;padding:9px 0}.calendar-row:first-child{border-top:0}
+.status-badge{display:inline-block;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:800;background:#edf3fb;color:#28496f}
+.empty-state{padding:18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+@media(max-width:900px){.planner-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}.nav button{font-size:9px}}
 
 </style>
 </head>
@@ -298,6 +315,60 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
  <div class="section"><h3 data-i18n="rotation_6w">🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
 </section>
 
+<section id="planner" class="view">
+ <div class="weekhead"><div><h2>🗓️ Planning & trajets</h2><div class="small">Activités, lieux, transports, accompagnement et synchronisation des calendriers.</div></div><button class="btn parentOnly" onclick="resetPlannerForm()">+ Activité</button></div>
+ <div class="planner-grid">
+  <div>
+   <div class="section" style="margin-top:0">
+    <h3>📆 Activités de la semaine</h3>
+    <div class="small" id="plannerWeekRange" style="margin-bottom:10px"></div>
+    <div class="planner-list" id="plannerEvents"></div>
+   </div>
+   <div class="section parentOnly">
+    <h3 id="plannerFormTitle">➕ Ajouter une activité</h3>
+    <div class="formgrid">
+     <div><div class="fieldlabel">Enfant / membre</div><select id="plPerson"></select></div>
+     <div><div class="fieldlabel">Activité</div><input id="plTitle" placeholder="Ex. Natation"></div>
+     <div><div class="fieldlabel">Date</div><input id="plDate" type="date"></div>
+     <div><div class="fieldlabel">Début</div><input id="plStart" type="time"></div>
+     <div><div class="fieldlabel">Fin</div><input id="plEnd" type="time"></div>
+     <div><div class="fieldlabel">Lieu enregistré</div><select id="plPlace"></select></div>
+     <div><div class="fieldlabel">Transport aller</div><select id="plTransportOut"></select></div>
+     <div><div class="fieldlabel">Transport retour</div><select id="plTransportBack"></select></div>
+     <div><div class="fieldlabel">Qui accompagne à l’aller ?</div><select id="plOutCare"></select></div>
+     <div><div class="fieldlabel">Qui s’occupe du retour ?</div><select id="plBackCare"></select></div>
+     <div><div class="fieldlabel">Temps trajet aller (min)</div><input id="plOutMinutes" type="number" min="0" max="300" placeholder="Auto plus tard"></div>
+     <div><div class="fieldlabel">Temps trajet retour (min)</div><input id="plBackMinutes" type="number" min="0" max="300" placeholder="Auto plus tard"></div>
+     <div class="wide"><div class="fieldlabel">À prendre / notes</div><textarea id="plNotes" placeholder="Sac, gourde, équipement, informations utiles…"></textarea></div>
+    </div>
+    <div class="settingrow"><button class="btn good" onclick="savePlannerEvent()">Enregistrer</button><button class="btn secondary" onclick="resetPlannerForm()">Annuler</button></div>
+    <div class="small">Le calcul automatique du trajet sera relié à Apple Maps / Google Maps lors de l’intégration cartographique.</div>
+   </div>
+  </div>
+  <div>
+   <div class="section" style="margin-top:0">
+    <h3>📍 Lieux enregistrés</h3>
+    <div id="placesList"></div>
+    <div class="formgrid parentOnly" style="margin-top:10px">
+     <div><div class="fieldlabel">Nom</div><input id="placeName" placeholder="Ex. Piscine"></div>
+     <div><div class="fieldlabel">Adresse</div><input id="placeAddress" placeholder="Rue, NPA, ville"></div>
+    </div>
+    <button class="btn parentOnly" onclick="addPlace()" style="margin-top:8px">+ Enregistrer le lieu</button>
+   </div>
+   <div class="section">
+    <h3>🚗 Modes de transport</h3>
+    <div class="transport-pills" id="transportModes"></div>
+    <div class="small" style="margin-top:8px">Touchez un mode en mode parent pour le masquer ou le réactiver.</div>
+   </div>
+   <div class="section parentOnly">
+    <h3>🔄 Calendriers externes</h3>
+    <div class="notice">Synchronisation <b>bidirectionnelle</b> prévue avec Google Calendar, Outlook / Microsoft 365 et Apple Calendar. Les connexions OAuth/API seront activées dans la version connectée/native.</div>
+    <div id="calendarConnections"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
 <section id="points" class="view">
  <div class="weekhead"><div><h2 data-i18n="family_points">🏆 Points famille</h2><div class="small">Tâches et comportements, jour par jour.</div></div></div>
  <div class="section" id="scoreSummary"></div>
@@ -362,12 +433,13 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 
 <footer class="footerinfo">
- Version <b>2.18</b> • Dernière mise à jour : <b>26/08/2026</b>
+ Version <b>2.19</b> • Dernière mise à jour : <b>26/08/2026</b>
 </footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span><span data-i18n="nav_today">Aujourd’hui</span></button>
  <button data-view="week"><span class="ico">📅</span><span data-i18n="nav_week">Semaine</span></button>
+ <button data-view="planner"><span class="ico">🗓️</span><span data-i18n="nav_planner">Planning</span></button>
  <button data-view="menus"><span class="ico">🍽️</span><span data-i18n="nav_menus">Menus</span></button>
  <button data-view="points"><span class="ico">⭐</span><span data-i18n="nav_points">Points</span></button>
  <button data-view="rules"><span class="ico">🛡️</span><span data-i18n="nav_rules">Règles</span></button>
@@ -437,7 +509,7 @@ main{padding:12px 12px 84px;max-width:1500px;margin:auto}
 
 const I18N = {
  fr:{
-  nav_today:"Aujourd’hui",nav_week:"Semaine",nav_menus:"Menus",nav_points:"Points",nav_rules:"Règles",nav_settings:"Réglages",
+  nav_today:"Aujourd’hui",nav_week:"Semaine",nav_planner:"Planning",nav_menus:"Menus",nav_points:"Points",nav_rules:"Règles",nav_settings:"Réglages",
   top_subtitle:"organisation familiale • tâches • menus • points",settings_title:"⚙️ Réglages",settings_subtitle:"Sauvegarde locale + synchronisation Supabase facultative.",
   language_title:"🌍 Langue de l’application",language_help:"Le choix est enregistré sur cet appareil.",
   menus_title:"🍽️ Menus de la semaine",menus_subtitle:"Parents et enfants séparés par défaut • possibilité d’activer un menu commun repas par repas.",
@@ -454,7 +526,7 @@ const I18N = {
   parent_locked:"🔒 Parent",parent_unlocked:"🔓 Parent"
  },
  en:{
-  nav_today:"Today",nav_week:"Week",nav_menus:"Menus",nav_points:"Points",nav_rules:"Rules",nav_settings:"Settings",
+  nav_today:"Today",nav_week:"Week",nav_planner:"Planning",nav_menus:"Menus",nav_points:"Points",nav_rules:"Rules",nav_settings:"Settings",
   top_subtitle:"family organization • tasks • menus • points",settings_title:"⚙️ Settings",settings_subtitle:"Local backup + optional Supabase sync.",
   language_title:"🌍 App language",language_help:"The choice is saved on this device.",
   menus_title:"🍽️ Weekly menus",menus_subtitle:"Parents and children are separate by default • a shared menu can be enabled meal by meal.",
@@ -471,7 +543,7 @@ const I18N = {
   parent_locked:"🔒 Parent",parent_unlocked:"🔓 Parent"
  },
  es:{
-  nav_today:"Hoy",nav_week:"Semana",nav_menus:"Menús",nav_points:"Puntos",nav_rules:"Reglas",nav_settings:"Ajustes",
+  nav_today:"Hoy",nav_week:"Semana",nav_planner:"Planificación",nav_menus:"Menús",nav_points:"Puntos",nav_rules:"Reglas",nav_settings:"Ajustes",
   top_subtitle:"organización familiar • tareas • menús • puntos",settings_title:"⚙️ Ajustes",settings_subtitle:"Copia local + sincronización Supabase opcional.",
   language_title:"🌍 Idioma de la aplicación",language_help:"La elección se guarda en este dispositivo.",
   menus_title:"🍽️ Menús de la semana",menus_subtitle:"Padres e hijos separados por defecto • se puede activar un menú común para cada comida.",
@@ -488,7 +560,7 @@ const I18N = {
   parent_locked:"🔒 Padres",parent_unlocked:"🔓 Padres"
  },
  it:{
-  nav_today:"Oggi",nav_week:"Settimana",nav_menus:"Menu",nav_points:"Punti",nav_rules:"Regole",nav_settings:"Impostazioni",
+  nav_today:"Oggi",nav_week:"Settimana",nav_planner:"Planning",nav_menus:"Menu",nav_points:"Punti",nav_rules:"Regole",nav_settings:"Impostazioni",
   top_subtitle:"organizzazione familiare • attività • menu • punti",settings_title:"⚙️ Impostazioni",settings_subtitle:"Backup locale + sincronizzazione Supabase opzionale.",
   language_title:"🌍 Lingua dell’app",language_help:"La scelta viene salvata su questo dispositivo.",
   menus_title:"🍽️ Menu della settimana",menus_subtitle:"Genitori e bambini separati per impostazione predefinita • è possibile attivare un menu comune per ogni pasto.",
@@ -505,7 +577,7 @@ const I18N = {
   parent_locked:"🔒 Genitore",parent_unlocked:"🔓 Genitore"
  },
  de:{
-  nav_today:"Heute",nav_week:"Woche",nav_menus:"Menüs",nav_points:"Punkte",nav_rules:"Regeln",nav_settings:"Einstellungen",
+  nav_today:"Heute",nav_week:"Woche",nav_planner:"Planung",nav_menus:"Menüs",nav_points:"Punkte",nav_rules:"Regeln",nav_settings:"Einstellungen",
   top_subtitle:"Familienorganisation • Aufgaben • Menüs • Punkte",settings_title:"⚙️ Einstellungen",settings_subtitle:"Lokale Sicherung + optionale Supabase-Synchronisierung.",
   language_title:"🌍 App-Sprache",language_help:"Die Auswahl wird auf diesem Gerät gespeichert.",
   menus_title:"🍽️ Wochenmenüs",menus_subtitle:"Eltern und Kinder standardmäßig getrennt • ein gemeinsames Menü kann pro Mahlzeit aktiviert werden.",
@@ -545,9 +617,9 @@ const SHARED=[{id:'table',icon:'🍴',label:'Mettre la table + nettoyer la table
 const GIRL_ROOM={id:'room',icon:'🛏️',label:'Ranger sa chambre'};
 const GIRLS_SHARED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'},{id:'bath',icon:'🛁',label:'Garder la salle de bain rangée'}];
 const ANCHOR=new Date(2026,7,17); let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
-let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},version:2.3,updatedAt:new Date().toISOString()};
+let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:[]},version:2.19,updatedAt:new Date().toISOString()};
 if(!state.menus) state.menus={};
-state.version=Math.max(Number(state.version)||0,2.3);
+state.version=Math.max(Number(state.version)||0,2.19);
 let cloud=JSON.parse(localStorage.getItem('familyCloudV2')||'null')||{url:'',key:'',familyCode:''};
 let parentUnlocked=false,pinBuffer='',pinMode='unlock';
 if(!localStorage.getItem('familyParentPin')) localStorage.setItem('familyParentPin','2468');
@@ -831,7 +903,73 @@ function copyMenuWeek(){
  saveLocal(); alert(t('week_copied'));
 }
 
-function renderAll(){document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
+
+
+const DEFAULT_TRANSPORTS=[
+ {id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},
+ {id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}
+];
+const CARE_OPTIONS=[
+ {id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},
+ {id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}
+];
+let editingPlannerId=null;
+function ensurePlannerState(){
+ if(!state.planner||typeof state.planner!=='object')state.planner={};
+ if(!Array.isArray(state.planner.events))state.planner.events=[];
+ if(!Array.isArray(state.planner.places))state.planner.places=[];
+ if(!Array.isArray(state.planner.transportModes)||!state.planner.transportModes.length)state.planner.transportModes=DEFAULT_TRANSPORTS.map(x=>({...x}));
+ if(!state.planner.calendarSync)state.planner.calendarSync={google:{mode:'two-way'},outlook:{mode:'two-way'},apple:{mode:'two-way'}};
+ ['google','outlook','apple'].forEach(k=>{if(!state.planner.calendarSync[k])state.planner.calendarSync[k]={mode:'two-way'}});
+}
+function activeTransports(){ensurePlannerState();return state.planner.transportModes.filter(x=>x.enabled!==false)}
+function plannerPersonName(id){return PEOPLE.find(p=>p.id===id)?.name||id}
+function careName(id,personId){if(id==='alone')return `${plannerPersonName(personId)} part/rentre seul(e)`;return CARE_OPTIONS.find(x=>x.id===id)?.label||id}
+function placeById(id){ensurePlannerState();return state.planner.places.find(x=>x.id===id)}
+function transportById(id){ensurePlannerState();return state.planner.transportModes.find(x=>x.id===id)}
+function minutesText(n){let v=parseInt(n,10);return Number.isFinite(v)&&v>0?`${v} min`:'à calculer'}
+function departureTime(start,mins){if(!start||!mins)return '';let [h,m]=start.split(':').map(Number),d=new Date(2000,0,1,h,m);d.setMinutes(d.getMinutes()-Number(mins));return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function renderPlanner(){
+ ensurePlannerState();
+ let range=document.getElementById('plannerWeekRange'), list=document.getElementById('plannerEvents');
+ if(!range||!list)return;
+ let m=monday(selectedDay),sun=addDays(m,6);range.textContent=rangeText(selectedDay);
+ let ev=state.planner.events.filter(e=>e.date>=iso(m)&&e.date<=iso(sun)).sort((a,b)=>(a.date+(a.start||'')).localeCompare(b.date+(b.start||'')));
+ list.innerHTML=ev.length?ev.map(e=>{
+   let p=placeById(e.placeId),to=transportById(e.transportOut),tb=transportById(e.transportBack),dep=departureTime(e.start,e.outMinutes);
+   return `<div class="event-card"><div class="event-top"><div><div class="event-title">${plannerPersonName(e.personId)} · ${escapeHtmlPlanner(e.title)}</div><div class="event-meta">📅 ${e.date} · ${e.start||'—'}–${e.end||'—'}<br>📍 ${p?escapeHtmlPlanner(p.name)+' — '+escapeHtmlPlanner(p.address):'Lieu non défini'}<br>${to?.label||'🚗'} Aller : ${careName(e.outCare,e.personId)} · ${minutesText(e.outMinutes)}${dep?` · départ ${dep}`:''}<br>${tb?.label||'🚗'} Retour : ${careName(e.backCare,e.personId)} · ${minutesText(e.backMinutes)}${e.notes?`<br>🎒 ${escapeHtmlPlanner(e.notes)}`:''}</div></div><span class="status-badge">Family Flow</span></div><div class="event-actions parentOnly"><button class="btn secondary" onclick="editPlannerEvent('${e.id}')">Modifier</button><button class="btn danger" onclick="deletePlannerEvent('${e.id}')">Supprimer</button></div></div>`
+ }).join(''):'<div class="empty-state">Aucune activité enregistrée cette semaine.</div>';
+ renderPlaces();renderTransportModes();renderCalendarConnections();populatePlannerForm();
+}
+function escapeHtmlPlanner(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function populatePlannerForm(){
+ let person=document.getElementById('plPerson'),place=document.getElementById('plPlace'),tout=document.getElementById('plTransportOut'),tback=document.getElementById('plTransportBack'),oc=document.getElementById('plOutCare'),bc=document.getElementById('plBackCare');
+ if(!person||!place||!tout||!tback||!oc||!bc)return;
+ let keep={person:person.value,place:place.value,to:tout.value,tb:tback.value,oc:oc.value,bc:bc.value};
+ person.innerHTML=PEOPLE.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+ place.innerHTML='<option value="">— Choisir un lieu —</option>'+state.planner.places.map(p=>`<option value="${p.id}">${escapeHtmlPlanner(p.name)}</option>`).join('');
+ let opts=activeTransports().map(t=>`<option value="${t.id}">${t.label}</option>`).join('');tout.innerHTML=opts;tback.innerHTML=opts;
+ let care=CARE_OPTIONS.map(x=>`<option value="${x.id}">${x.label}</option>`).join('');oc.innerHTML=care;bc.innerHTML=care;
+ if(keep.person)person.value=keep.person;if(keep.place)place.value=keep.place;if(keep.to)tout.value=keep.to;if(keep.tb)tback.value=keep.tb;if(keep.oc)oc.value=keep.oc;if(keep.bc)bc.value=keep.bc;
+ let date=document.getElementById('plDate');if(date&&!date.value)date.value=iso(selectedDay);
+}
+function resetPlannerForm(){editingPlannerId=null;let title=document.getElementById('plannerFormTitle');if(title)title.textContent='➕ Ajouter une activité';['plTitle','plStart','plEnd','plOutMinutes','plBackMinutes','plNotes'].forEach(id=>{let e=document.getElementById(id);if(e)e.value=''});let d=document.getElementById('plDate');if(d)d.value=iso(selectedDay);populatePlannerForm()}
+function savePlannerEvent(){
+ if(!parentUnlocked)return showPin('unlock');ensurePlannerState();let title=document.getElementById('plTitle').value.trim(),date=document.getElementById('plDate').value;if(!title||!date)return alert('Indique au minimum une activité et une date.');
+ let data={id:editingPlannerId||('ev-'+Date.now()),personId:document.getElementById('plPerson').value,title,date,start:document.getElementById('plStart').value,end:document.getElementById('plEnd').value,placeId:document.getElementById('plPlace').value,transportOut:document.getElementById('plTransportOut').value,transportBack:document.getElementById('plTransportBack').value,outCare:document.getElementById('plOutCare').value,backCare:document.getElementById('plBackCare').value,outMinutes:document.getElementById('plOutMinutes').value,backMinutes:document.getElementById('plBackMinutes').value,notes:document.getElementById('plNotes').value.trim(),updatedAt:new Date().toISOString(),externalIds:{}};
+ let i=state.planner.events.findIndex(x=>x.id===editingPlannerId);if(i>=0)state.planner.events[i]={...state.planner.events[i],...data};else state.planner.events.push(data);saveLocal();resetPlannerForm();renderPlanner();
+}
+function editPlannerEvent(id){let e=state.planner.events.find(x=>x.id===id);if(!e)return;editingPlannerId=id;document.getElementById('plannerFormTitle').textContent='✏️ Modifier l’activité';populatePlannerForm();let map={plPerson:'personId',plTitle:'title',plDate:'date',plStart:'start',plEnd:'end',plPlace:'placeId',plTransportOut:'transportOut',plTransportBack:'transportBack',plOutCare:'outCare',plBackCare:'backCare',plOutMinutes:'outMinutes',plBackMinutes:'backMinutes',plNotes:'notes'};Object.entries(map).forEach(([id,k])=>document.getElementById(id).value=e[k]??'')}
+function deletePlannerEvent(id){if(!parentUnlocked)return;if(confirm('Supprimer cette activité ?')){state.planner.events=state.planner.events.filter(x=>x.id!==id);saveLocal();renderPlanner()}}
+function addPlace(){if(!parentUnlocked)return;let n=document.getElementById('placeName').value.trim(),a=document.getElementById('placeAddress').value.trim();if(!n||!a)return alert('Indique un nom et une adresse.');state.planner.places.push({id:'pl-'+Date.now(),name:n,address:a});document.getElementById('placeName').value='';document.getElementById('placeAddress').value='';saveLocal();renderPlanner()}
+function deletePlace(id){if(!parentUnlocked)return;if(state.planner.events.some(e=>e.placeId===id))return alert('Ce lieu est utilisé par une activité. Modifie d’abord l’activité.');state.planner.places=state.planner.places.filter(x=>x.id!==id);saveLocal();renderPlanner()}
+function renderPlaces(){let el=document.getElementById('placesList');if(!el)return;el.innerHTML=state.planner.places.length?state.planner.places.map(p=>`<div class="task"><div class="label">📍 ${escapeHtmlPlanner(p.name)}<div class="tag">${escapeHtmlPlanner(p.address)}</div></div><button class="btn secondary parentOnly" onclick="deletePlace('${p.id}')">×</button></div>`).join(''):'<div class="small">Aucun lieu enregistré.</div>'}
+function toggleTransport(id){if(!parentUnlocked)return showPin('unlock');let t=state.planner.transportModes.find(x=>x.id===id);if(t){t.enabled=t.enabled===false;saveLocal();renderPlanner()}}
+function renderTransportModes(){let el=document.getElementById('transportModes');if(!el)return;el.innerHTML=state.planner.transportModes.map(t=>`<button class="transport-pill ${t.enabled===false?'off':''}" onclick="toggleTransport('${t.id}')">${t.label}</button>`).join('')}
+function setCalendarMode(provider,mode){if(!parentUnlocked)return;state.planner.calendarSync[provider].mode=mode;saveLocal();renderCalendarConnections()}
+function renderCalendarConnections(){let el=document.getElementById('calendarConnections');if(!el)return;let labels={google:'Google Calendar',outlook:'Outlook / Microsoft 365',apple:'Apple Calendar'};el.innerHTML=Object.keys(labels).map(k=>`<div class="calendar-row"><div><b>${labels[k]}</b><div class="small">Connexion API à activer</div></div><select onchange="setCalendarMode('${k}',this.value)"><option value="read" ${state.planner.calendarSync[k].mode==='read'?'selected':''}>Lecture seule</option><option value="push" ${state.planner.calendarSync[k].mode==='push'?'selected':''}>Family Flow → calendrier</option><option value="two-way" ${state.planner.calendarSync[k].mode==='two-way'?'selected':''}>Bidirectionnel</option></select></div>`).join('')}
+
+function renderAll(){ensurePlannerState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?t('parent_unlocked'):t('parent_locked');renderToday();renderSharedTasks();renderEveningRoutine();renderWeek();renderPlanner();renderPoints();renderMenus();loadCloudFields();updateSyncUI()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
@@ -874,8 +1012,8 @@ function resetPointsOnly(){
  }
 }
 
-function resetAll(){if(!parentUnlocked)return;if(confirm('Effacer toutes les coches et tous les points sur cet appareil ?')){state={checks:{},points:[],menus:{},version:2.3,updatedAt:new Date().toISOString()};saveLocal();renderAll()}}
-migrateV21ToV22();applyTranslations();if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
+function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales (tâches, points, menus, planning, lieux et réglages de transport) ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:2.19,updatedAt:new Date().toISOString()};saveLocal();renderAll()}}
+migrateV21ToV22();ensurePlannerState();state.version=2.19;applyTranslations();if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
 </script>
 </body>
 </html>
