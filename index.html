@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.23 — Carballes</title>
+<title>Family Flow V2.25 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -44,7 +44,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .task{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid #edf1f6;min-height:44px}
 .task:last-child{border-bottom:0}.task .label{flex:1;font-weight:650;line-height:1.2;font-size:14px}.tag{font-size:10px;color:var(--muted);margin-top:3px}
 .check{width:28px;height:28px;border:2px solid #a9b5c7;border-radius:8px;background:white;display:grid;place-items:center;font-weight:900;color:white;flex:0 0 auto}
-.check.done{background:var(--green);border-color:var(--green)}.check.done:after{content:"✓";font-size:18px}
+.check.done{background:var(--green);border-color:var(--green)}.check.done:after{content:"✓";font-size:18px}.check.missed{background:var(--red);border-color:var(--red)}.check.missed:after{content:"✕";font-size:17px}.routine-pair{display:flex;justify-content:center;gap:5px;align-items:center}.routine-pair .check{width:25px;height:25px;border-radius:7px}.routine-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted)}
 .section{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 3px 12px #1431590c}
 .section h3{margin:0 0 8px;font-size:17px}
 .points-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
@@ -247,7 +247,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.23</b> • Correction des responsabilités de la semaine en cours • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.25</b> • Ajout du rangement de la salle de bain commune des filles • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -277,7 +277,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </div>
 
 <script>
-const APP_VERSION=2.23;
+const APP_VERSION=2.25;
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -285,7 +285,10 @@ const ROTATION_TASKS=[
  {id:'trash',icon:'🗑️',label:'Poubelles'},
  {id:'salon',icon:'🧹',label:'Rangement salon + couloirs'}
 ];
-const GIRLS_SHARED=[{id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'}];
+const GIRLS_SHARED=[
+ {id:'playroom',icon:'🧸',label:'Ranger la salle de jeux'},
+ {id:'girls_bathroom',icon:'🛁',label:'Ranger la salle de bain commune des filles'}
+];
 const EVENING_ROUTINE=[{id:'teeth',icon:'🦷',label:'Se laver les dents',points:0},{id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure',points:0}];
 const DEFAULT_TRANSPORTS=[{id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},{id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}];
 const CARE_OPTIONS=[{id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},{id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}];
@@ -366,8 +369,21 @@ function roomKey(day,p){return sharedKey(day,p,'room')}
 function roomDone(day,p){return !!state.checks[roomKey(day,p)]}
 function toggleRoom(day,p){let k=roomKey(day,p);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
 function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
+function routineMissedKey(day,p,t){return `routine_missed|${iso(day)}|${p}|${t}`}
 function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
-function toggleRoutine(day,p,t){let k=routineKey(day,p,t);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+function routineMissed(day,p,t){return !!state.checks[routineMissedKey(day,p,t)]}
+function toggleRoutine(day,p,t){
+ let k=routineKey(day,p,t), mk=routineMissedKey(day,p,t);
+ if(state.checks[k])delete state.checks[k];
+ else{state.checks[k]=true;delete state.checks[mk]}
+ saveLocal();renderAll()
+}
+function toggleRoutineMissed(day,p,t){
+ let k=routineKey(day,p,t), mk=routineMissedKey(day,p,t);
+ if(state.checks[mk])delete state.checks[mk];
+ else{state.checks[mk]=true;delete state.checks[k]}
+ saveLocal();renderAll()
+}
 
 function addPoint(person,delta,reason,day=selectedDay,silent=false){
  if(!parentUnlocked&&!silent)return showPin('unlock');
@@ -400,8 +416,8 @@ function renderWeek(){
  document.getElementById('weekTable').innerHTML=h;
  document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
  let rh='<table class="weektable"><tr><th>Routine</th>'+days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}</th>`).join('')+'</tr>';
- ['sole','calista'].forEach(id=>EVENING_ROUTINE.forEach(t=>{rh+=`<tr><td>${PEOPLE.find(p=>p.id===id).name} — ${t.icon} ${t.label}</td>${days.map(d=>`<td><button class="check ${routineDone(d,id,t.id)?'done':''}" onclick="toggleRoutine(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button></td>`).join('')}</tr>`}));
- rh+='</table>';document.getElementById('dailyRoutineWeek').innerHTML=rh
+ ['sole','calista'].forEach(id=>EVENING_ROUTINE.forEach(t=>{rh+=`<tr><td>${PEOPLE.find(p=>p.id===id).name} — ${t.icon} ${t.label}</td>${days.map(d=>`<td><div class="routine-pair"><button title="Fait" class="check ${routineDone(d,id,t.id)?'done':''}" onclick="toggleRoutine(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button><button title="Non fait" class="check ${routineMissed(d,id,t.id)?'missed':''}" onclick="toggleRoutineMissed(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button></div></td>`).join('')}</tr>`}));
+ rh+='</table><div class="routine-legend"><span>✅ case gauche = fait</span><span>❌ case droite = non fait</span><span>Une seule des deux peut être cochée pour un même jour.</span></div>';document.getElementById('dailyRoutineWeek').innerHTML=rh
 }
 
 function menuBlank(){return {common:false,parents:{dish:'',protein:'',side:'',dessert:''},children:{dish:'',protein:'',side:'',dessert:''},shared:{dish:'',protein:'',side:'',dessert:''}}}
@@ -509,7 +525,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-23-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-25-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
