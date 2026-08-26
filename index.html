@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.35 — Carballes</title>
+<title>Family Flow V2.36 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -499,6 +499,57 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   #menus .menu-col-dinner{min-width:210px}
 }
 
+
+/* V2.36 : classement en podium */
+.podium{display:block}
+.podium-top{
+  display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:10px;align-items:end
+}
+.podium-place{
+  border:1px solid var(--line);border-radius:16px;padding:12px 10px;text-align:center;background:white;
+  box-shadow:0 4px 14px #14315910
+}
+.podium-place .place-no{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:34px;height:34px;border-radius:999px;background:#eef3fa;font-size:16px;font-weight:900;margin-bottom:8px
+}
+.podium-place .place-name{font-size:18px;font-weight:900;line-height:1.15}
+.podium-place .place-score{font-size:28px;font-weight:900;margin-top:6px}
+.podium-place .place-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.podium-1{padding-top:18px;padding-bottom:18px;border-color:#e5c96d;background:linear-gradient(180deg,#fff8dd,#ffffff)}
+.podium-1 .place-no{background:#f5d96d;color:#6e5600}
+.podium-1 .place-name{font-size:22px}
+.podium-1 .place-score{font-size:34px}
+.podium-2{background:linear-gradient(180deg,#f4f7fb,#ffffff)}
+.podium-2 .place-no{background:#dfe6ef;color:#44566d}
+.podium-3{background:linear-gradient(180deg,#fdf3ea,#ffffff)}
+.podium-3 .place-no{background:#efc8a6;color:#74441b}
+.podium-fourth{
+  margin-top:12px;border:1px dashed #cfd8e6;border-radius:16px;padding:12px;background:#fbfcfe
+}
+.podium-fourth .fourth-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap
+}
+.podium-fourth .left{display:flex;align-items:center;gap:10px}
+.podium-fourth .mini-no{
+  width:32px;height:32px;border-radius:999px;background:#eef3fa;display:grid;place-items:center;font-weight:900
+}
+.podium-fourth .name{font-size:17px;font-weight:900}
+.podium-fourth .score{font-size:24px;font-weight:900}
+@media(max-width:700px){
+  .podium-top{gap:6px}
+  .podium-place{padding:8px 6px;border-radius:12px}
+  .podium-place .place-no{min-width:28px;height:28px;font-size:13px;margin-bottom:5px}
+  .podium-place .place-name{font-size:13px}
+  .podium-1 .place-name{font-size:16px}
+  .podium-place .place-score{font-size:20px}
+  .podium-1 .place-score{font-size:24px}
+  .podium-place .place-sub{font-size:9px}
+  .podium-fourth{margin-top:8px;padding:8px;border-radius:12px}
+  .podium-fourth .name{font-size:14px}
+  .podium-fourth .score{font-size:18px}
+}
+
 </style>
 </head>
 <body>
@@ -592,7 +643,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <section id="points" class="view">
  <div class="weekhead"><div><h2>🏆 Classement familial</h2><div class="small">Un seul classement pour Solé, Calista, Angela et Yvan.</div></div></div>
- <div class="section"><div class="rank" id="rankCards"></div></div>
+ <div class="section"><div class="podium" id="rankCards"></div></div>
  <div class="section" id="scoreSummary"></div>
  <div class="section"><h3>Historique récent</h3><div id="history"></div></div>
 </section>
@@ -637,7 +688,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.35</b> • Correctif iOS pour le tableau vertical des menus • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.36</b> • Nouveau classement en podium • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -690,7 +741,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.35;
+const APP_VERSION=2.36;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1155,9 +1206,34 @@ function renderTransportModes(){document.getElementById('transportModes').innerH
 function toggleTransport(id){if(!parentUnlocked)return showPin('unlock');let t=state.planner.transportModes.find(x=>x.id===id);if(t){t.enabled=t.enabled===false?true:false;saveLocal();renderPlanner()}}
 function renderCalendarConnections(){let names={google:'Google Calendar',outlook:'Outlook / Microsoft 365',apple:'Apple Calendar'};document.getElementById('calendarConnections').innerHTML=Object.keys(names).map(k=>`<div class="syncrow"><div><b>${names[k]}</b><div class="small">Mode prévu : bidirectionnel</div></div><span class="status-badge">À connecter</span></div>`).join('')}
 
-function renderPoints(){let m=monday(selectedDay),s=addDays(m,6),scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score);document.getElementById('rankCards').innerHTML=scores.map((x,i)=>`<div class="rankcard"><div class="small">#${i+1}</div><b>${x.p.name}</b><div class="score">${x.score} ⭐</div></div>`).join('');
- document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+PEOPLE.map(p=>`<div class="task"><div class="label">${p.name}</div><b style="font-size:22px">${scoreFor(p.id,m,s)>=0?'+':''}${scoreFor(p.id,m,s)} ⭐</b></div>`).join('');
- let recent=[...state.points].sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
+function renderPoints(){
+ let m=monday(selectedDay),s=addDays(m,6),scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score);
+ function podiumCard(item,place){
+   if(!item)return `<div class="podium-place podium-${place}"><div class="place-no">${place}</div><div class="place-name">—</div><div class="place-score">0 ⭐</div><div class="place-sub">Aucun membre</div></div>`;
+   return `<div class="podium-place podium-${place}">
+     <div class="place-no">${place}</div>
+     <div class="place-name">${item.p.name}</div>
+     <div class="place-score">${item.score} ⭐</div>
+     <div class="place-sub">${place===1?'Leader de la semaine':place===2?'Très belle semaine':'Podium'}</div>
+   </div>`;
+ }
+ let htmlPodium = `<div class="podium-top">
+   ${podiumCard(scores[1],2)}
+   ${podiumCard(scores[0],1)}
+   ${podiumCard(scores[2],3)}
+ </div>`;
+ if(scores[3]){
+   htmlPodium += `<div class="podium-fourth">
+     <div class="fourth-row">
+       <div class="left"><div class="mini-no">4</div><div><div class="name">${scores[3].p.name}</div><div class="small">4e place de la semaine</div></div></div>
+       <div class="score">${scores[3].score} ⭐</div>
+     </div>
+   </div>`;
+ }
+ document.getElementById('rankCards').innerHTML=htmlPodium;
+ document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+scores.map((x,i)=>`<div class="task"><div class="label">#${i+1} — ${x.p.name}</div><b style="font-size:22px">${x.score>=0?'+':''}${x.score} ⭐</b></div>`).join('');
+ let recent=[...state.points].sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);
+ document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
 }
 
 function parentButton(){parentUnlocked?lockParent():showPin('unlock')}
@@ -1208,7 +1284,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-35-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-36-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
