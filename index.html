@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.33 — Carballes</title>
+<title>Family Flow V2.34 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -436,6 +436,48 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 #app:not(.parent-mode) #menus .menu-cell:hover{border-color:var(--line);box-shadow:none}
 #app:not(.parent-mode) #menus .menu-cell:active{transform:none}
 #app.parent-mode #menuReadOnlyNotice{background:#edf9f1;border-color:#b8dfc6}
+
+/* V2.34 : menus avec jours verticaux et repas en colonnes */
+.menu-week-wrap{overflow-x:auto;padding-bottom:4px}
+.menu-table-view{min-width:980px}
+.menu-vtable{width:100%;border-collapse:separate;border-spacing:0;background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.menu-vtable th,.menu-vtable td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top}
+.menu-vtable th:last-child,.menu-vtable td:last-child{border-right:0}
+.menu-vtable tr:last-child td{border-bottom:0}
+.menu-vtable thead th{background:#eef3fa;padding:9px 7px;font-size:12px;font-weight:900;text-align:center}
+.menu-vtable .day-col{width:110px;background:#f8fafc;padding:10px 8px;text-align:center}
+.menu-day-name{font-size:12px;font-weight:900;text-transform:capitalize}
+.menu-day-date{font-size:11px;color:var(--muted);margin-top:2px}
+.menu-day-today{display:inline-block;margin-top:5px;font-size:10px;border-radius:999px;padding:3px 6px;background:#fff3cd;color:#7a5b00}
+.menu-meal-cell{padding:7px;background:white}
+.menu-meal-stack{display:flex;flex-direction:column;gap:6px}
+.menu-meal-card{border:1px solid var(--line);border-radius:12px;padding:7px;min-height:112px;display:flex;flex-direction:column;gap:5px}
+.menu-meal-card.parents{background:var(--parent)}
+.menu-meal-card.children{background:var(--child)}
+.menu-meal-card.commonbox{background:var(--common)}
+.menu-meal-title{font-size:10px;font-weight:900}
+.menu-meal-main{font-size:11px;font-weight:800;line-height:1.2}
+.menu-meal-sub{font-size:10px;color:var(--muted);line-height:1.2}
+.menu-meal-empty{font-size:10px;color:#9aa4b4;font-style:italic}
+.menu-meal-actions{display:flex;justify-content:flex-end;margin-top:6px}
+.menu-cell-btn{border:0;border-radius:999px;padding:5px 9px;background:#e9eef6;color:#1d395d;font-size:10px;font-weight:850}
+.menu-col-breakfast,.menu-col-lunch,.menu-col-dinner{min-width:250px}
+#app:not(.parent-mode) .menu-cell-btn{display:none}
+@media(max-width:700px){
+  .menu-table-view{min-width:760px}
+  .menu-vtable thead th{font-size:10px;padding:7px 5px}
+  .menu-vtable .day-col{width:86px;padding:7px 4px}
+  .menu-day-name{font-size:10px}
+  .menu-day-date{font-size:9px}
+  .menu-day-today{font-size:8px;padding:2px 5px}
+  .menu-meal-cell{padding:4px}
+  .menu-meal-card{min-height:96px;padding:5px;border-radius:10px}
+  .menu-meal-title{font-size:9px}
+  .menu-meal-main{font-size:10px}
+  .menu-meal-sub,.menu-meal-empty{font-size:8.5px}
+  .menu-cell-btn{font-size:8px;padding:4px 7px}
+}
+
 </style>
 </head>
 <body>
@@ -524,7 +566,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div>
   <div id="foodCatalogList"></div>
  </div>
-<div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> touche directement n’importe quelle case Midi/Soir, ou le bouton « ✏️ Modifier ».</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
+<div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> utilise le bouton « ✏️ Modifier » dans la cellule du repas souhaité.</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
 </section>
 
 <section id="points" class="view">
@@ -574,7 +616,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.33</b> • Modification des menus réservée aux parents • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.34</b> • Menus affichés avec jours en vertical et repas en colonnes • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -627,7 +669,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.33;
+const APP_VERSION=2.34;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -886,77 +928,70 @@ function menuSummary(o){
 }
 function menuMiniHtml(kind,o){let s=menuSummary(o),title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Menu commun';return `<div class="menu-mini ${kind==='common'?'commonbox':kind}"><div class="menu-mini-title">${kind==='parents'?'👨‍👩 ':kind==='children'?'👧👧 ':'👨‍👩‍👧‍👧 '}${title}</div>${s.main?`<div class="menu-main">${esc(s.main)}</div>${s.sub?`<div class="menu-sub">${esc(s.sub)}</div>`:''}`:'<div class="menu-empty">À définir</div>'}</div>`}
 
+
 function mealTitle(meal){return meal==='breakfast'?'Petit-déjeuner':meal==='lunch'?'Déjeuner':meal==='dinner'?'Dîner':meal}
 function compactMenuValue(obj){
   if(!obj)return '';
   return selectedFoodNames(obj).join(' • ');
 }
-function mobileMealSlotHtml(day,meal){
-  let e=menuEntry(day,meal);
-  if(e.common){
-    let val=compactMenuValue(e.shared);
-    return `<div class="mobile-menu-slot" role="button" tabindex="0" data-menu-date="${iso(day)}" data-menu-meal="${meal}">
-      <div class="mobile-menu-slot-head">${mealTitle(meal)}</div>
-      <div class="mobile-menu-slot-body">
-        <div class="mobile-menu-meal-block">
-          <div class="mobile-menu-meal-label">Commun</div>
-          <div class="mobile-menu-meal-value ${val?'':'mobile-menu-empty'}">${val||'À définir'}</div>
-        </div>
-      </div>
-      <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn parentOnly" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
-    </div>`;
-  }
-  let pv=compactMenuValue(e.parents), cv=compactMenuValue(e.children);
-  return `<div class="mobile-menu-slot" role="button" tabindex="0" data-menu-date="${iso(day)}" data-menu-meal="${meal}">
-    <div class="mobile-menu-slot-head">${mealTitle(meal)}</div>
-    <div class="mobile-menu-slot-body">
-      <div class="mobile-menu-meal-block">
-        <div class="mobile-menu-meal-label">Parents</div>
-        <div class="mobile-menu-meal-value ${pv?'':'mobile-menu-empty'}">${pv||'À définir'}</div>
-      </div>
-      <div class="mobile-menu-meal-block">
-        <div class="mobile-menu-meal-label">Enfants</div>
-        <div class="mobile-menu-meal-value ${cv?'':'mobile-menu-empty'}">${cv||'À définir'}</div>
-      </div>
-    </div>
-    <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn parentOnly" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
+function splitMealValue(obj){
+  const vals = compactMenuValue(obj);
+  if(!vals)return {main:'',sub:''};
+  const parts = vals.split(' • ');
+  return {main:parts[0]||'',sub:parts.slice(1).join(' • ')};
+}
+function menuMealCard(kind,obj){
+  const data=splitMealValue(obj);
+  const cls=kind==='parents'?'parents':kind==='children'?'children':'commonbox';
+  const title=kind==='parents'?'👨‍👩 Parents':kind==='children'?'👧👧 Enfants':'👨‍👩‍👧‍👧 Commun';
+  return `<div class="menu-meal-card ${cls}">
+    <div class="menu-meal-title">${title}</div>
+    ${data.main?`<div class="menu-meal-main">${esc(data.main)}</div>${data.sub?`<div class="menu-meal-sub">${esc(data.sub)}</div>`:''}`:`<div class="menu-meal-empty">À définir</div>`}
   </div>`;
 }
-function renderMobileMenus(days){
-  const host=document.getElementById('mobileMenuView');
-  if(!host)return;
-  let todayIso=iso(new Date());
-  host.innerHTML=days.map(d=>{
-    let dayIso=iso(d);
-    let isToday=dayIso===todayIso;
-    return `<div class="mobile-menu-day">
-      <div class="mobile-menu-date ${isToday?'today':''}">
-        <div class="daynum">${d.getDate()}</div>
-        <div class="dayshort">${d.toLocaleDateString(currentLocale(),{weekday:'short'})}</div>
-        <div class="daynote">${isToday?'Aujourd’hui':''}</div>
-      </div>
-      <div class="mobile-menu-card">
-        <div class="mobile-menu-columns">
-          ${mobileMealSlotHtml(d,'breakfast')}
-          ${mobileMealSlotHtml(d,'lunch')}
-          ${mobileMealSlotHtml(d,'dinner')}
-        </div>
-      </div>
-    </div>`;
-  }).join('') + '<div class="mobile-menu-copyhint">Astuce : touche directement un bloc Midi ou Soir pour le modifier.</div>';
+function menuMealCellHtml(day,meal){
+  let e=menuEntry(day,meal);
+  let content = e.common
+    ? menuMealCard('common',e.shared)
+    : menuMealCard('parents',e.parents)+menuMealCard('children',e.children);
+  return `<td class="menu-meal-cell"><div class="menu-meal-stack">${content}</div><div class="menu-meal-actions parentOnly"><button type="button" class="menu-cell-btn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div></td>`;
 }
-
-function renderMenus(){let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
- let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- ['breakfast','lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='breakfast'?'🥐<br>Petit-déj.':meal==='lunch'?'☀️<br>Déjeuner':'🌙<br>Dîner'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit parentOnly" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
- renderMobileMenus(days);
- let ds=document.getElementById('desktopMenuDay');
- if(ds){
-   let previous=ds.value;
-   ds.innerHTML=days.map(d=>`<option value="${iso(d)}">${d.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long'})}</option>`).join('');
-   if(previous && days.some(d=>iso(d)===previous)) ds.value=previous;
-   else ds.value=iso(days[0]);
- }
+function renderMenus(){
+  let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];
+  document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
+  const todayIso=iso(new Date());
+  let out=`<table class="menu-vtable">
+    <thead>
+      <tr>
+        <th>Jour</th>
+        <th class="menu-col-breakfast">🥐 Petit-déjeuner</th>
+        <th class="menu-col-lunch">☀️ Déjeuner</th>
+        <th class="menu-col-dinner">🌙 Dîner</th>
+      </tr>
+    </thead><tbody>`;
+  days.forEach(d=>{
+    const dIso=iso(d);
+    out += `<tr>
+      <td class="day-col">
+        <div class="menu-day-name">${d.toLocaleDateString(currentLocale(),{weekday:'long'})}</div>
+        <div class="menu-day-date">${d.getDate()} ${d.toLocaleDateString(currentLocale(),{month:'short'})}</div>
+        ${dIso===todayIso?'<div class="menu-day-today">Aujourd’hui</div>':''}
+      </td>
+      ${menuMealCellHtml(d,'breakfast')}
+      ${menuMealCellHtml(d,'lunch')}
+      ${menuMealCellHtml(d,'dinner')}
+    </tr>`;
+  });
+  out += `</tbody></table>`;
+  const host=document.getElementById('menuTableView');
+  if(host)host.innerHTML=out;
+  let ds=document.getElementById('desktopMenuDay');
+  if(ds){
+    let previous=ds.value;
+    ds.innerHTML=days.map(d=>`<option value="${iso(d)}">${d.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long'})}</option>`).join('');
+    if(previous && days.some(d=>iso(d)===previous)) ds.value=previous;
+    else ds.value=iso(days[0]);
+  }
 }
 function moveMenuWeek(n){menuWeekDate=addDays(menuWeekDate,n*7);renderMenus()}
 function openMenuEditorIso(dateStr,meal){let [y,m,d]=dateStr.split('-').map(Number);openMenuEditor(new Date(y,m-1,d,12),meal)}
@@ -1152,7 +1187,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-33-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-34-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
