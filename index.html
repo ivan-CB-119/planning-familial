@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.31 — Carballes</title>
+<title>Family Flow V2.28 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -321,102 +321,6 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .mobile-overview,.mobile-view-switch{display:none!important}
 }
 
-
-/* V2.29 : affichage mobile des menus inspiré d'une vue timeline plus lisible */
-.mobile-menu-view{display:none}
-.mobile-ui #menus .menu-week-wrap{display:none}
-.mobile-ui #menus .mobile-menu-view{display:block}
-.mobile-ui #menus .menu-legend{display:none}
-.mobile-ui #menus .menu-actions{gap:4px}
-.mobile-ui #menus .menu-actions .btn{font-size:9px;padding:6px 7px}
-.mobile-ui #menus .menu-toolbar{margin-bottom:6px}
-.mobile-ui #menus .menu-week-nav{width:100%;justify-content:space-between}
-.mobile-ui #menus .menu-week-nav b{font-size:11px;text-align:center;flex:1}
-.mobile-ui #menus .menu-week-nav .btn{padding:6px 8px}
-.mobile-menu-day{
-  display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:stretch;
-  margin-bottom:8px
-}
-.mobile-menu-date{
-  background:#2d2f35;color:#fff;border-radius:999px;min-height:72px;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:8px 4px;text-align:center;border:1px solid #44474e
-}
-.mobile-menu-date .daynum{font-size:22px;font-weight:900;line-height:1}
-.mobile-menu-date .dayshort{font-size:12px;opacity:.95;margin-top:2px}
-.mobile-menu-date .daynote{font-size:9px;opacity:.85;margin-top:7px;line-height:1.1}
-.mobile-menu-date.today{
-  background:#e9e4eb;color:#242833;border-color:#d1cad5
-}
-.mobile-menu-card{
-  background:#1f2126;color:#f4f5f8;border-radius:18px;padding:10px 10px 8px;
-  box-shadow:0 6px 16px #00000016;border:1px solid #2f333a
-}
-.mobile-menu-columns{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px
-}
-.mobile-menu-slot{
-  background:#23262c;border-radius:12px;padding:7px 7px 8px;min-height:102px;
-  display:flex;flex-direction:column;gap:5px;border:1px solid #2d3138
-}
-.mobile-menu-slot-head{
-  font-size:9.5px;font-weight:900;color:#d9dde7;letter-spacing:.01em;line-height:1.05
-}
-.mobile-menu-slot-body{
-  flex:1;font-size:10px;line-height:1.22;color:#eef1f5;display:flex;flex-direction:column;gap:5px
-}
-.mobile-menu-meal-block{
-  background:#2a2e35;border-radius:9px;padding:5px 6px
-}
-.mobile-menu-meal-label{
-  font-size:8px;font-weight:900;color:#b9c3d2;margin-bottom:2px;text-transform:uppercase
-}
-.mobile-menu-meal-value{
-  font-size:9px;font-weight:750;line-height:1.15
-}
-.mobile-menu-empty{
-  color:#98a2b3;font-style:italic
-}
-.mobile-menu-editline{
-  display:flex;justify-content:flex-end;gap:6px;margin-top:7px
-}
-.mobile-menu-editbtn{
-  border:0;border-radius:999px;padding:5px 9px;background:#343945;color:#fff;
-  font-size:9px;font-weight:850
-}
-.mobile-menu-copyhint{
-  font-size:8.5px;color:var(--muted);margin-top:4px
-}
-
-
-.food-add-row{display:grid;grid-template-columns:190px minmax(180px,1fr) auto;gap:8px;align-items:center}
-.food-add-row select,.food-add-row input{padding:9px;border:1px solid var(--line);border-radius:10px;background:white;min-width:0}
-.food-catalog-group{margin-top:10px}
-.food-catalog-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:900;margin-bottom:5px}
-.food-chip-wrap{display:flex;flex-wrap:wrap;gap:6px}
-.food-chip{border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:7px 9px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:5px}
-.food-chip button{border:0;background:transparent;color:inherit;font-weight:900;padding:0 2px;cursor:pointer}
-.food-picker-group{margin:8px 0 10px}
-.food-picker-title{font-size:11px;font-weight:900;margin-bottom:5px}
-.food-choice{border:1px solid #ccd5e2;background:white;border-radius:999px;padding:7px 9px;font-size:11px;font-weight:800}
-.food-choice.selected{outline:2px solid var(--navy);outline-offset:1px}
-.food-cat-proteins{background:#fff0f0;border-color:#e8aaaa}
-.food-cat-vegetables{background:#eef9ef;border-color:#afd8b2}
-.food-cat-starches{background:#fff6e6;border-color:#e4c181}
-.food-cat-soups{background:#f1f0ff;border-color:#bbb6e8}
-.food-cat-fruits{background:#edfafa;border-color:#9dd4d6}
-.food-cat-desserts{background:#fff8dc;border-color:#ded08a}
-.food-cat-drinks{background:#f1f3f5;border-color:#c8cdd2}
-.food-cat-dairy{background:#eef5ff;border-color:#aec8eb}
-.food-cat-other{background:#f7f0fa;border-color:#d6b9de}
-.food-picker-empty{font-size:10px;color:var(--muted);font-style:italic;padding:5px 0}
-@media(max-width:700px){
- .food-add-row{grid-template-columns:1fr}
- .food-add-row .btn{width:100%}
- .food-choice{padding:6px 8px;font-size:10px}
- .food-picker-title{font-size:10px}
-}
-
 </style>
 </head>
 <body>
@@ -522,28 +426,17 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div class="menu-toolbar"><div class="menu-week-nav"><button class="btn secondary" onclick="moveMenuWeek(-1)">‹</button><b id="menuRangeTitle"></b><button class="btn secondary" onclick="moveMenuWeek(1)">›</button></div>
    <div class="menu-legend"><span><i class="legend-dot legend-parent"></i>Parents</span><span><i class="legend-dot legend-child"></i>Enfants</span><span><i class="legend-dot legend-common"></i>Menu commun</span></div>
   </div>
-  <div id="mobileMenuView" class="mobile-menu-view"></div><div class="menu-week-wrap"><div class="menu-grid" id="menuGrid"></div></div>
+  <div class="menu-week-wrap"><div class="menu-grid" id="menuGrid"></div></div>
   <div class="menu-actions"><button class="btn" id="menuAddEditBtn" type="button">＋ Ajouter / modifier un repas</button><button class="btn secondary" onclick="copyMenuWeek()">📋 Copier la semaine suivante</button></div>
   <div class="menu-desktop-tools">
    <div class="toolfield"><label>Jour</label><select id="desktopMenuDay"></select></div>
-   <div class="toolfield"><label>Repas</label><select id="desktopMenuMeal"><option value="breakfast">🥐 Petit-déjeuner</option><option value="lunch">☀️ Déjeuner</option><option value="dinner">🌙 Dîner</option></select></div>
+   <div class="toolfield"><label>Repas</label><select id="desktopMenuMeal"><option value="lunch">☀️ Midi</option><option value="dinner">🌙 Soir</option></select></div>
    <button class="btn good" type="button" id="desktopMenuEditBtn">✏️ Modifier ce repas</button>
    <div class="small">Alternative spécialement prévue pour Chrome sur ordinateur.</div>
   </div>
   <div id="desktopMenuEditorHost" class="desktop-menu-editor-host"></div>
  </div>
- 
- <div class="section" id="foodCatalogSection">
-  <h3>🥗 Bibliothèque d’aliments</h3>
-  <div class="small" style="margin-bottom:8px">Crée une seule fois tes aliments, rattache-les à un groupe, puis sélectionne-les dans chaque repas.</div>
-  <div class="food-add-row">
-    <select id="foodCategorySelect"></select>
-    <input id="foodNameInput" placeholder="Ex. Poulet grillé, brocolis, riz…">
-    <button type="button" class="btn good" onclick="addFoodItem()">＋ Ajouter</button>
-  </div>
-  <div id="foodCatalogList"></div>
- </div>
-<div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> touche directement n’importe quelle case Midi/Soir, ou le bouton « ✏️ Modifier ».</div><div class="small" style="line-height:1.55">Chaque repas (petit-déjeuner, déjeuner ou dîner) possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
+ <div class="section"><h3>💡 Fonctionnement</h3><div class="notice okbox" style="margin-bottom:10px"><b>Modification :</b> touche directement n’importe quelle case Midi/Soir, ou le bouton « ✏️ Modifier ».</div><div class="small" style="line-height:1.55">Chaque repas possède deux menus indépendants : <b>Parents</b> et <b>Enfants</b>. Pour un repas identique, active <b>« Même menu pour tous »</b>. Chaque menu peut contenir : plat, protéine, accompagnement et dessert.</div></div>
 </section>
 
 <section id="points" class="view">
@@ -575,7 +468,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.31</b> • Catalogue d’aliments par groupes + sélection des repas • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.28</b> • Vue mobile globale dédiée iPhone • Dernière mise à jour : <b>26/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -592,44 +485,20 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <div class="modalback" id="menuModal">
  <div class="modal" id="menuModalBox">
-  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
-   <div><h3 style="margin-bottom:3px">🍽️ Composer le repas</h3><div class="small" id="menuEditorDate"></div></div>
-   <button class="btn secondary" onclick="closeMenuEditor()">Fermer</button>
-  </div>
-  <div class="menu-toggle">
-   <div><b>Même menu pour tous</b><div class="small">Parents et enfants auront exactement les mêmes aliments.</div></div>
-   <label class="switch"><input id="menuCommonToggle" type="checkbox" onchange="toggleMenuEditorMode()"></label>
-  </div>
-
-  <div class="menu-separate">
-   <div class="menu-form-grid">
-    <div class="menu-form-card parents">
-     <h4>👨‍👩 Parents</h4>
-     <div id="foodPickerParents" class="food-picker"></div>
-    </div>
-    <div class="menu-form-card children">
-     <h4>👧👧 Enfants</h4>
-     <div id="foodPickerChildren" class="food-picker"></div>
-    </div>
-   </div>
-  </div>
-
-  <div class="menu-common-only">
-   <div class="menu-form-card common">
-    <h4>👨‍👩‍👧‍👧 Menu commun</h4>
-    <div id="foodPickerShared" class="food-picker"></div>
-   </div>
-  </div>
-
-  <div class="small" style="margin-top:8px">Touche les aliments pour les sélectionner ou les retirer du repas. Les choix restent enregistrés dans la bibliothèque.</div>
-  <div class="settingrow" style="justify-content:flex-end">
-   <button class="btn danger" onclick="clearMenuEntry()">Effacer ce repas</button>
-   <button type="button" class="btn good" onclick="saveMenuEntry()">💾 Enregistrer le repas</button>
-  </div>
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><h3 style="margin-bottom:3px">🍽️ Modifier le repas</h3><div class="small" id="menuEditorDate"></div></div><button class="btn secondary" onclick="closeMenuEditor()">Fermer</button></div>
+  <div class="menu-toggle"><div><b>Même menu pour tous</b><div class="small">Parents et enfants auront exactement le même repas.</div></div><label class="switch"><input id="menuCommonToggle" type="checkbox" onchange="toggleMenuEditorMode()"></label></div>
+  <div class="menu-separate"><div class="menu-form-grid">
+   <div class="menu-form-card parents"><h4>👨‍👩 Parents</h4><div class="menu-field"><label>Plat</label><input id="mp_dish" placeholder="Ex. Saumon grillé"></div><div class="menu-field"><label>Protéine</label><input id="mp_protein" placeholder="Ex. Saumon"></div><div class="menu-field"><label>Accompagnement</label><input id="mp_side" placeholder="Ex. Haricots verts"></div><div class="menu-field"><label>Dessert</label><input id="mp_dessert" placeholder="Ex. Yaourt"></div></div>
+   <div class="menu-form-card children"><h4>👧👧 Enfants</h4><div class="menu-field"><label>Plat</label><input id="mc_dish" placeholder="Ex. Pâtes bolognaise"></div><div class="menu-field"><label>Protéine</label><input id="mc_protein" placeholder="Ex. Poulet"></div><div class="menu-field"><label>Accompagnement</label><input id="mc_side" placeholder="Ex. Riz"></div><div class="menu-field"><label>Dessert</label><input id="mc_dessert" placeholder="Ex. Compote"></div></div>
+  </div></div>
+  <div class="menu-common-only"><div class="menu-form-card common"><h4>👨‍👩‍👧‍👧 Menu commun</h4><div class="menu-field"><label>Plat</label><input id="mcom_dish" placeholder="Ex. Tacos maison"></div><div class="menu-field"><label>Protéine</label><input id="mcom_protein" placeholder="Ex. Bœuf haché"></div><div class="menu-field"><label>Accompagnement</label><input id="mcom_side" placeholder="Ex. Légumes + salade"></div><div class="menu-field"><label>Dessert</label><input id="mcom_dessert" placeholder="Ex. Glace"></div></div></div>
+  <div class="small">Tu peux laisser certains champs vides. Le « Plat » est affiché en priorité dans la vue semaine.</div>
+  <div class="settingrow" style="justify-content:flex-end"><button class="btn danger" onclick="clearMenuEntry()">Effacer ce repas</button><button type="button" class="btn good" onclick="saveMenuEntry()">💾 Enregistrer le repas</button></div>
  </div>
 </div>
+
 <script>
-const APP_VERSION=2.31;
+const APP_VERSION=2.28;
 const PEOPLE=[{id:'sole',name:'Solé',cls:'sole'},{id:'calista',name:'Calista',cls:'calista'},{id:'angela',name:'Angela',cls:'angela'},{id:'yvan',name:'Yvan',cls:'yvan'}];
 const ROTATION_TASKS=[
  {id:'dishwasher',icon:'🍽️',label:'Lave-vaisselle'},
@@ -643,18 +512,6 @@ const GIRLS_SHARED=[
 ];
 const EVENING_ROUTINE=[{id:'teeth',icon:'🦷',label:'Se laver les dents',points:0},{id:'bedtime',icon:'🌙',label:'Aller se coucher à l’heure',points:0}];
 const DEFAULT_TRANSPORTS=[{id:'car',label:'🚗 Voiture',enabled:true},{id:'public',label:'🚌 Transports publics',enabled:true},{id:'walk',label:'🚶 Marche',enabled:true},{id:'bike',label:'🚲 Vélo',enabled:true},{id:'scooter',label:'🛴 Trottinette',enabled:true}];
-
-const FOOD_CATEGORIES=[
- {id:'proteins',label:'Protéines',icon:'🥩'},
- {id:'vegetables',label:'Légumes',icon:'🥦'},
- {id:'starches',label:'Féculents',icon:'🍚'},
- {id:'soups',label:'Soupes',icon:'🥣'},
- {id:'fruits',label:'Fruits',icon:'🍎'},
- {id:'desserts',label:'Desserts',icon:'🍰'},
- {id:'drinks',label:'Boissons',icon:'🥤'},
- {id:'dairy',label:'Produits laitiers',icon:'🥛'},
- {id:'other',label:'Autres',icon:'🍽️'}
-];
 const CARE_OPTIONS=[{id:'alone',label:'Seul(e)'},{id:'angela',label:'Angela'},{id:'yvan',label:'Yvan'},{id:'other',label:'Autre personne'},{id:'none',label:'Non défini'}];
 const ANCHOR=new Date(2026,7,17,12,0,0,0);
 let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
@@ -671,8 +528,6 @@ function ensureState(){
  if(!Array.isArray(state.planner.events))state.planner.events=[];
  if(!Array.isArray(state.planner.places))state.planner.places=[];
  if(!Array.isArray(state.planner.transportModes)||!state.planner.transportModes.length)state.planner.transportModes=DEFAULT_TRANSPORTS.map(x=>({...x}));
- if(!state.foodCatalog||typeof state.foodCatalog!=='object')state.foodCatalog={items:[]};
- if(!Array.isArray(state.foodCatalog.items))state.foodCatalog.items=[];
  if(!state.planner.calendarSync)state.planner.calendarSync={google:{mode:'two-way'},outlook:{mode:'two-way'},apple:{mode:'two-way'}};
  ['google','outlook','apple'].forEach(k=>{if(!state.planner.calendarSync[k])state.planner.calendarSync[k]={mode:'two-way'}});
  state.version=APP_VERSION;
@@ -847,102 +702,14 @@ function renderWeek(){
  rh+='</table><div class="routine-legend"><span>✅ case gauche = fait</span><span>❌ case droite = non fait</span><span>Une seule des deux peut être cochée pour un même jour.</span></div>';document.getElementById('dailyRoutineWeek').innerHTML=rh
 }
 
-function menuBlank(){return {common:false,parents:{selected:[]},children:{selected:[]},shared:{selected:[]}}}
+function menuBlank(){return {common:false,parents:{dish:'',protein:'',side:'',dessert:''},children:{dish:'',protein:'',side:'',dessert:''},shared:{dish:'',protein:'',side:'',dessert:''}}}
 function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};return state.menus[k]}
-function normalizeMealTarget(o){
- o=o||{};
- if(!Array.isArray(o.selected))o.selected=[];
- return o;
-}
-function menuEntry(day,meal){
- const obj=menuDayObj(day);
- if(!obj[meal])obj[meal]=menuBlank();
- let e=obj[meal];
- e.parents=normalizeMealTarget(e.parents);
- e.children=normalizeMealTarget(e.children);
- e.shared=normalizeMealTarget(e.shared);
- e.common=!!e.common;
- return e
-}
-function foodItemById(id){return state.foodCatalog.items.find(x=>x.id===id)}
-function selectedFoodNames(o){
- let selected=(o&&Array.isArray(o.selected))?o.selected:[];
- let names=selected.map(id=>foodItemById(id)?.name).filter(Boolean);
- if(!names.length && o){
-   names=[o.dish,o.protein,o.side,o.dessert].filter(Boolean);
- }
- return names
-}
-function menuSummary(o){
- let names=selectedFoodNames(o);
- return {main:names[0]||'',sub:names.slice(1,4).join(' • ')}
-}
+function menuEntry(day,meal){const obj=menuDayObj(day);if(!obj[meal])obj[meal]=menuBlank();let e=obj[meal];e.parents=e.parents||{};e.children=e.children||{};e.shared=e.shared||{};e.common=!!e.common;return e}
+function menuSummary(o){let extras=[o.protein,o.side,o.dessert].filter(Boolean);return {main:o.dish||extras[0]||'',sub:extras.filter(x=>x!==o.dish).slice(0,2).join(' • ')}}
 function menuMiniHtml(kind,o){let s=menuSummary(o),title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Menu commun';return `<div class="menu-mini ${kind==='common'?'commonbox':kind}"><div class="menu-mini-title">${kind==='parents'?'👨‍👩 ':kind==='children'?'👧👧 ':'👨‍👩‍👧‍👧 '}${title}</div>${s.main?`<div class="menu-main">${esc(s.main)}</div>${s.sub?`<div class="menu-sub">${esc(s.sub)}</div>`:''}`:'<div class="menu-empty">À définir</div>'}</div>`}
-
-function mealTitle(meal){return meal==='breakfast'?'Petit-déjeuner':meal==='lunch'?'Déjeuner':meal==='dinner'?'Dîner':meal}
-function compactMenuValue(obj){
-  if(!obj)return '';
-  return selectedFoodNames(obj).join(' • ');
-}
-function mobileMealSlotHtml(day,meal){
-  let e=menuEntry(day,meal);
-  if(e.common){
-    let val=compactMenuValue(e.shared);
-    return `<div class="mobile-menu-slot" role="button" tabindex="0" data-menu-date="${iso(day)}" data-menu-meal="${meal}">
-      <div class="mobile-menu-slot-head">${mealTitle(meal)}</div>
-      <div class="mobile-menu-slot-body">
-        <div class="mobile-menu-meal-block">
-          <div class="mobile-menu-meal-label">Commun</div>
-          <div class="mobile-menu-meal-value ${val?'':'mobile-menu-empty'}">${val||'À définir'}</div>
-        </div>
-      </div>
-      <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
-    </div>`;
-  }
-  let pv=compactMenuValue(e.parents), cv=compactMenuValue(e.children);
-  return `<div class="mobile-menu-slot" role="button" tabindex="0" data-menu-date="${iso(day)}" data-menu-meal="${meal}">
-    <div class="mobile-menu-slot-head">${mealTitle(meal)}</div>
-    <div class="mobile-menu-slot-body">
-      <div class="mobile-menu-meal-block">
-        <div class="mobile-menu-meal-label">Parents</div>
-        <div class="mobile-menu-meal-value ${pv?'':'mobile-menu-empty'}">${pv||'À définir'}</div>
-      </div>
-      <div class="mobile-menu-meal-block">
-        <div class="mobile-menu-meal-label">Enfants</div>
-        <div class="mobile-menu-meal-value ${cv?'':'mobile-menu-empty'}">${cv||'À définir'}</div>
-      </div>
-    </div>
-    <div class="mobile-menu-editline"><button type="button" class="mobile-menu-editbtn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div>
-  </div>`;
-}
-function renderMobileMenus(days){
-  const host=document.getElementById('mobileMenuView');
-  if(!host)return;
-  let todayIso=iso(new Date());
-  host.innerHTML=days.map(d=>{
-    let dayIso=iso(d);
-    let isToday=dayIso===todayIso;
-    return `<div class="mobile-menu-day">
-      <div class="mobile-menu-date ${isToday?'today':''}">
-        <div class="daynum">${d.getDate()}</div>
-        <div class="dayshort">${d.toLocaleDateString(currentLocale(),{weekday:'short'})}</div>
-        <div class="daynote">${isToday?'Aujourd’hui':''}</div>
-      </div>
-      <div class="mobile-menu-card">
-        <div class="mobile-menu-columns">
-          ${mobileMealSlotHtml(d,'breakfast')}
-          ${mobileMealSlotHtml(d,'lunch')}
-          ${mobileMealSlotHtml(d,'dinner')}
-        </div>
-      </div>
-    </div>`;
-  }).join('') + '<div class="mobile-menu-copyhint">Astuce : touche directement un bloc Midi ou Soir pour le modifier.</div>';
-}
-
 function renderMenus(){let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
  let html='<div></div>'+days.map(d=>`<div class="menu-dayhead">${d.toLocaleDateString(currentLocale(),{weekday:'short'}).toUpperCase()}<br>${d.getDate()}</div>`).join('');
- ['breakfast','lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='breakfast'?'🥐<br>Petit-déj.':meal==='lunch'?'☀️<br>Déjeuner':'🌙<br>Dîner'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
- renderMobileMenus(days);
+ ['lunch','dinner'].forEach(meal=>{html+=`<div class="menu-meal-label">${meal==='lunch'?'☀️<br>Midi':'🌙<br>Soir'}</div>`;days.forEach(d=>{let e=menuEntry(d,meal);html+=`<div class="menu-cell ${e.common?'common':''}" role="button" tabindex="0" aria-label="Modifier le repas" data-menu-date="${iso(d)}" data-menu-meal="${meal}">${e.common?menuMiniHtml('common',e.shared):menuMiniHtml('parents',e.parents)+menuMiniHtml('children',e.children)}<button type="button" class="btn secondary menu-edit" data-menu-date="${iso(d)}" data-menu-meal="${meal}">✏️ Modifier</button></div>`})});document.getElementById('menuGrid').innerHTML=html;
  let ds=document.getElementById('desktopMenuDay');
  if(ds){
    let previous=ds.value;
@@ -968,9 +735,9 @@ function placeMenuEditorForViewport(){
 function openMenuEditor(day,meal){
  menuEditDay=new Date(day);menuEditMeal=meal;let e=menuEntry(menuEditDay,menuEditMeal);
  placeMenuEditorForViewport();
- document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='breakfast'?'Petit-déjeuner':meal==='lunch'?'Déjeuner':'Dîner');
+ document.getElementById('menuEditorDate').textContent=menuEditDay.toLocaleDateString(currentLocale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • '+(meal==='lunch'?'Midi':'Soir');
  document.getElementById('menuCommonToggle').checked=e.common;
- renderFoodPickers(e);
+ [['mp_',e.parents],['mc_',e.children],['mcom_',e.shared]].forEach(([pre,o])=>['dish','protein','side','dessert'].forEach(k=>document.getElementById(pre+k).value=o[k]||''));
  toggleMenuEditorMode();
  if(isDesktopMenuMode()){
    const host=document.getElementById('desktopMenuEditorHost');host.classList.add('active');
@@ -982,81 +749,10 @@ function closeMenuEditor(){
  document.getElementById('desktopMenuEditorHost')?.classList.remove('active');
 }
 function toggleMenuEditorMode(){document.getElementById('menuModalBox').classList.toggle('common-mode',document.getElementById('menuCommonToggle').checked)}
-let pickerDraft={parents:[],children:[],shared:[]};
-function renderFoodPickers(e){
- pickerDraft={
-   parents:[...(e.parents.selected||[])],
-   children:[...(e.children.selected||[])],
-   shared:[...(e.shared.selected||[])]
- };
- renderFoodPicker('foodPickerParents','parents');
- renderFoodPicker('foodPickerChildren','children');
- renderFoodPicker('foodPickerShared','shared');
-}
-function renderFoodPicker(hostId,target){
- const host=document.getElementById(hostId); if(!host)return;
- host.innerHTML=FOOD_CATEGORIES.map(cat=>{
-   const items=state.foodCatalog.items.filter(x=>x.category===cat.id).sort((a,b)=>a.name.localeCompare(b.name,currentLocale()));
-   return `<div class="food-picker-group">
-     <div class="food-picker-title">${cat.icon} ${cat.label}</div>
-     <div class="food-chip-wrap">${items.length?items.map(item=>`<button type="button" class="food-choice food-cat-${cat.id} ${pickerDraft[target].includes(item.id)?'selected':''}" onclick="toggleFoodChoice('${target}','${item.id}')">${esc(item.name)}</button>`).join(''):'<div class="food-picker-empty">Aucun aliment dans ce groupe</div>'}</div>
-   </div>`;
- }).join('');
-}
-function toggleFoodChoice(target,id){
- let arr=pickerDraft[target]||[];
- pickerDraft[target]=arr.includes(id)?arr.filter(x=>x!==id):[...arr,id];
- renderFoodPicker(target==='parents'?'foodPickerParents':target==='children'?'foodPickerChildren':'foodPickerShared',target);
-}
-function saveMenuEntry(){
- if(!menuEditDay)return;
- let e=menuEntry(menuEditDay,menuEditMeal);
- e.common=document.getElementById('menuCommonToggle').checked;
- e.parents={selected:[...pickerDraft.parents]};
- e.children={selected:[...pickerDraft.children]};
- e.shared={selected:[...pickerDraft.shared]};
- saveLocal();closeMenuEditor();renderMenus();renderFoodCatalog();
-}
+function readMealFields(pre){return {dish:document.getElementById(pre+'dish').value.trim(),protein:document.getElementById(pre+'protein').value.trim(),side:document.getElementById(pre+'side').value.trim(),dessert:document.getElementById(pre+'dessert').value.trim()}}
+function saveMenuEntry(){if(!menuEditDay)return;let e=menuEntry(menuEditDay,menuEditMeal);e.common=document.getElementById('menuCommonToggle').checked;e.parents=readMealFields('mp_');e.children=readMealFields('mc_');e.shared=readMealFields('mcom_');saveLocal();closeMenuEditor();renderMenus()}
 function clearMenuEntry(){if(!menuEditDay||!confirm('Effacer ce repas ?'))return;let k=iso(menuEditDay);if(state.menus[k])delete state.menus[k][menuEditMeal];saveLocal();closeMenuEditor();renderMenus()}
 function copyMenuWeek(){let src=monday(menuWeekDate),dest=addDays(src,7);if(!confirm('Copier tous les menus de cette semaine vers la semaine suivante ?'))return;for(let i=0;i<7;i++){let sKey=iso(addDays(src,i)),dKey=iso(addDays(dest,i));if(state.menus[sKey])state.menus[dKey]=JSON.parse(JSON.stringify(state.menus[sKey]))}saveLocal();alert('✅ Semaine copiée.')}
-
-
-function renderFoodCatalog(){
- const sel=document.getElementById('foodCategorySelect');
- if(sel){
-   const keep=sel.value;
-   sel.innerHTML=FOOD_CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
-   if(keep)sel.value=keep;
- }
- const host=document.getElementById('foodCatalogList'); if(!host)return;
- host.innerHTML=FOOD_CATEGORIES.map(cat=>{
-   const items=state.foodCatalog.items.filter(x=>x.category===cat.id).sort((a,b)=>a.name.localeCompare(b.name,currentLocale()));
-   return `<div class="food-catalog-group">
-     <div class="food-catalog-title"><span>${cat.icon} ${cat.label}</span><span class="small">${items.length}</span></div>
-     <div class="food-chip-wrap">${items.length?items.map(item=>`<span class="food-chip food-cat-${cat.id}">${esc(item.name)} <button type="button" title="Supprimer" onclick="deleteFoodItem('${item.id}')">×</button></span>`).join(''):'<span class="small">Aucun aliment</span>'}</div>
-   </div>`;
- }).join('');
-}
-function addFoodItem(){
- const input=document.getElementById('foodNameInput'), sel=document.getElementById('foodCategorySelect');
- let name=(input?.value||'').trim(), category=sel?.value||'other';
- if(!name)return alert('Indique le nom de l’aliment.');
- if(state.foodCatalog.items.some(x=>x.name.toLowerCase()===name.toLowerCase()))return alert('Cet aliment existe déjà.');
- state.foodCatalog.items.push({id:'food-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),name,category});
- input.value='';saveLocal();renderFoodCatalog();
- if(menuEditDay){let e=menuEntry(menuEditDay,menuEditMeal);renderFoodPickers(e)}
-}
-function deleteFoodItem(id){
- const item=foodItemById(id); if(!item)return;
- if(!confirm(`Supprimer « ${item.name} » de la bibliothèque ?`))return;
- state.foodCatalog.items=state.foodCatalog.items.filter(x=>x.id!==id);
- Object.values(state.menus||{}).forEach(day=>Object.values(day||{}).forEach(meal=>{
-   ['parents','children','shared'].forEach(k=>{
-     if(meal?.[k]?.selected)meal[k].selected=meal[k].selected.filter(x=>x!==id);
-   });
- }));
- saveLocal();renderFoodCatalog();renderMenus();
-}
 
 function activeTransports(){return state.planner.transportModes.filter(x=>x.enabled!==false)}
 function plannerPersonName(id){return PEOPLE.find(p=>p.id===id)?.name||id}
@@ -1111,14 +807,14 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-31-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-28-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
 function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales : tâches, points, menus, planning, lieux et transports ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};ensureState();saveLocal();renderAll()}}
 
 function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
-function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderPlanner();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();applyTranslations()}
+function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderToday();renderWeek();renderPlanner();renderMenus();renderPoints();loadCloudFields();updateSyncUI();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 /* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
@@ -1171,7 +867,6 @@ document.getElementById('mobileDetailBtn')?.addEventListener('click',()=>{
  document.getElementById('mobileOverviewBtn').classList.remove('active');
 });
 
-document.getElementById('foodNameInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFoodItem()}});
 renderAll();
 if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
 </script>
