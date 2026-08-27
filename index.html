@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.48 — Carballes</title>
+<title>Family Flow V2.49 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1045,7 +1045,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
-  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Les tâches qui rapportent des points les ajoutent automatiquement : <b>+2 tâche principale</b>, <b>+1 tortues</b>.</div>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. <b>✅ Fait</b> crédite automatiquement les tâches concernées : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Les points sont recalculés à partir des coches pour rester synchronisés.</div>
   <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1156,7 +1156,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.48</b> • Points automatiques sur tâches principales/tortues + affichage Aujourd’hui simplifié • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.49</b> • Correction et recalcul automatique des points liés aux coches de Semaine • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1209,7 +1209,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.48;
+const APP_VERSION=2.49;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1271,6 +1271,8 @@ function ensureState(){
  state.version=APP_VERSION;
 }
 ensureState();
+reconcileEvaluationPoints();
+localStorage.setItem('familyBoardV2',JSON.stringify(state));
 
 const I18N={
  fr:{top_subtitle:'organisation familiale • tâches • menus • points'},
@@ -1516,23 +1518,57 @@ function autoEvalPointValue(person,task,day){
   return 0;
 }
 function syncEvaluationPoints(day,person,task,status){
-  const delta=autoEvalPointValue(person,task,day);
-  if(!delta || !PEOPLE.some(p=>p.id===person)) return;
-
   const autoKey=`weekly-eval|${iso(day)}|${person}|${task}`;
-  // Remove any existing automatic entry for this exact evaluation first.
+
+  // Always remove the previous automatic point for this exact cell first.
   state.points=state.points.filter(x=>x.autoEvalKey!==autoKey);
 
-  if(status==='done'){
+  const delta=autoEvalPointValue(person,task,day);
+  if(status!=='done' || !delta || !PEOPLE.some(p=>p.id===person)) return;
+
+  state.points.push({
+    id:Date.now()+Math.random(),
+    person,
+    delta,
+    date:iso(day),
+    reason:autoEvalPointReason(person,task,day),
+    ts:new Date().toISOString(),
+    autoEvalKey
+  });
+}
+
+/*
+ Rebuilds all automatic points from the weekly evaluation grid.
+ This also migrates checks that were already marked "done" in older versions.
+*/
+function reconcileEvaluationPoints(){
+  if(!state.dailyEvaluation || !state.dailyEvaluation.tasks) return;
+
+  // Keep manual points and other automatic systems, remove only weekly-evaluation generated points.
+  state.points=state.points.filter(x=>!String(x.autoEvalKey||'').startsWith('weekly-eval|'));
+
+  Object.entries(state.dailyEvaluation.tasks).forEach(([key,status])=>{
+    if(status!=='done') return;
+    const parts=key.split('|');
+    if(parts.length!==3) return;
+
+    const [dateStr,person,task]=parts;
+    const day=new Date(`${dateStr}T12:00:00`);
+    if(Number.isNaN(day.getTime())) return;
+
+    const delta=autoEvalPointValue(person,task,day);
+    if(!delta || !PEOPLE.some(p=>p.id===person)) return;
+
     state.points.push({
+      id:Date.now()+Math.random(),
       person,
       delta,
-      date:iso(day),
+      date:dateStr,
       reason:autoEvalPointReason(person,task,day),
       ts:new Date().toISOString(),
-      autoEvalKey
+      autoEvalKey:`weekly-eval|${dateStr}|${person}|${task}`
     });
-  }
+  });
 }
 
 function evalTaskKey(day,person,task){return `${iso(day)}|${person}|${task}`}
@@ -1541,14 +1577,13 @@ function setTaskEval(day,person,task,status){
  if(!canCheckTasks())return denyTaskWrite();
  const k=evalTaskKey(day,person,task);
  const same=state.dailyEvaluation.tasks[k]===status;
- if(same){
-   delete state.dailyEvaluation.tasks[k];
-   syncEvaluationPoints(day,person,task,'');
- }else{
-   state.dailyEvaluation.tasks[k]=status;
-   syncEvaluationPoints(day,person,task,status);
- }
- saveLocal();renderAll();
+
+ if(same) delete state.dailyEvaluation.tasks[k];
+ else state.dailyEvaluation.tasks[k]=status;
+
+ reconcileEvaluationPoints();
+ saveLocal();
+ renderAll();
 }
 function evalTaskButtons(day,person,task){
  const v=getTaskEval(day,person,task), dis=canCheckTasks()?'':'disabled';
@@ -2009,7 +2044,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-48-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-49-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
