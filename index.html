@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.38 — Carballes</title>
+<title>Family Flow V2.40 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -642,6 +642,73 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  .menu-person-hint{display:none}
 }
 
+
+/* V2.39 : tâches validables uniquement sur smartphone parent */
+.task-access-banner{
+  margin:0 0 7px;padding:7px 10px;border-radius:10px;
+  border:1px solid #d8e0ec;background:#f8fafc;
+  font-size:10px;font-weight:800;color:#536176
+}
+.task-access-banner.write{
+  background:#edf9f1;border-color:#b8dfc6;color:#20643a
+}
+.task-access-banner.readonly{
+  background:#f4f6f8;border-color:#d8dee7;color:#657089
+}
+#app:not(.task-write) .check{
+  pointer-events:none!important;
+  cursor:default!important;
+  opacity:.82;
+}
+#app:not(.task-write) .check:not(.done):not(.missed){
+  background:#f3f5f8;
+  border-color:#c5ceda;
+}
+#app:not(.task-write) .task .label,
+#app:not(.task-write) .mobile-task-line,
+#app:not(.task-write) .moverview-task{
+  cursor:default;
+}
+
+
+/* V2.40 — suivi quotidien hebdomadaire */
+.eval-wrap{min-width:820px}
+.eval-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.eval-table th,.eval-table td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px 4px;text-align:center;font-size:10px;vertical-align:middle}
+.eval-table th{background:#eef3fa;font-weight:900;position:sticky;top:0;z-index:1}
+.eval-table th:first-child,.eval-table td:first-child{text-align:left;min-width:190px;position:sticky;left:0;background:#fff;z-index:2}
+.eval-table th:first-child{background:#eef3fa;z-index:3}
+.eval-table tr:last-child td{border-bottom:0}
+.eval-table th:last-child,.eval-table td:last-child{border-right:0}
+.eval-task-name{font-weight:850;line-height:1.15}
+.eval-task-person{font-size:8px;color:var(--muted);margin-top:2px}
+.eval-status{display:flex;justify-content:center;gap:2px}
+.eval-status button{border:1px solid #ccd5e2;background:#fff;border-radius:6px;width:25px;height:25px;padding:0;font-size:11px;font-weight:900}
+.eval-status button.on.done{background:#e4f6ea;border-color:#67b47f}
+.eval-status button.on.missed{background:#fdebed;border-color:#dd777e}
+.eval-status button.on.na{background:#eef1f5;border-color:#9da8b7}
+.eval-status button:disabled{opacity:.7}
+.behavior-card{min-width:820px}
+.behavior-day-cell{min-width:96px}
+.behavior-rating{display:flex;justify-content:center;gap:2px;margin-bottom:4px}
+.behavior-rating button{border:1px solid #ccd5e2;background:#fff;border-radius:7px;padding:4px 5px;font-size:11px}
+.behavior-rating .good.on{background:#e4f6ea;border-color:#67b47f}
+.behavior-rating .medium.on{background:#fff4d9;border-color:#d8b658}
+.behavior-rating .bad.on{background:#fdebed;border-color:#dd777e}
+.behavior-incidents{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.behavior-incidents button{border:1px solid #d5dce6;background:#f8fafc;border-radius:999px;padding:3px 5px;font-size:8px;font-weight:800}
+.behavior-incidents button.on{background:#fbe9ec;border-color:#d88991;color:#8d3038}
+.behavior-positive{margin-top:3px}
+.behavior-positive button{border:1px solid #a9d1b5;background:#f4fbf6;border-radius:999px;padding:3px 6px;font-size:8px;font-weight:850}
+.behavior-positive button.on{background:#dff3e5;border-color:#62a878;color:#28603a}
+.eval-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:9px;color:var(--muted)}
+@media(max-width:700px){
+ .eval-wrap,.behavior-card{min-width:760px}
+ .eval-table th,.eval-table td{font-size:9px;padding:4px 3px}
+ .eval-table th:first-child,.eval-table td:first-child{min-width:165px}
+ .eval-status button{width:23px;height:23px;font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -659,6 +726,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <main>
 <section id="today" class="view active">
+ <div id="taskAccessBannerToday" class="task-access-banner"></div>
  <div id="mobileOverview" class="mobile-overview"></div>
  <div id="mobileViewSwitch" class="mobile-view-switch">
    <button type="button" id="mobileOverviewBtn" class="active">Vue globale</button>
@@ -696,10 +764,29 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 
 <section id="week" class="view">
+ <div id="taskAccessBannerWeek" class="task-access-banner"></div>
  <div class="weekhead"><div><h2>📅 Suivi de la semaine</h2><div class="small" id="weekRange2"></div></div></div>
  <div class="section" style="overflow:auto"><table class="weektable" id="weekTable"></table></div>
+
+ <div class="section">
+  <h3>✅ Suivi quotidien des tâches</h3>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Ce suivi n’ajoute pas automatiquement de points.</div>
+  <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
+ </div>
+
+ <div class="section">
+  <h3>🙂 Comportement quotidien — Solé & Calista</h3>
+  <div class="small">Une appréciation générale par jour, complétée si nécessaire par les incidents observés.</div>
+  <div id="dailyBehaviorEvaluation" style="overflow:auto;margin-top:8px"></div>
+ </div>
+
+ <div class="section">
+  <h3>🌙 Routines quotidiennes — Solé & Calista</h3>
+  <div class="small">Dents et coucher : <b>✅ OK</b> • <b>❌ Pas OK</b> • <b>➖ Non évalué / pas nécessaire</b>.</div>
+  <div id="dailyRoutineEvaluation" style="overflow:auto;margin-top:8px"></div>
+ </div>
+
  <div class="section"><h3>🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
- <div class="section"><h3>🗓️ Habitudes quotidiennes</h3><div class="small">Dents et coucher restent des rappels quotidiens, sans impact automatique sur le score.</div><div id="dailyRoutineWeek" style="overflow:auto;margin-top:8px"></div></div>
 </section>
 
 <section id="menus" class="view">
@@ -794,7 +881,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.38</b> • Codes couleur par groupe alimentaire + meilleure distinction Parents/Enfants • Dernière mise à jour : <b>26/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.40</b> • Nouveau suivi quotidien hebdomadaire tâches, routines et comportement • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -847,7 +934,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.38;
+const APP_VERSION=2.40;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -894,6 +981,10 @@ if(DEPLOY_SUPABASE_PUBLISHABLE_KEY)cloud.key=DEPLOY_SUPABASE_PUBLISHABLE_KEY;
 
 function ensureState(){
  state.checks=state.checks||{};state.points=Array.isArray(state.points)?state.points:[];state.menus=state.menus||{};
+ if(!state.dailyEvaluation||typeof state.dailyEvaluation!=='object')state.dailyEvaluation={tasks:{},behavior:{},routines:{}};
+ state.dailyEvaluation.tasks=state.dailyEvaluation.tasks||{};
+ state.dailyEvaluation.behavior=state.dailyEvaluation.behavior||{};
+ state.dailyEvaluation.routines=state.dailyEvaluation.routines||{};
  if(!state.planner||typeof state.planner!=='object')state.planner={};
  if(!Array.isArray(state.planner.events))state.planner.events=[];
  if(!Array.isArray(state.planner.places))state.planner.places=[];
@@ -951,27 +1042,44 @@ function assignments(d){
  return out;
 }
 function turtlePerson(d){return PEOPLE[((weekIndex(d)%4)+4)%4]}
+
+function isPhoneTaskDevice(){
+  const narrow = window.innerWidth <= 700;
+  const touch = (navigator.maxTouchPoints||0) > 0;
+  const shortSide = Math.min(window.screen?.width||9999,window.screen?.height||9999);
+  return narrow && touch && shortSide <= 700;
+}
+function canCheckTasks(){
+  return parentUnlocked && isPhoneTaskDevice();
+}
+function denyTaskWrite(){
+  const msg='Les tâches sont en lecture seule sur cet appareil. Pour les valider, utilise le smartphone d’un parent et déverrouille le mode Parent.';
+  if(typeof alert==='function')alert(msg);
+}
+
 function keyCheck(day,p,t){return `week|${iso(monday(day))}|${p}|${t}`}
 function isDone(day,p,t){return !!state.checks[keyCheck(day,p,t)]}
-function toggle(day,p,t){let k=keyCheck(day,p,t),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-2,'Responsabilité hebdomadaire décochée',day,true)}else{state.checks[k]=true;addPoint(p,2,'Responsabilité hebdomadaire faite',day,true)}saveLocal();renderAll()}
+function toggle(day,p,t){if(!canCheckTasks())return denyTaskWrite();let k=keyCheck(day,p,t),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-2,'Responsabilité hebdomadaire décochée',day,true)}else{state.checks[k]=true;addPoint(p,2,'Responsabilité hebdomadaire faite',day,true)}saveLocal();renderAll()}
 function sharedKey(day,group,task){return `sharedweek|${iso(monday(day))}|${group}|${task}`}
 function sharedDone(day,group,task){return !!state.checks[sharedKey(day,group,task)]}
-function toggleSharedGirls(day,t){let k=sharedKey(day,'girls',t);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
-function toggleTurtles(day){const p=turtlePerson(day).id,k=sharedKey(day,'turtles','turtles'),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-1,'Tortues décochées',day,true)}else{state.checks[k]=true;addPoint(p,1,'Tortues faites',day,true)}saveLocal();renderAll()}
+function toggleSharedGirls(day,t){if(!canCheckTasks())return denyTaskWrite();let k=sharedKey(day,'girls',t);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+function toggleTurtles(day){if(!canCheckTasks())return denyTaskWrite();const p=turtlePerson(day).id,k=sharedKey(day,'turtles','turtles'),was=!!state.checks[k];if(was){delete state.checks[k];addPoint(p,-1,'Tortues décochées',day,true)}else{state.checks[k]=true;addPoint(p,1,'Tortues faites',day,true)}saveLocal();renderAll()}
 function roomKey(day,p){return sharedKey(day,p,'room')}
 function roomDone(day,p){return !!state.checks[roomKey(day,p)]}
-function toggleRoom(day,p){let k=roomKey(day,p);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
+function toggleRoom(day,p){if(!canCheckTasks())return denyTaskWrite();let k=roomKey(day,p);if(state.checks[k])delete state.checks[k];else state.checks[k]=true;saveLocal();renderAll()}
 function routineKey(day,p,t){return `routine|${iso(day)}|${p}|${t}`}
 function routineMissedKey(day,p,t){return `routine_missed|${iso(day)}|${p}|${t}`}
 function routineDone(day,p,t){return !!state.checks[routineKey(day,p,t)]}
 function routineMissed(day,p,t){return !!state.checks[routineMissedKey(day,p,t)]}
 function toggleRoutine(day,p,t){
+ if(!canCheckTasks())return denyTaskWrite();
  let k=routineKey(day,p,t), mk=routineMissedKey(day,p,t);
  if(state.checks[k])delete state.checks[k];
  else{state.checks[k]=true;delete state.checks[mk]}
  saveLocal();renderAll()
 }
 function toggleRoutineMissed(day,p,t){
+ if(!canCheckTasks())return denyTaskWrite();
  let k=routineKey(day,p,t), mk=routineMissedKey(day,p,t);
  if(state.checks[mk])delete state.checks[mk];
  else{state.checks[mk]=true;delete state.checks[k]}
@@ -1063,17 +1171,133 @@ function renderSharedTasks(){
 }
 function renderEveningRoutine(){document.getElementById('eveningRoutine').innerHTML=['sole','calista'].map(id=>`<div class="point-card"><h4>${PEOPLE.find(p=>p.id===id).name}</h4>${EVENING_ROUTINE.map(t=>`<div class="task"><button class="check ${routineDone(selectedDay,id,t.id)?'done':''}" onclick="toggleRoutine(selectedDay,'${id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">Routine quotidienne • 0 point</div></div></div>`).join('')}</div>`).join('')}
 
+
+const BEHAVIOR_INCIDENTS=[
+ {id:'insults',label:'Insultes'},
+ {id:'quarrels',label:'Chamailleries'},
+ {id:'shouting',label:'Cris'},
+ {id:'disrespect',label:'Manque de respect'}
+];
+
+function evalTaskKey(day,person,task){return `${iso(day)}|${person}|${task}`}
+function getTaskEval(day,person,task){return state.dailyEvaluation.tasks[evalTaskKey(day,person,task)]||''}
+function setTaskEval(day,person,task,status){
+ if(!canCheckTasks())return denyTaskWrite();
+ const k=evalTaskKey(day,person,task);
+ if(state.dailyEvaluation.tasks[k]===status)delete state.dailyEvaluation.tasks[k];
+ else state.dailyEvaluation.tasks[k]=status;
+ saveLocal();renderWeek();
+}
+function evalTaskButtons(day,person,task){
+ const v=getTaskEval(day,person,task), dis=canCheckTasks()?'':'disabled';
+ return `<div class="eval-status">
+   <button ${dis} title="Fait" class="${v==='done'?'on done':''}" onclick="setTaskEval(new Date('${iso(day)}T12:00:00'),'${person}','${task}','done')">✓</button>
+   <button ${dis} title="Non fait" class="${v==='missed'?'on missed':''}" onclick="setTaskEval(new Date('${iso(day)}T12:00:00'),'${person}','${task}','missed')">✕</button>
+   <button ${dis} title="Pas nécessaire" class="${v==='na'?'on na':''}" onclick="setTaskEval(new Date('${iso(day)}T12:00:00'),'${person}','${task}','na')">—</button>
+ </div>`;
+}
+function weeklyTaskRows(d){
+ const ass=assignments(d);
+ let rows=[];
+ PEOPLE.forEach(p=>{
+   const t=ass[p.id][0];
+   rows.push({person:p.id,personName:p.name,task:t.id,label:`${t.icon} ${t.label}`});
+ });
+ GIRLS_SHARED.forEach(t=>rows.push({person:'girls',personName:'Solé + Calista',task:t.id,label:`${t.icon} ${t.label}`}));
+ ['sole','calista'].forEach(id=>rows.push({person:id,personName:PEOPLE.find(p=>p.id===id).name,task:'room',label:'🛏️ Ranger sa chambre'}));
+ const tp=turtlePerson(d);
+ rows.push({person:tp.id,personName:tp.name,task:'turtles',label:'🐢 S’occuper des tortues'});
+ return rows;
+}
+
+function behaviorKey(day,person){return `${iso(day)}|${person}`}
+function getBehavior(day,person){
+ const k=behaviorKey(day,person);
+ if(!state.dailyEvaluation.behavior[k])state.dailyEvaluation.behavior[k]={rating:'',incidents:[],positive:false};
+ let b=state.dailyEvaluation.behavior[k];
+ b.incidents=Array.isArray(b.incidents)?b.incidents:[];
+ return b;
+}
+function setBehaviorRating(day,person,rating){
+ if(!canCheckTasks())return denyTaskWrite();
+ let b=getBehavior(day,person);
+ b.rating=b.rating===rating?'':rating;
+ saveLocal();renderWeek();
+}
+function toggleBehaviorIncident(day,person,incident){
+ if(!canCheckTasks())return denyTaskWrite();
+ let b=getBehavior(day,person);
+ b.incidents=b.incidents.includes(incident)?b.incidents.filter(x=>x!==incident):[...b.incidents,incident];
+ saveLocal();renderWeek();
+}
+function toggleBehaviorPositive(day,person){
+ if(!canCheckTasks())return denyTaskWrite();
+ let b=getBehavior(day,person);b.positive=!b.positive;saveLocal();renderWeek();
+}
+function behaviorCell(day,person){
+ const b=getBehavior(day,person),dis=canCheckTasks()?'':'disabled';
+ return `<div class="behavior-day-cell">
+   <div class="behavior-rating">
+    <button ${dis} title="Bon" class="good ${b.rating==='good'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','good')">😊</button>
+    <button ${dis} title="Moyen" class="medium ${b.rating==='medium'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','medium')">😐</button>
+    <button ${dis} title="Mauvais" class="bad ${b.rating==='bad'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','bad')">😠</button>
+   </div>
+   <div class="behavior-incidents">${BEHAVIOR_INCIDENTS.map(x=>`<button ${dis} class="${b.incidents.includes(x.id)?'on':''}" onclick="toggleBehaviorIncident(new Date('${iso(day)}T12:00:00'),'${person}','${x.id}')">${x.label}</button>`).join('')}</div>
+   <div class="behavior-positive"><button ${dis} class="${b.positive?'on':''}" onclick="toggleBehaviorPositive(new Date('${iso(day)}T12:00:00'),'${person}')">⭐ Bon comportement</button></div>
+ </div>`;
+}
+
+function routineEvalKey(day,person,routine){return `${iso(day)}|${person}|${routine}`}
+function getRoutineEval(day,person,routine){return state.dailyEvaluation.routines[routineEvalKey(day,person,routine)]||''}
+function setRoutineEval(day,person,routine,status){
+ if(!canCheckTasks())return denyTaskWrite();
+ const k=routineEvalKey(day,person,routine);
+ if(state.dailyEvaluation.routines[k]===status)delete state.dailyEvaluation.routines[k];
+ else state.dailyEvaluation.routines[k]=status;
+ saveLocal();renderWeek();
+}
+function routineEvalButtons(day,person,routine){
+ const v=getRoutineEval(day,person,routine),dis=canCheckTasks()?'':'disabled';
+ return `<div class="eval-status">
+   <button ${dis} title="OK" class="${v==='done'?'on done':''}" onclick="setRoutineEval(new Date('${iso(day)}T12:00:00'),'${person}','${routine}','done')">✓</button>
+   <button ${dis} title="Pas OK" class="${v==='missed'?'on missed':''}" onclick="setRoutineEval(new Date('${iso(day)}T12:00:00'),'${person}','${routine}','missed')">✕</button>
+   <button ${dis} title="Non évalué / pas nécessaire" class="${v==='na'?'on na':''}" onclick="setRoutineEval(new Date('${iso(day)}T12:00:00'),'${person}','${routine}','na')">—</button>
+ </div>`;
+}
+
 function renderWeek(){
  let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);
+
  let h='<tr><th>Personne</th>'+days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')+'<th>Score</th></tr>';
  h+=PEOPLE.map(p=>`<tr><td><b>${p.name}</b></td>${days.map(d=>`<td>${scoreFor(p.id,d,d)} ⭐</td>`).join('')}<td><b>${scoreFor(p.id,m,addDays(m,6))}</b></td></tr>`).join('');
  document.getElementById('weekTable').innerHTML=h;
- document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
- let rh='<table class="weektable"><tr><th>Routine</th>'+days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}</th>`).join('')+'</tr>';
- ['sole','calista'].forEach(id=>EVENING_ROUTINE.forEach(t=>{rh+=`<tr><td>${PEOPLE.find(p=>p.id===id).name} — ${t.icon} ${t.label}</td>${days.map(d=>`<td><div class="routine-pair"><button title="Fait" class="check ${routineDone(d,id,t.id)?'done':''}" onclick="toggleRoutine(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button><button title="Non fait" class="check ${routineMissed(d,id,t.id)?'missed':''}" onclick="toggleRoutineMissed(new Date('${iso(d)}T12:00:00'),'${id}','${t.id}')"></button></div></td>`).join('')}</tr>`}));
- rh+='</table><div class="routine-legend"><span>✅ case gauche = fait</span><span>❌ case droite = non fait</span><span>Une seule des deux peut être cochée pour un même jour.</span></div>';document.getElementById('dailyRoutineWeek').innerHTML=rh
-}
 
+ const rows=weeklyTaskRows(selectedDay);
+ let th=`<div class="eval-wrap"><table class="eval-table"><tr><th>Tâche</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
+ rows.forEach(r=>{
+   th+=`<tr><td><div class="eval-task-name">${r.label}</div><div class="eval-task-person">${r.personName}</div></td>${days.map(d=>`<td>${evalTaskButtons(d,r.person,r.task)}</td>`).join('')}</tr>`;
+ });
+ th+='</table><div class="eval-legend"><span>✓ Fait</span><span>✕ Non fait</span><span>— Pas nécessaire</span></div></div>';
+ document.getElementById('dailyTaskEvaluation').innerHTML=th;
+
+ let bh=`<div class="behavior-card"><table class="eval-table"><tr><th>Enfant</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
+ ['sole','calista'].forEach(id=>{
+   bh+=`<tr><td><div class="eval-task-name">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-task-person">😊 Bon • 😐 Moyen • 😠 Mauvais</div></td>${days.map(d=>`<td>${behaviorCell(d,id)}</td>`).join('')}</tr>`;
+ });
+ bh+='</table><div class="eval-legend"><span>Les incidents sont facultatifs.</span><span>⭐ Bon comportement permet de relever aussi les journées particulièrement positives.</span></div></div>';
+ document.getElementById('dailyBehaviorEvaluation').innerHTML=bh;
+
+ let rh=`<div class="eval-wrap"><table class="eval-table"><tr><th>Routine</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
+ ['sole','calista'].forEach(id=>{
+   EVENING_ROUTINE.forEach(t=>{
+     rh+=`<tr><td><div class="eval-task-name">${t.icon} ${t.label}</div><div class="eval-task-person">${PEOPLE.find(p=>p.id===id).name}</div></td>${days.map(d=>`<td>${routineEvalButtons(d,id,t.id)}</td>`).join('')}</tr>`;
+   });
+ });
+ rh+='</table><div class="eval-legend"><span>✓ OK</span><span>✕ Pas OK</span><span>— Non évalué / pas nécessaire</span></div></div>';
+ document.getElementById('dailyRoutineEvaluation').innerHTML=rh;
+
+ document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
+}
 function menuBlank(){return {common:false,parents:{selected:[]},children:{selected:[]},shared:{selected:[]}}}
 function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};return state.menus[k]}
 function normalizeMealTarget(o){
@@ -1418,14 +1642,30 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-38-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-40-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
 function resetAll(){if(!parentUnlocked)return;if(confirm('Réinitialiser TOUTES les données locales : tâches, points, menus, planning, lieux et transports ?')){state={checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};ensureState();saveLocal();renderAll()}}
 
 function goToday(){selectedDay=new Date();selectedDay.setHours(12,0,0,0);menuWeekDate=new Date(selectedDay);renderAll()}
-function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
+
+function renderTaskAccess(){
+  const writable=canCheckTasks();
+  document.getElementById('app')?.classList.toggle('task-write',writable);
+  const text=writable
+    ? '✅ Smartphone parent — validation des tâches autorisée'
+    : '👀 Lecture seule — les tâches se valident uniquement sur le smartphone d’un parent';
+  ['taskAccessBannerToday','taskAccessBannerWeek'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.textContent=text;
+      el.className='task-access-banner '+(writable?'write':'readonly');
+    }
+  });
+}
+
+function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderTaskAccess();let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
 
 /* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
@@ -1467,7 +1707,7 @@ function applyMobileUI(){
  if(!isPhone)document.documentElement.classList.remove('mobile-detail');
 }
 applyMobileUI();
-window.addEventListener('resize',applyMobileUI);
+window.addEventListener('resize',()=>{applyMobileUI();renderTaskAccess()});
 
 document.getElementById('mobileOverviewBtn')?.addEventListener('click',()=>{
  document.documentElement.classList.remove('mobile-detail');
