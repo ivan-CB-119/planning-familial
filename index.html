@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.47 — Carballes</title>
+<title>Family Flow V2.48 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -900,6 +900,26 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   cursor:not-allowed;
 }
 
+
+/* V2.48 — bloc Tâches communes plus lisible */
+.today-task-group-head.stacked{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:5px;
+}
+.today-task-group-title{
+  font-size:13px;
+  font-weight:900;
+}
+.today-common-box{
+  background:#faf7fd;
+  border-color:#e1d5ec;
+}
+@media(max-width:700px){
+  .today-task-group-title{font-size:11px}
+}
+
 </style>
 </head>
 <body>
@@ -933,11 +953,11 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   </div>
 
   <div class="section">
-   <h3>🏠 Tâches communes et personnelles</h3>
+   <h3>🏠 Organisation des tâches</h3>
 
-   <div class="today-task-group">
-    <div class="today-task-group-head">
-     <span>🤝 Tâches communes</span>
+   <div class="today-task-group today-common-box">
+    <div class="today-task-group-head stacked">
+     <span class="today-task-group-title">🤝 Tâches communes</span>
      <span class="today-name-badge girls">Solé + Calista</span>
     </div>
     <div id="todayCommonTasks" class="today-task-items"></div>
@@ -1025,7 +1045,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
-  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Ce suivi n’ajoute pas automatiquement de points.</div>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Les tâches qui rapportent des points les ajoutent automatiquement : <b>+2 tâche principale</b>, <b>+1 tortues</b>.</div>
   <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1136,7 +1156,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.47</b> • Correction édition Parent du suivi hebdomadaire • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.48</b> • Points automatiques sur tâches principales/tortues + affichage Aujourd’hui simplifié • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1189,7 +1209,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.47;
+const APP_VERSION=2.48;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1480,14 +1500,55 @@ const BEHAVIOR_INCIDENTS=[
  {id:'disrespect',label:'Manque de respect'}
 ];
 
+
+function autoEvalPointReason(person,task,day){
+  if(task==='turtles') return '🐢 S’occuper des tortues';
+  const rows=weeklyTaskRows(day);
+  const row=rows.find(r=>r.person===person && r.task===task);
+  if(row && !['girls','room','turtles'].includes(task)) return `Responsabilité principale : ${row.label.replace(/^.\s*/,'')}`;
+  return '';
+}
+function autoEvalPointValue(person,task,day){
+  if(task==='turtles') return 1;
+  const ass=assignments(day);
+  const main=(ass[person]&&ass[person][0])?ass[person][0]:null;
+  if(main && main.id===task) return 2;
+  return 0;
+}
+function syncEvaluationPoints(day,person,task,status){
+  const delta=autoEvalPointValue(person,task,day);
+  if(!delta || !PEOPLE.some(p=>p.id===person)) return;
+
+  const autoKey=`weekly-eval|${iso(day)}|${person}|${task}`;
+  // Remove any existing automatic entry for this exact evaluation first.
+  state.points=state.points.filter(x=>x.autoEvalKey!==autoKey);
+
+  if(status==='done'){
+    state.points.push({
+      person,
+      delta,
+      date:iso(day),
+      reason:autoEvalPointReason(person,task,day),
+      ts:new Date().toISOString(),
+      autoEvalKey
+    });
+  }
+}
+
 function evalTaskKey(day,person,task){return `${iso(day)}|${person}|${task}`}
 function getTaskEval(day,person,task){return state.dailyEvaluation.tasks[evalTaskKey(day,person,task)]||''}
 function setTaskEval(day,person,task,status){
  if(!canCheckTasks())return denyTaskWrite();
  const k=evalTaskKey(day,person,task);
- if(state.dailyEvaluation.tasks[k]===status)delete state.dailyEvaluation.tasks[k];
- else state.dailyEvaluation.tasks[k]=status;
- saveLocal();renderWeek();
+ const same=state.dailyEvaluation.tasks[k]===status;
+ if(same){
+   delete state.dailyEvaluation.tasks[k];
+   syncEvaluationPoints(day,person,task,'');
+ }else{
+   state.dailyEvaluation.tasks[k]=status;
+   syncEvaluationPoints(day,person,task,status);
+ }
+ saveLocal();renderAll();
 }
 function evalTaskButtons(day,person,task){
  const v=getTaskEval(day,person,task), dis=canCheckTasks()?'':'disabled';
@@ -1948,7 +2009,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-47-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-48-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
