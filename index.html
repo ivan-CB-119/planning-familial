@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.49 — Carballes</title>
+<title>Family Flow V2.50 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1156,7 +1156,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.49</b> • Correction et recalcul automatique des points liés aux coches de Semaine • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.50</b> • Navigation persistante par onglet avec URL dédiée • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1209,7 +1209,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.49;
+const APP_VERSION=2.50;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2044,7 +2044,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-49-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-50-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -2065,6 +2065,24 @@ function renderTaskAccess(){
       el.className='task-access-banner '+(writable?'write':'readonly');
     }
   });
+}
+
+
+function showView(id,updateHash=true){
+  const valid=['today','week','menus','points','rules','settings'];
+  if(!valid.includes(id))id='today';
+
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+
+  if(updateHash && location.hash!==`#${id}`){
+    history.replaceState(null,'',`#${id}`);
+  }
+
+  if(id==='today')renderToday();
+  if(id==='week')renderWeek();
+  if(id==='menus')renderMenus();
+  if(id==='points')renderPoints();
 }
 
 function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderTaskAccess();let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
@@ -2123,7 +2141,17 @@ document.getElementById('mobileDetailBtn')?.addEventListener('click',()=>{
 });
 
 document.getElementById('foodNameInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFoodItem()}});
+
 renderAll();
+(function initViewFromHash(){
+  const id=(location.hash||'#today').slice(1);
+  showView(id,false);
+})();
+window.addEventListener('hashchange',()=>{
+  const id=(location.hash||'#today').slice(1);
+  showView(id,false);
+});
+
 if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
 </script>
 </body>
