@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.50 — Carballes</title>
+<title>Family Flow V2.51 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1045,7 +1045,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
-  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. <b>✅ Fait</b> crédite automatiquement les tâches concernées : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Les points sont recalculés à partir des coches pour rester synchronisés.</div>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. <b>✅ Fait</b> crédite automatiquement les tâches concernées : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Les points sont calculés directement à partir des coches : ils restent donc synchronisés même après un rafraîchissement.</div>
   <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1156,7 +1156,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.50</b> • Navigation persistante par onglet avec URL dédiée • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.51</b> • Navigation persistante corrigée + points calculés directement depuis les coches • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1209,7 +1209,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.50;
+const APP_VERSION=2.51;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1271,8 +1271,7 @@ function ensureState(){
  state.version=APP_VERSION;
 }
 ensureState();
-reconcileEvaluationPoints();
-localStorage.setItem('familyBoardV2',JSON.stringify(state));
+// V2.51 : les points des tâches sont calculés directement depuis dailyEvaluation.
 
 const I18N={
  fr:{top_subtitle:'organisation familiale • tâches • menus • points'},
@@ -1368,7 +1367,41 @@ function addPoint(person,delta,reason,day=selectedDay,silent=false){
  state.points.push({id:Date.now()+Math.random(),date:iso(day),person,delta,reason,ts:new Date().toISOString()});
  saveLocal();if(!silent)renderAll()
 }
-function scoreFor(person,from=null,to=null){return state.points.filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to))).reduce((a,b)=>a+Number(b.delta||0),0)}
+function evaluationPointEntries(){
+  const out=[];
+  const tasks=state.dailyEvaluation?.tasks||{};
+  Object.entries(tasks).forEach(([key,status])=>{
+    if(status!=='done')return;
+    const parts=key.split('|');
+    if(parts.length!==3)return;
+    const [dateStr,person,task]=parts;
+    if(!PEOPLE.some(p=>p.id===person))return;
+    const day=new Date(`${dateStr}T12:00:00`);
+    if(Number.isNaN(day.getTime()))return;
+    const delta=autoEvalPointValue(person,task,day);
+    if(!delta)return;
+    out.push({
+      person,
+      delta,
+      date:dateStr,
+      reason:autoEvalPointReason(person,task,day),
+      ts:`${dateStr}T23:59:00`,
+      derivedEval:true,
+      evalKey:key
+    });
+  });
+  return out;
+}
+function effectivePointEntries(){
+  // Ignore any old V2.48/V2.49 generated copies to prevent double counting.
+  const manual=(state.points||[]).filter(x=>!String(x.autoEvalKey||'').startsWith('weekly-eval|'));
+  return [...manual,...evaluationPointEntries()];
+}
+function scoreFor(person,from=null,to=null){
+  return effectivePointEntries()
+    .filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to)))
+    .reduce((a,b)=>a+Number(b.delta||0),0);
+}
 function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
 function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag}</div></div></div>`).join('')}
 
@@ -1577,11 +1610,8 @@ function setTaskEval(day,person,task,status){
  if(!canCheckTasks())return denyTaskWrite();
  const k=evalTaskKey(day,person,task);
  const same=state.dailyEvaluation.tasks[k]===status;
-
  if(same) delete state.dailyEvaluation.tasks[k];
  else state.dailyEvaluation.tasks[k]=status;
-
- reconcileEvaluationPoints();
  saveLocal();
  renderAll();
 }
@@ -1992,7 +2022,7 @@ function renderPoints(){
  }
  document.getElementById('rankCards').innerHTML=htmlPodium;
  document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+scores.map((x,i)=>`<div class="task"><div class="label">#${i+1} — ${x.p.name}</div><b style="font-size:22px">${x.score>=0?'+':''}${x.score} ⭐</b></div>`).join('');
- let recent=[...state.points].sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);
+ let recent=effectivePointEntries().sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);
  document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
 }
 
@@ -2044,7 +2074,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-50-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-51-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -2073,20 +2103,26 @@ function showView(id,updateHash=true){
   if(!valid.includes(id))id='today';
 
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
-  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  document.querySelectorAll('.nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
 
-  if(updateHash && location.hash!==`#${id}`){
-    history.replaceState(null,'',`#${id}`);
+  if(updateHash){
+    const wanted='#'+id;
+    if(location.hash!==wanted){
+      history.replaceState({view:id},'',wanted);
+    }
   }
 
   if(id==='today')renderToday();
-  if(id==='week')renderWeek();
-  if(id==='menus')renderMenus();
-  if(id==='points')renderPoints();
+  else if(id==='week')renderWeek();
+  else if(id==='menus')renderMenus();
+  else if(id==='points')renderPoints();
 }
-
 function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderTaskAccess();let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(b.dataset.view).classList.add('active');renderAll()});
+document.querySelectorAll('.nav button').forEach(b=>{
+  b.onclick=()=>{
+    showView(b.dataset.view,true);
+  };
+});
 
 /* Édition des menus : gestionnaire délégué, plus fiable sous Chrome desktop que les onclick injectés via innerHTML. */
 document.addEventListener('click',function(ev){
@@ -2144,11 +2180,14 @@ document.getElementById('foodNameInput')?.addEventListener('keydown',e=>{if(e.ke
 
 renderAll();
 (function initViewFromHash(){
-  const id=(location.hash||'#today').slice(1);
+  const valid=['today','week','menus','points','rules','settings'];
+  let id=(location.hash||'').replace(/^#/,'');
+  if(!valid.includes(id))id='today';
   showView(id,false);
+  if(location.hash!=='#'+id)history.replaceState({view:id},'','#'+id);
 })();
 window.addEventListener('hashchange',()=>{
-  const id=(location.hash||'#today').slice(1);
+  const id=(location.hash||'#today').replace(/^#/,'');
   showView(id,false);
 });
 
