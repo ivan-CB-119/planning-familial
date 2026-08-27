@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.51 — Carballes</title>
+<title>Family Flow V2.53 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -920,16 +920,201 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .today-task-group-title{font-size:11px}
 }
 
+
+/* V2.52 — drapeaux CSS + griffes autour du titre */
+.family-title{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+.family-flags{display:none}
+.family-claws{display:inline-flex;gap:4px;align-items:center}
+.family-claws i{
+  display:block;
+  width:7px;
+  height:18px;
+  border-radius:999px;
+  transform:skew(-18deg) rotate(12deg);
+  box-shadow:0 1px 2px #0002 inset;
+}
+.family-claws.spain i:nth-child(1){background:#c60b1e}
+.family-claws.spain i:nth-child(2){background:#ffc400}
+.family-claws.spain i:nth-child(3){background:#c60b1e}
+.family-claws.italy i:nth-child(1){background:#009246}
+.family-claws.italy i:nth-child(2){background:#f4f7fb}
+.family-claws.italy i:nth-child(3){background:#ce2b37}
+
+.lang-switcher{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-wrap:wrap;
+  max-width:34%;
+}
+.lang-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 7px;
+  border-radius:999px;
+  border:1px solid #90a3bf;
+  background:#ffffff14;
+  color:white;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+}
+.lang-btn.active{
+  background:white;
+  color:#123463;
+  border-color:white;
+}
+.flag-css{
+  display:inline-block;
+  width:16px;
+  height:11px;
+  border-radius:2px;
+  border:1px solid #ffffff80;
+  box-shadow:0 0 0 1px #00000010 inset;
+  overflow:hidden;
+}
+.flag-css.fr{background:linear-gradient(90deg,#0055a4 0 33%,#ffffff 33% 66%,#ef4135 66% 100%)}
+.flag-css.it{background:linear-gradient(90deg,#009246 0 33%,#ffffff 33% 66%,#ce2b37 66% 100%)}
+.flag-css.es{background:linear-gradient(180deg,#aa151b 0 25%,#f1bf00 25% 75%,#aa151b 75% 100%)}
+.flag-css.de{background:linear-gradient(180deg,#000000 0 33%,#dd0000 33% 66%,#ffce00 66% 100%)}
+.flag-css.gb{
+  background:
+    linear-gradient(90deg, transparent 42%, #fff 42% 58%, transparent 58%),
+    linear-gradient(transparent 38%, #fff 38% 62%, transparent 62%),
+    linear-gradient(90deg, transparent 45%, #c8102e 45% 55%, transparent 55%),
+    linear-gradient(transparent 43%, #c8102e 43% 57%, transparent 57%),
+    #012169;
+}
+@media(max-width:700px){
+  .toprow{align-items:flex-start}
+  .lang-switcher{max-width:42%;gap:3px}
+  .lang-btn{padding:4px 6px;font-size:9px}
+  .flag-css{width:14px;height:10px}
+  .family-title{gap:7px}
+  .family-claws i{width:5px;height:14px}
+}
+
+
+/* V2.53 — Espagne horizontale / Italie verticale + menu langues déroulant */
+.family-claws{
+  display:inline-grid;
+  gap:2px;
+  align-items:center;
+  justify-items:center;
+}
+.family-claws.spain{
+  grid-template-rows:repeat(3,4px);
+}
+.family-claws.spain i{
+  width:20px;
+  height:4px;
+  border-radius:999px;
+  transform:skew(-18deg) rotate(-4deg);
+}
+.family-claws.italy{
+  display:inline-flex;
+  gap:4px;
+}
+.family-claws.italy i{
+  width:6px;
+  height:18px;
+  border-radius:999px;
+  transform:skew(-18deg) rotate(12deg);
+}
+.family-claws.spain i:nth-child(1){background:#c60b1e}
+.family-claws.spain i:nth-child(2){background:#ffc400}
+.family-claws.spain i:nth-child(3){background:#c60b1e}
+.family-claws.italy i:nth-child(1){background:#009246}
+.family-claws.italy i:nth-child(2){background:#f4f7fb}
+.family-claws.italy i:nth-child(3){background:#ce2b37}
+
+.lang-switcher{display:none!important}
+.lang-dropdown{
+  position:relative;
+  flex:0 0 auto;
+}
+.lang-dropdown-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:31px;
+  padding:5px 8px;
+  border:1px solid #90a3bf;
+  border-radius:9px;
+  background:#ffffff14;
+  color:white;
+  font-size:11px;
+  font-weight:900;
+}
+.lang-chevron{font-size:9px;opacity:.9}
+.lang-dropdown-menu{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  min-width:165px;
+  padding:5px;
+  border-radius:10px;
+  border:1px solid #cad4e2;
+  background:white;
+  box-shadow:0 8px 24px #0003;
+  z-index:50;
+}
+.lang-dropdown.open .lang-dropdown-menu{display:grid;gap:2px}
+.lang-dropdown-menu button{
+  display:grid;
+  grid-template-columns:20px 1fr auto;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  padding:7px 8px;
+  border:0;
+  border-radius:7px;
+  background:white;
+  color:#173253;
+  text-align:left;
+  font-size:11px;
+  font-weight:800;
+}
+.lang-dropdown-menu button:hover{background:#f2f6fb}
+.lang-dropdown-menu button.active{background:#eaf2fd}
+.lang-dropdown-menu button b{font-size:9px;color:#6a7688}
+
+@media(max-width:700px){
+  .family-claws.spain i{width:15px;height:3px}
+  .family-claws.italy i{width:5px;height:14px}
+  .lang-dropdown-btn{min-height:29px;padding:4px 6px;font-size:9px}
+  .lang-dropdown-menu{min-width:150px}
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
 <header class="topbar">
  <div class="toprow">
-  <select id="langSelectTop" class="lang-select" onchange="setLanguage(this.value)" aria-label="Langue">
-   <option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="it">🇮🇹 IT</option><option value="de">🇩🇪 DE</option>
-  </select>
-  <div class="title"><div class="family-title"><span>Family Flow</span><span class="family-flags">🇪🇸 🇮🇹</span></div></div>
+  <div id="langDropdown" class="lang-dropdown">
+   <button type="button" id="langDropdownBtn" class="lang-dropdown-btn" onclick="toggleLangDropdown()" aria-haspopup="true" aria-expanded="false">
+    <span id="currentLangFlag" class="flag-css fr"></span>
+    <span id="currentLangLabel">FR</span>
+    <span class="lang-chevron">▾</span>
+   </button>
+   <div id="langDropdownMenu" class="lang-dropdown-menu" role="menu">
+    <button type="button" data-lang="fr" onclick="chooseLanguage('fr')"><span class="flag-css fr"></span><span>Français</span><b>FR</b></button>
+    <button type="button" data-lang="en" onclick="chooseLanguage('en')"><span class="flag-css gb"></span><span>English</span><b>EN</b></button>
+    <button type="button" data-lang="es" onclick="chooseLanguage('es')"><span class="flag-css es"></span><span>Español</span><b>ES</b></button>
+    <button type="button" data-lang="it" onclick="chooseLanguage('it')"><span class="flag-css it"></span><span>Italiano</span><b>IT</b></button>
+    <button type="button" data-lang="de" onclick="chooseLanguage('de')"><span class="flag-css de"></span><span>Deutsch</span><b>DE</b></button>
+   </div>
+  </div>
+  <div class="title">
+   <div class="family-title">
+    <span class="family-claws spain" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>Family Flow</span>
+    <span class="family-claws italy" aria-hidden="true"><i></i><i></i><i></i></span>
+   </div>
+  </div>
   <button class="pill" onclick="parentButton()" id="parentBtn">🔒 Parent</button>
  </div>
  <div class="subtitle"><span class="syncdot" id="syncDot"></span><span id="syncText">Mode local</span> • <span data-i18n="top_subtitle">organisation familiale • tâches • menus • points</span></div>
@@ -1045,7 +1230,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
-  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. <b>✅ Fait</b> crédite automatiquement les tâches concernées : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Les points sont calculés directement à partir des coches : ils restent donc synchronisés même après un rafraîchissement.</div>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Pour une tâche qui rapporte des points, <b>✅ Fait</b> et <b>➖ Pas nécessaire</b> donnent le même crédit : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Ainsi, une tâche qui n’avait pas besoin d’être faite n’est jamais pénalisante.</div>
   <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1156,7 +1341,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.51</b> • Navigation persistante corrigée + points calculés directement depuis les coches • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.53</b> • Griffes Espagne horizontales + menu langues déroulant + Pas nécessaire crédité • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1209,7 +1394,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.51;
+const APP_VERSION=2.53;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1281,7 +1466,50 @@ const I18N={
  de:{top_subtitle:'Familienorganisation • Aufgaben • Menüs • Punkte'}
 };
 function setLanguage(l){currentLang=l;localStorage.setItem('familyFlowLang',l);applyTranslations();renderAll()}
-function applyTranslations(){document.getElementById('langSelectTop').value=currentLang;document.querySelectorAll('[data-i18n]').forEach(el=>{let k=el.dataset.i18n;if(I18N[currentLang]?.[k])el.textContent=I18N[currentLang][k]})}
+function toggleLangDropdown(){
+ const dd=document.getElementById('langDropdown');
+ const btn=document.getElementById('langDropdownBtn');
+ if(!dd||!btn)return;
+ const open=!dd.classList.contains('open');
+ dd.classList.toggle('open',open);
+ btn.setAttribute('aria-expanded',open?'true':'false');
+}
+function chooseLanguage(l){
+ setLanguage(l);
+ const dd=document.getElementById('langDropdown');
+ const btn=document.getElementById('langDropdownBtn');
+ if(dd)dd.classList.remove('open');
+ if(btn)btn.setAttribute('aria-expanded','false');
+}
+function applyTranslations(){
+ const langMeta={
+  fr:{flag:'fr',label:'FR'},
+  en:{flag:'gb',label:'EN'},
+  es:{flag:'es',label:'ES'},
+  it:{flag:'it',label:'IT'},
+  de:{flag:'de',label:'DE'}
+ };
+ const meta=langMeta[currentLang]||langMeta.fr;
+ const flag=document.getElementById('currentLangFlag');
+ const label=document.getElementById('currentLangLabel');
+ if(flag)flag.className='flag-css '+meta.flag;
+ if(label)label.textContent=meta.label;
+ document.querySelectorAll('#langDropdownMenu [data-lang]').forEach(btn=>{
+   btn.classList.toggle('active',btn.dataset.lang===currentLang);
+ });
+ document.querySelectorAll('[data-i18n]').forEach(el=>{
+   let k=el.dataset.i18n;
+   if(I18N[currentLang]?.[k])el.textContent=I18N[currentLang][k];
+ });
+}
+document.addEventListener('click',e=>{
+ const dd=document.getElementById('langDropdown');
+ if(dd && !dd.contains(e.target)){
+   dd.classList.remove('open');
+   document.getElementById('langDropdownBtn')?.setAttribute('aria-expanded','false');
+ }
+});
+
 function currentLocale(){return {fr:'fr-CH',en:'en-GB',es:'es-ES',it:'it-IT',de:'de-CH'}[currentLang]||'fr-CH'}
 
 function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -1371,7 +1599,7 @@ function evaluationPointEntries(){
   const out=[];
   const tasks=state.dailyEvaluation?.tasks||{};
   Object.entries(tasks).forEach(([key,status])=>{
-    if(status!=='done')return;
+    if(status!=='done' && status!=='na')return;
     const parts=key.split('|');
     if(parts.length!==3)return;
     const [dateStr,person,task]=parts;
@@ -2074,7 +2302,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-51-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-53-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
