@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.40 — Carballes</title>
+<title>Family Flow V2.44 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -709,6 +709,156 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  .eval-status button{width:23px;height:23px;font-size:10px}
 }
 
+
+/* V2.41 — meilleure lisibilité des prénoms dans Semaine */
+.eval-person-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 8px;border-radius:999px;
+  background:#eef3fa;border:1px solid #d6e0ee;
+  font-size:12px;font-weight:900;color:#16365f;
+  margin-bottom:5px;line-height:1
+}
+.eval-person-badge.girls{background:#f7eefc;border-color:#dcc8ec;color:#5b3f7a}
+.eval-person-badge.sole{background:#f3eefc;border-color:#dbcceb;color:#5a4376}
+.eval-person-badge.calista{background:#eef8f0;border-color:#c8e1cf;color:#2d6240}
+.eval-person-badge.angela{background:#eef5ff;border-color:#c8d9f3;color:#2b568a}
+.eval-person-badge.yvan{background:#fff4e8;border-color:#ead0ab;color:#84551d}
+.eval-task-label{
+  font-size:11px;font-weight:800;line-height:1.2;color:#1f2937
+}
+.eval-task-meta{
+  font-size:8.5px;color:var(--muted);margin-top:3px
+}
+.eval-routine-label{
+  font-size:11px;font-weight:800;line-height:1.2;color:#1f2937
+}
+@media(max-width:700px){
+  .eval-person-badge{font-size:10px;padding:3px 6px;margin-bottom:4px}
+  .eval-task-label,.eval-routine-label{font-size:10px}
+  .eval-task-meta{font-size:8px}
+}
+
+
+/* V2.43 — écran Aujourd’hui = tableau de bord lecture seule */
+.today-dashboard{display:block}
+.today-responsibility-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.today-person-card{border:1px solid var(--line);border-radius:13px;padding:9px;background:#fff}
+.today-person-card.sole{border-top:4px solid #d94f8a}
+.today-person-card.calista{border-top:4px solid #8fd39a}
+.today-person-card.angela{border-top:4px solid #1f6b43}
+.today-person-card.yvan{border-top:4px solid #6b7280}
+.today-person-head{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-bottom:6px}
+.today-person-name{font-size:15px;font-weight:900}
+.today-person-score{font-size:10px;font-weight:900;background:#eef3fa;border-radius:999px;padding:3px 6px;white-space:nowrap}
+.today-person-task{font-size:12px;font-weight:800;line-height:1.2}
+.today-person-note{font-size:9px;color:var(--muted);margin-top:4px}
+.today-simple-list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.today-simple-item{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fbfcfe;font-size:11px;font-weight:760;line-height:1.25}
+.today-two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.today-info-list{display:grid;gap:5px;font-size:11px}
+.today-info-list>div{padding:6px 7px;border-radius:8px;background:#f8fafc;border:1px solid #edf1f6}
+.today-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.today-rules-grid>div{padding:7px;border-radius:8px;background:#f8fafc;border:1px solid #edf1f6;font-size:10px;font-weight:800}
+.school-checklist{display:grid;gap:4px}
+.school-checklist>div{padding:6px 7px;border-radius:8px;background:#fbfcfe;border:1px solid #edf1f6;font-size:10px;font-weight:760;line-height:1.25}
+@media(max-width:700px){
+ .today-responsibility-grid{grid-template-columns:1fr 1fr;gap:5px}
+ .today-person-card{padding:7px;border-radius:10px}
+ .today-person-name{font-size:12px}
+ .today-person-task{font-size:10px}
+ .today-person-note{font-size:8px}
+ .today-simple-list{grid-template-columns:1fr 1fr;gap:4px}
+ .today-simple-item{padding:6px;font-size:9px}
+ .today-two-col{grid-template-columns:1fr;gap:0}
+ .today-info-list{font-size:9px}
+ .today-rules-grid{grid-template-columns:1fr 1fr}
+ .today-rules-grid>div,.school-checklist>div{font-size:9px;padding:5px 6px}
+}
+
+
+/* V2.44 — séparation tâches communes / personnelles dans Aujourd’hui */
+.today-task-group{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fbfcfe;
+  padding:9px;
+  margin-top:8px;
+}
+.today-task-group:first-of-type{margin-top:0}
+.today-task-group-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:7px;
+  font-size:12px;
+  font-weight:900;
+}
+.today-name-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+.today-name-badge.girls{
+  background:#f7eefc;
+  border-color:#dcc8ec;
+  color:#5b3f7a;
+}
+.today-name-badge.sole{
+  background:#f3eefc;
+  border-color:#dbcceb;
+  color:#5a4376;
+}
+.today-name-badge.calista{
+  background:#eef8f0;
+  border-color:#c8e1cf;
+  color:#2d6240;
+}
+.today-personal-task-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.today-personal-card{
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:8px;
+  background:white;
+}
+.today-personal-card.sole{border-top:4px solid #d94f8a}
+.today-personal-card.calista{border-top:4px solid #8fd39a}
+.today-task-items{
+  display:grid;
+  gap:5px;
+}
+.today-task-item{
+  padding:6px 7px;
+  border-radius:8px;
+  background:white;
+  border:1px solid #edf1f6;
+  font-size:10px;
+  font-weight:760;
+  line-height:1.2;
+}
+.today-personal-card .today-name-badge{
+  margin-bottom:7px;
+}
+@media(max-width:700px){
+  .today-task-group{padding:7px}
+  .today-task-group-head{font-size:10px}
+  .today-name-badge{font-size:10px;padding:4px 7px}
+  .today-personal-task-grid{grid-template-columns:1fr 1fr;gap:5px}
+  .today-personal-card{padding:6px}
+  .today-task-item{font-size:9px;padding:5px 6px}
+}
+
 </style>
 </head>
 <body>
@@ -726,40 +876,104 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <main>
 <section id="today" class="view active">
- <div id="taskAccessBannerToday" class="task-access-banner"></div>
- <div id="mobileOverview" class="mobile-overview"></div>
- <div id="mobileViewSwitch" class="mobile-view-switch">
-   <button type="button" id="mobileOverviewBtn" class="active">Vue globale</button>
-   <button type="button" id="mobileDetailBtn">Vue détaillée</button>
- </div>
- <div class="weekhead desktop-today-head"><div><h2 id="rangeTitle"></h2><div class="small">1 responsabilité principale par personne • enfants affichés avant les adultes • extras sans surcharge de points</div></div><div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div></div>
- <div class="cards detailed-today" id="personCards"></div>
-
- <div class="section detailed-today">
-  <h3>🏠 Tâches spécifiques & communes</h3>
-  <div class="points-grid"><div class="point-card" id="turtlesCard"></div><div class="point-card" id="girlsSharedCard"></div><div class="point-card" id="roomsCard"></div></div>
- </div>
-
- <div class="section detailed-today">
-  <h3>🌙 Routine du soir — Solé & Calista</h3>
-  <div class="small" style="margin-bottom:10px">Rappels simples : cases quotidiennes, sans point automatique.</div>
-  <div class="points-grid" id="eveningRoutine"></div>
- </div>
-
- <div class="section detailed-today">
-  <h3>ℹ️ Comment fonctionnent les points ?</h3>
-  <div class="small" style="line-height:1.6">
-   <b>Responsabilité principale de la semaine :</b> ⭐ +2 quand elle est faite.<br>
-   <b>Tortues :</b> ⭐ +1 pour la personne responsable cette semaine.<br>
-   <b>Salle de jeux, chambres et routine du soir :</b> suivi visuel uniquement, 0 point, afin de ne pas avantager automatiquement les enfants dans le classement familial.<br>
-   <b>Comportement :</b> un parent peut ajouter ou retirer des points manuellement. Le défi « repas sans cris » donne +1 à chacun.
+ <div class="weekhead desktop-today-head">
+  <div>
+   <h2>🏠 Aujourd’hui</h2>
+   <div class="small" id="todayRangeText"></div>
   </div>
+  <div class="pill" style="color:#18385e;background:white;border-color:#d8e0ec" id="weekNo"></div>
  </div>
 
- <div class="section detailed-today">
-  <h3>⭐ Points du jour — comportement & attitude</h3>
-  <div class="points-grid" id="pointsCards"></div>
-  <div class="familychallenge"><div class="big">🍽️🤫</div><div style="flex:1"><strong>Défi repas sans cris</strong><span class="small">Repas calme du début à la fin : +1 point à chacun.</span></div><button class="btn good parentOnly" onclick="mealNoShouting()">+1 à tous</button></div>
+ <div class="today-dashboard">
+  <div class="section">
+   <h3>👨‍👩‍👧‍👧 Qui fait quoi ?</h3>
+   <div class="small" style="margin-bottom:8px">Aperçu uniquement. Les validations se font dans l’onglet <b>Semaine</b>.</div>
+   <div id="todayResponsibilities" class="today-responsibility-grid"></div>
+  </div>
+
+  <div class="section">
+   <h3>🏠 Tâches communes et personnelles</h3>
+
+   <div class="today-task-group">
+    <div class="today-task-group-head">
+     <span>🤝 Tâches communes</span>
+     <span class="today-name-badge girls">Solé + Calista</span>
+    </div>
+    <div id="todayCommonTasks" class="today-task-items"></div>
+   </div>
+
+   <div class="today-task-group">
+    <div class="today-task-group-head">
+     <span>👤 Tâches personnelles</span>
+    </div>
+    <div class="today-personal-task-grid">
+     <div class="today-personal-card sole">
+      <div class="today-name-badge sole">Solé</div>
+      <div id="todaySoleTasks" class="today-task-items"></div>
+     </div>
+     <div class="today-personal-card calista">
+      <div class="today-name-badge calista">Calista</div>
+      <div id="todayCalistaTasks" class="today-task-items"></div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="today-two-col">
+   <div class="section">
+    <h3>⭐ Comment fonctionnent les points ?</h3>
+    <div class="today-info-list">
+     <div><b>+2</b> Responsabilité principale de la semaine faite</div>
+     <div><b>+1</b> S’occuper des tortues</div>
+     <div><b>+1</b> Bon comportement / aide spontanée</div>
+     <div><b>+1 chacun</b> Repas sans cris</div>
+     <div><b>−1</b> Cris, manque de respect ou comportement à corriger</div>
+    </div>
+    <div class="small" style="margin-top:7px">Les chambres, salle de jeux, salle de bain et routines sont suivies sans point automatique.</div>
+   </div>
+
+   <div class="section">
+    <h3>❤️ Règles de respect</h3>
+    <div class="today-rules-grid">
+     <div>💬 On parle calmement</div>
+     <div>❤️ On se respecte</div>
+     <div>📦 On range après soi</div>
+     <div>🏡 On aide à la maison</div>
+     <div>📚 Devoirs avant les écrans</div>
+     <div>🍽️ Pas de cris pendant les repas</div>
+    </div>
+   </div>
+  </div>
+
+  <div class="today-two-col">
+   <div class="section school-card">
+    <h3>🎒 Avant de partir à l’école</h3>
+    <div class="school-checklist">
+     <div>🛏️ Faire son lit / ranger rapidement sa chambre</div>
+     <div>👕 S’habiller et se préparer</div>
+     <div>🥣 Prendre son petit-déjeuner</div>
+     <div>🦷 Se laver les dents</div>
+     <div>🎒 Vérifier le sac et les affaires du jour</div>
+     <div>💧 Prendre sa gourde / goûter si nécessaire</div>
+     <div>🧥 Prendre veste, clés ou équipement nécessaire</div>
+     <div>⏰ Être prêt à l’heure</div>
+    </div>
+   </div>
+
+   <div class="section school-card">
+    <h3>🏡 Quand on rentre de l’école</h3>
+    <div class="school-checklist">
+     <div>👟 Ranger correctement ses chaussures et mettre ses pantoufles</div>
+     <div>🧼 Se laver les mains</div>
+     <div>🎒 Vider son sac : gourde, boîte à goûter, documents</div>
+     <div>🍎 Prendre son goûter</div>
+     <div>📚 Faire ses devoirs</div>
+     <div>📝 Donner les documents / informations importantes aux parents</div>
+     <div>🧹 Ranger ses affaires après les devoirs</div>
+     <div>🎮 Écrans seulement après les obligations</div>
+    </div>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -881,7 +1095,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.40</b> • Nouveau suivi quotidien hebdomadaire tâches, routines et comportement • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.44</b> • Tâches communes et personnelles mieux séparées dans Aujourd’hui • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -934,7 +1148,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.40;
+const APP_VERSION=2.44;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1156,12 +1370,53 @@ function renderMobileDashboard(){
  `;
 }
 function renderToday(){
- renderMobileDashboard();
  let ass=assignments(selectedDay),m=monday(selectedDay),s=addDays(m,6);
- document.getElementById('rangeTitle').textContent=rangeText(selectedDay);document.getElementById('weekNo').textContent='Sem. '+(weekIndex(selectedDay)+1);
- document.getElementById('personCards').innerHTML=PEOPLE.map(p=>`<article class="person ${p.cls}"><div class="head"><span>${p.name}</span><span class="scorechip">⭐ ${scoreFor(p.id,m,s)}</span></div><div class="body">${personTasksHtml(p,ass[p.id])}</div></article>`).join('');
- document.getElementById('pointsCards').innerHTML=PEOPLE.map(p=>`<div class="point-card"><h4>${p.name}</h4><div class="quick parentOnly"><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Comportement positif')">+1 positif</button><button class="pbtn minus" onclick="addPoint('${p.id}',-1,'Comportement à corriger')">−1</button><button class="pbtn plus" onclick="addPoint('${p.id}',1,'Aide spontanée')">+1 aide</button><button class="pbtn neutral" onclick="addPoint('${p.id}',1,'Effort particulier')">+1 effort</button></div><div class="small">Score semaine : <b>${scoreFor(p.id,m,s)}</b></div></div>`).join('');
- renderSharedTasks();renderEveningRoutine()
+ const rangeEl=document.getElementById('todayRangeText');
+ if(rangeEl)rangeEl.textContent=rangeText(selectedDay);
+ const weekEl=document.getElementById('weekNo');
+ if(weekEl)weekEl.textContent='Sem. '+(weekIndex(selectedDay)+1);
+
+ const host=document.getElementById('todayResponsibilities');
+ if(host){
+   host.innerHTML=PEOPLE.map(p=>{
+     const t=ass[p.id][0];
+     return `<div class="today-person-card ${p.id}">
+       <div class="today-person-head">
+        <span class="today-person-name">${p.name}</span>
+        <span class="today-person-score">⭐ ${scoreFor(p.id,m,s)}</span>
+       </div>
+       <div class="today-person-task">${t.icon} ${t.label}</div>
+       <div class="today-person-note">Responsabilité principale de la semaine</div>
+     </div>`;
+   }).join('');
+ }
+
+ const turtle=turtlePerson(selectedDay);
+
+ const common=document.getElementById('todayCommonTasks');
+ if(common){
+   common.innerHTML=[
+     ...GIRLS_SHARED.map(t=>`<div class="today-task-item">${t.icon} ${t.label}</div>`),
+     `<div class="today-task-item">🦷 Se laver les dents</div>`,
+     `<div class="today-task-item">🌙 Aller se coucher à l’heure</div>`
+   ].join('');
+ }
+
+ const sole=document.getElementById('todaySoleTasks');
+ if(sole){
+   sole.innerHTML=[
+     `<div class="today-task-item">🛏️ Ranger sa chambre</div>`,
+     ...(turtle.id==='sole'?[`<div class="today-task-item">🐢 S’occuper des tortues</div>`]:[])
+   ].join('');
+ }
+
+ const calista=document.getElementById('todayCalistaTasks');
+ if(calista){
+   calista.innerHTML=[
+     `<div class="today-task-item">🛏️ Ranger sa chambre</div>`,
+     ...(turtle.id==='calista'?[`<div class="today-task-item">🐢 S’occuper des tortues</div>`]:[])
+   ].join('');
+ }
 }
 function renderSharedTasks(){
  const turtle=turtlePerson(selectedDay);
@@ -1265,6 +1520,11 @@ function routineEvalButtons(day,person,routine){
  </div>`;
 }
 
+
+function personBadgeClass(person){
+  return person==='girls'?'girls':person;
+}
+
 function renderWeek(){
  let m=monday(selectedDay),days=[0,1,2,3,4,5,6].map(i=>addDays(m,i));document.getElementById('weekRange2').textContent=rangeText(selectedDay);
 
@@ -1275,14 +1535,14 @@ function renderWeek(){
  const rows=weeklyTaskRows(selectedDay);
  let th=`<div class="eval-wrap"><table class="eval-table"><tr><th>Tâche</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
  rows.forEach(r=>{
-   th+=`<tr><td><div class="eval-task-name">${r.label}</div><div class="eval-task-person">${r.personName}</div></td>${days.map(d=>`<td>${evalTaskButtons(d,r.person,r.task)}</td>`).join('')}</tr>`;
+   th+=`<tr><td><div class="eval-person-badge ${personBadgeClass(r.person)}">${r.personName}</div><div class="eval-task-label">${r.label}</div><div class="eval-task-meta">À évaluer pour cette personne / ce groupe</div></td>${days.map(d=>`<td>${evalTaskButtons(d,r.person,r.task)}</td>`).join('')}</tr>`;
  });
  th+='</table><div class="eval-legend"><span>✓ Fait</span><span>✕ Non fait</span><span>— Pas nécessaire</span></div></div>';
  document.getElementById('dailyTaskEvaluation').innerHTML=th;
 
  let bh=`<div class="behavior-card"><table class="eval-table"><tr><th>Enfant</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
  ['sole','calista'].forEach(id=>{
-   bh+=`<tr><td><div class="eval-task-name">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-task-person">😊 Bon • 😐 Moyen • 😠 Mauvais</div></td>${days.map(d=>`<td>${behaviorCell(d,id)}</td>`).join('')}</tr>`;
+   bh+=`<tr><td><div class="eval-person-badge ${personBadgeClass(id)}">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-task-label">Comportement quotidien</div><div class="eval-task-meta">😊 Bon • 😐 Moyen • 😠 Mauvais</div></td>${days.map(d=>`<td>${behaviorCell(d,id)}</td>`).join('')}</tr>`;
  });
  bh+='</table><div class="eval-legend"><span>Les incidents sont facultatifs.</span><span>⭐ Bon comportement permet de relever aussi les journées particulièrement positives.</span></div></div>';
  document.getElementById('dailyBehaviorEvaluation').innerHTML=bh;
@@ -1290,7 +1550,7 @@ function renderWeek(){
  let rh=`<div class="eval-wrap"><table class="eval-table"><tr><th>Routine</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
  ['sole','calista'].forEach(id=>{
    EVENING_ROUTINE.forEach(t=>{
-     rh+=`<tr><td><div class="eval-task-name">${t.icon} ${t.label}</div><div class="eval-task-person">${PEOPLE.find(p=>p.id===id).name}</div></td>${days.map(d=>`<td>${routineEvalButtons(d,id,t.id)}</td>`).join('')}</tr>`;
+     rh+=`<tr><td><div class="eval-person-badge ${personBadgeClass(id)}">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-routine-label">${t.icon} ${t.label}</div><div class="eval-task-meta">Routine à suivre pour cette personne</div></td>${days.map(d=>`<td>${routineEvalButtons(d,id,t.id)}</td>`).join('')}</tr>`;
    });
  });
  rh+='</table><div class="eval-legend"><span>✓ OK</span><span>✕ Pas OK</span><span>— Non évalué / pas nécessaire</span></div></div>';
@@ -1642,7 +1902,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-40-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-44-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
