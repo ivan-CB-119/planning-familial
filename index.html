@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.53 — Carballes</title>
+<title>Family Flow V2.54 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -980,10 +980,12 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .flag-css.de{background:linear-gradient(180deg,#000000 0 33%,#dd0000 33% 66%,#ffce00 66% 100%)}
 .flag-css.gb{
   background:
-    linear-gradient(90deg, transparent 42%, #fff 42% 58%, transparent 58%),
-    linear-gradient(transparent 38%, #fff 38% 62%, transparent 62%),
-    linear-gradient(90deg, transparent 45%, #c8102e 45% 55%, transparent 55%),
-    linear-gradient(transparent 43%, #c8102e 43% 57%, transparent 57%),
+    linear-gradient(33deg, transparent 42%, #ffffff 42% 48%, #c8102e 48% 52%, #ffffff 52% 58%, transparent 58%),
+    linear-gradient(-33deg, transparent 42%, #ffffff 42% 48%, #c8102e 48% 52%, #ffffff 52% 58%, transparent 58%),
+    linear-gradient(90deg, transparent 38%, #ffffff 38% 62%, transparent 62%),
+    linear-gradient(transparent 34%, #ffffff 34% 66%, transparent 66%),
+    linear-gradient(90deg, transparent 43%, #c8102e 43% 57%, transparent 57%),
+    linear-gradient(transparent 40%, #c8102e 40% 60%, transparent 60%),
     #012169;
 }
 @media(max-width:700px){
@@ -1170,7 +1172,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
     <h3>⭐ Comment fonctionnent les points ?</h3>
     <div class="today-info-list">
      <div><b>+2</b> Responsabilité principale de la semaine faite</div>
-     <div><b>+1</b> S’occuper des tortues</div>
+     <div><b>0 / −1</b> Tortues : 0 si fait ou pas nécessaire, −1 si non fait</div>
      <div><b>+1</b> Bon comportement / aide spontanée</div>
      <div><b>+1 chacun</b> Repas sans cris</div>
      <div><b>−1</b> Cris, manque de respect ou comportement à corriger</div>
@@ -1230,7 +1232,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
-  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. Pour une tâche qui rapporte des points, <b>✅ Fait</b> et <b>➖ Pas nécessaire</b> donnent le même crédit : <b>+2 tâche principale</b>, <b>+1 tortues</b>. Ainsi, une tâche qui n’avait pas besoin d’être faite n’est jamais pénalisante.</div>
+  <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. La tâche principale donne <b>+2</b> si elle est faite ou pas nécessaire. Pour les tortues : <b>0 point si fait</b>, <b>0 si pas nécessaire</b>, <b>−1 si non fait</b>.</div>
   <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1304,7 +1306,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 <section id="rules" class="view">
  <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
  <div class="rulegrid"><div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div><div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div></div>
- <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>+1</b> tortues • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés comme les enfants.</p></div>
+ <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés comme les enfants.</p></div>
 </section>
 
 <section id="settings" class="view">
@@ -1341,7 +1343,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.53</b> • Griffes Espagne horizontales + menu langues déroulant + Pas nécessaire crédité • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.54</b> • Union Jack corrigé + tortues en responsabilité pénalisante • Dernière mise à jour : <b>27/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1394,7 +1396,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.53;
+const APP_VERSION=2.54;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1599,14 +1601,13 @@ function evaluationPointEntries(){
   const out=[];
   const tasks=state.dailyEvaluation?.tasks||{};
   Object.entries(tasks).forEach(([key,status])=>{
-    if(status!=='done' && status!=='na')return;
     const parts=key.split('|');
     if(parts.length!==3)return;
     const [dateStr,person,task]=parts;
     if(!PEOPLE.some(p=>p.id===person))return;
     const day=new Date(`${dateStr}T12:00:00`);
     if(Number.isNaN(day.getTime()))return;
-    const delta=autoEvalPointValue(person,task,day);
+    const delta=autoEvalPointValue(person,task,day,status);
     if(!delta)return;
     out.push({
       person,
@@ -1765,17 +1766,19 @@ const BEHAVIOR_INCIDENTS=[
 
 
 function autoEvalPointReason(person,task,day){
-  if(task==='turtles') return '🐢 S’occuper des tortues';
+  if(task==='turtles') return '🐢 Tortues non faites';
   const rows=weeklyTaskRows(day);
   const row=rows.find(r=>r.person===person && r.task===task);
   if(row && !['girls','room','turtles'].includes(task)) return `Responsabilité principale : ${row.label.replace(/^.\s*/,'')}`;
   return '';
 }
-function autoEvalPointValue(person,task,day){
-  if(task==='turtles') return 1;
+function autoEvalPointValue(person,task,day,status='done'){
+  if(task==='turtles'){
+    return status==='missed' ? -1 : 0;
+  }
   const ass=assignments(day);
   const main=(ass[person]&&ass[person][0])?ass[person][0]:null;
-  if(main && main.id===task) return 2;
+  if(main && main.id===task && (status==='done' || status==='na')) return 2;
   return 0;
 }
 function syncEvaluationPoints(day,person,task,status){
@@ -2302,7 +2305,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-53-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-54-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
