@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.54 — Carballes</title>
+<title>Family Flow V2.57 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1174,7 +1174,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
      <div><b>+2</b> Responsabilité principale de la semaine faite</div>
      <div><b>0 / −1</b> Tortues : 0 si fait ou pas nécessaire, −1 si non fait</div>
      <div><b>+1</b> Bon comportement / aide spontanée</div>
-     <div><b>+1 chacun</b> Repas sans cris</div>
+     
      <div><b>−1</b> Cris, manque de respect ou comportement à corriger</div>
     </div>
     <div class="small" style="margin-top:7px">Les chambres, salle de jeux, salle de bain et routines sont suivies sans point automatique.</div>
@@ -1188,7 +1188,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
      <div>📦 On range après soi</div>
      <div>🏡 On aide à la maison</div>
      <div>📚 Devoirs avant les écrans</div>
-     <div>🍽️ Pas de cris pendant les repas</div>
+     
     </div>
    </div>
   </div>
@@ -1238,7 +1238,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
  <div class="section">
   <h3>🙂 Comportement quotidien — Solé & Calista</h3>
-  <div class="small">Une appréciation générale par jour, complétée si nécessaire par les incidents observés.</div>
+  <div class="small">Une appréciation générale par jour. Dès qu’au moins un motif négatif est coché, la pénalité est de <b>−1 point maximum pour la journée</b>, même si plusieurs motifs sont sélectionnés. Le bouton ⭐ Bon comportement reste une appréciation sans point automatique.</div>
   <div id="dailyBehaviorEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1306,7 +1306,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 <section id="rules" class="view">
  <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
  <div class="rulegrid"><div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div><div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div></div>
- <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1</b> repas sans cris • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1</b> cris • <b>−1</b> manque de respect • <b>−1</b> comportement inadapté. Les parents sont concernés comme les enfants.</p></div>
+ <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1 maximum par enfant et par jour</b> dès qu’au moins un motif négatif est coché : insultes, chamailleries, cris, répondre ou règles non respectées. Plusieurs motifs le même jour ne cumulent pas les pénalités.</p></div>
 </section>
 
 <section id="settings" class="view">
@@ -1343,7 +1343,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.54</b> • Union Jack corrigé + tortues en responsabilité pénalisante • Dernière mise à jour : <b>27/08/2026</b></footer>
+<footer class="footerinfo">Version <b>2.57</b> • Suppression du bonus «  » • Dernière mise à jour : <b>28/08/2026</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1396,7 +1396,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.54;
+const APP_VERSION=2.57;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1621,17 +1621,49 @@ function evaluationPointEntries(){
   });
   return out;
 }
+
+function behaviorNegativePointEntries(){
+  const out=[];
+  const behavior=state.dailyEvaluation?.behavior||{};
+
+  Object.entries(behavior).forEach(([key,data])=>{
+    const parts=key.split('|');
+    if(parts.length!==2)return;
+
+    const [dateStr,person]=parts;
+    if(!['sole','calista'].includes(person))return;
+
+    const incidents=Array.isArray(data?.incidents)?data.incidents:[];
+    if(!incidents.length)return;
+
+    const labels=incidents
+      .map(id=>BEHAVIOR_INCIDENTS.find(x=>x.id===id)?.label)
+      .filter(Boolean);
+
+    out.push({
+      person,
+      delta:-1,
+      date:dateStr,
+      reason:`Comportement négatif : ${labels.join(', ')}`,
+      ts:`${dateStr}T23:58:00`,
+      derivedBehavior:true,
+      behaviorKey:key
+    });
+  });
+
+  return out;
+}
 function effectivePointEntries(){
-  // Ignore any old V2.48/V2.49 generated copies to prevent double counting.
+  // Ignore old generated copies to prevent double counting.
   const manual=(state.points||[]).filter(x=>!String(x.autoEvalKey||'').startsWith('weekly-eval|'));
-  return [...manual,...evaluationPointEntries()];
+  return [...manual,...evaluationPointEntries(),...behaviorNegativePointEntries()];
 }
 function scoreFor(person,from=null,to=null){
   return effectivePointEntries()
     .filter(x=>x.person===person&&(!from||x.date>=iso(from))&&(!to||x.date<=iso(to)))
     .reduce((a,b)=>a+Number(b.delta||0),0);
 }
-function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'Repas sans cris',ts:new Date().toISOString()}));saveLocal();renderAll()}
+function mealNoShouting(){if(!parentUnlocked)return showPin('unlock');PEOPLE.forEach(p=>state.points.push({id:Date.now()+Math.random(),date:iso(selectedDay),person:p.id,delta:1,reason:'',ts:new Date().toISOString()}));saveLocal();renderAll()}
 function personTasksHtml(p,tasks){return tasks.map(t=>`<div class="task"><button class="check ${isDone(selectedDay,p.id,t.id)?'done':''}" onclick="toggle(selectedDay,'${p.id}','${t.id}')"></button><div class="label">${t.icon} ${t.label}<div class="tag">${t.tag}</div></div></div>`).join('')}
 
 
@@ -1690,7 +1722,7 @@ function renderMobileDashboard(){
    </div>
 
    <div class="moverview-block">
-     <div class="moverview-meal"><span>🍽️ Repas sans cris = +1 chacun</span><button class="btn good parentOnly" onclick="mealNoShouting()">+1 tous</button></div>
+     <div class="moverview-meal"><span>🍽️  = +1 chacun</span><button class="btn good parentOnly" onclick="mealNoShouting()">+1 tous</button></div>
    </div>
  `;
 }
@@ -1761,7 +1793,8 @@ const BEHAVIOR_INCIDENTS=[
  {id:'insults',label:'Insultes'},
  {id:'quarrels',label:'Chamailleries'},
  {id:'shouting',label:'Cris'},
- {id:'disrespect',label:'Manque de respect'}
+ {id:'answering_back',label:'Répondre'},
+ {id:'rules_not_respected',label:'Règles non respectées'}
 ];
 
 
@@ -1886,7 +1919,7 @@ function toggleBehaviorIncident(day,person,incident){
  if(!canCheckTasks())return denyTaskWrite();
  let b=getBehavior(day,person);
  b.incidents=b.incidents.includes(incident)?b.incidents.filter(x=>x!==incident):[...b.incidents,incident];
- saveLocal();renderWeek();
+ saveLocal();renderAll();
 }
 function toggleBehaviorPositive(day,person){
  if(!canCheckTasks())return denyTaskWrite();
@@ -2305,7 +2338,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-54-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-57-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
