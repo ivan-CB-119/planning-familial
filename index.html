@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.59 — Carballes</title>
+<title>Family Flow V2.62 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1090,6 +1090,141 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   .lang-dropdown-menu{min-width:150px}
 }
 
+
+/* V2.60 — Axes d'amélioration */
+.improvement-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:9px;
+}
+.improvement-card{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+  background:#fff;
+  min-width:0;
+}
+.improvement-card.sole{border-top:4px solid var(--sole)}
+.improvement-card.calista{border-top:4px solid var(--calista)}
+.improvement-card.angela{border-top:4px solid var(--angela)}
+.improvement-card.yvan{border-top:4px solid var(--yvan)}
+.improvement-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+  margin-bottom:8px;
+}
+.improvement-name{font-size:15px;font-weight:900}
+.improvement-trend{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.improvement-trend.better{background:#e8f7ed;color:#277040;border:1px solid #b8ddc4}
+.improvement-trend.same{background:#f1f4f8;color:#657089;border:1px solid #d8e0ec}
+.improvement-trend.worse{background:#fdebed;color:#9a343d;border:1px solid #efbdc2}
+.improvement-trend.clear{background:#edf7ef;color:#2c7444;border:1px solid #bedfc8}
+.improvement-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+  padding:6px 0;
+  border-top:1px solid #edf1f6;
+}
+.improvement-item:first-of-type{border-top:0}
+.improvement-label{font-size:10px;font-weight:800;line-height:1.2}
+.improvement-count{
+  min-width:25px;
+  text-align:center;
+  padding:3px 6px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  background:#fff2df;
+  color:#8a5b13;
+}
+.improvement-count.axis{background:#fdebed;color:#9a343d}
+.improvement-ok{
+  padding:8px;
+  border-radius:9px;
+  background:#edf8f0;
+  border:1px solid #c8e4d0;
+  color:#2f6f43;
+  font-size:10px;
+  font-weight:800;
+}
+.improvement-note{
+  margin-top:7px;
+  font-size:8px;
+  color:var(--muted);
+  line-height:1.25;
+}
+@media(max-width:700px){
+  .improvement-grid{grid-template-columns:1fr;gap:6px}
+  .improvement-card{padding:8px}
+  .improvement-name{font-size:13px}
+}
+
+
+/* V2.61 — repas extérieur + menu commun plein bloc */
+.menu-outside-choice{
+  display:flex;align-items:center;gap:7px;
+  margin:4px 0 8px;padding:7px 8px;
+  border:1px solid #e0c775;border-radius:9px;
+  background:#fff9e9;font-size:10px;font-weight:850;
+}
+.menu-outside-choice input{width:17px;height:17px}
+.food-picker.outside-mode{
+  min-height:72px;display:flex;align-items:center;justify-content:center;
+  border:1px dashed #d7bd6f;border-radius:10px;background:#fffdf6;
+}
+.food-picker-outside{
+  padding:12px;text-align:center;font-size:11px;font-weight:900;color:#765b18;
+}
+.menu-meal-card.exterior{
+  background:#fff9e9!important;
+  border-color:#dfc46b!important;
+}
+.menu-exterior-label{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  min-height:58px;padding:10px 7px;border-radius:9px;
+  border:1px dashed #d9bc64;background:#fffdf5;
+  font-size:11px;font-weight:900;text-align:center;color:#755914;
+}
+.menu-cell-common{height:100%;display:flex}
+.menu-cell-common .menu-meal-card{
+  width:100%;min-height:126px;
+  display:flex;flex-direction:column;justify-content:flex-start;
+}
+.menu-cell-split{display:grid;grid-template-rows:1fr 1fr;gap:6px}
+.menu-cell-split .menu-meal-card{min-height:60px}
+@media(max-width:700px){
+  .menu-cell-common .menu-meal-card{min-height:112px}
+  .menu-exterior-label{min-height:50px;font-size:10px}
+}
+
+
+/* V2.62 — double classement semaine / saison */
+#seasonRankCards .podium-1{
+  background:linear-gradient(180deg,#eef6ff,#ffffff);
+  border-color:#9ab9df;
+}
+#seasonRankCards .podium-1 .place-no{
+  background:#cfe0f5;
+  color:#244d7c;
+}
+#seasonScoreSummary .task{
+  background:#fbfcff;
+}
+
 </style>
 </head>
 <body>
@@ -1298,8 +1433,25 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 
 <section id="points" class="view">
  <div class="weekhead"><div><h2>🏆 Classement familial</h2><div class="small">Un seul classement pour Solé, Calista, Angela et Yvan.</div></div></div>
- <div class="section"><div class="podium" id="rankCards"></div></div>
+ <div class="section">
+  <h3>🏆 Classement de la semaine</h3>
+  <div class="small" id="weeklyRankingRange"></div>
+  <div class="podium" id="rankCards"></div>
+ </div>
  <div class="section" id="scoreSummary"></div>
+
+ <div class="section">
+  <h3>🎓 Classement de la saison scolaire</h3>
+  <div class="small">Cumul des points enregistrés depuis le début de la saison scolaire.</div>
+  <div class="podium" id="seasonRankCards" style="margin-top:9px"></div>
+  <div id="seasonScoreSummary" style="margin-top:10px"></div>
+ </div>
+
+ <div class="section">
+  <h3>🎯 Axes d’amélioration</h3>
+  <div class="small">Analyse automatique de la semaine : un seul événement est signalé « à surveiller » ; à partir de 2 occurrences, il devient un axe d’amélioration. La comparaison avec la semaine précédente permet aussi de voir les progrès.</div>
+  <div id="improvementAxes" class="improvement-grid"></div>
+ </div>
  <div class="section"><h3>Historique récent</h3><div id="history"></div></div>
 </section>
 
@@ -1372,10 +1524,12 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
    <div class="menu-form-grid">
     <div class="menu-form-card parents">
      <h4>👨‍👩 Parents</h4>
+     <label class="menu-outside-choice"><input id="outsideParents" type="checkbox" onchange="toggleOutsideDraft('parents',this.checked)"> 🍽️ Repas à l’extérieur</label>
      <div id="foodPickerParents" class="food-picker"></div>
     </div>
     <div class="menu-form-card children">
      <h4>👧👧 Enfants</h4>
+     <label class="menu-outside-choice"><input id="outsideChildren" type="checkbox" onchange="toggleOutsideDraft('children',this.checked)"> 🍽️ Repas à l’extérieur</label>
      <div id="foodPickerChildren" class="food-picker"></div>
     </div>
    </div>
@@ -1384,6 +1538,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div class="menu-common-only">
    <div class="menu-form-card common">
     <h4>👨‍👩‍👧‍👧 Menu commun</h4>
+    <label class="menu-outside-choice"><input id="outsideShared" type="checkbox" onchange="toggleOutsideDraft('shared',this.checked)"> 🍽️ Repas à l’extérieur</label>
     <div id="foodPickerShared" class="food-picker"></div>
    </div>
   </div>
@@ -1396,7 +1551,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.59;
+const APP_VERSION=2.62;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2009,6 +2164,7 @@ function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};r
 function normalizeMealTarget(o){
  o=o||{};
  if(!Array.isArray(o.selected))o.selected=[];
+ o.outside=!!o.outside;
  return o;
 }
 function menuEntry(day,meal){
@@ -2068,27 +2224,34 @@ function mealFoodTags(obj){
   }).join('');
 }
 function menuMealCard(kind,obj){
-  const tags=mealFoodTags(obj);
+  const outside=!!obj?.outside;
+  const tags=outside?'':mealFoodTags(obj);
   const cls=kind==='parents'?'parents':kind==='children'?'children':'commonbox';
   const labelCls=kind==='parents'?'parents-label':kind==='children'?'children-label':'common-label';
   const title=kind==='parents'?'Parents':kind==='children'?'Enfants':'Commun';
   const icon=kind==='parents'?'👨‍👩':kind==='children'?'👧👧':'👨‍👩‍👧‍👧';
   const hint=kind==='parents'?'Menu parents':kind==='children'?'Menu enfants':'Même menu pour tous';
-  return `<div class="menu-meal-card ${cls}">
+  return `<div class="menu-meal-card ${cls} ${outside?'exterior':''}">
     <div class="menu-meal-title ${labelCls}">
       <span class="menu-person-label">${icon} ${title}</span>
       <span class="menu-person-hint">${hint}</span>
     </div>
-    ${tags?`<div class="menu-food-groups">${tags}</div>`:`<div class="menu-meal-empty">À définir</div>`}
+    ${outside
+      ? `<div class="menu-exterior-label">🍽️ Repas à l’extérieur</div>`
+      : (tags?`<div class="menu-food-groups">${tags}</div>`:`<div class="menu-meal-empty">À définir</div>`)}
   </div>`;
 }
 function menuMealCellHtml(day,meal){
-  let e=menuEntry(day,meal);
-  let content = e.common
-    ? menuMealCard('common',e.shared)
-    : menuMealCard('parents',e.parents)+menuMealCard('children',e.children);
-  return `<td class="menu-meal-cell"><div class="menu-meal-stack">${content}</div><div class="menu-meal-actions parentOnly"><button type="button" class="menu-cell-btn" data-menu-date="${iso(day)}" data-menu-meal="${meal}">✏️ Modifier</button></div></td>`;
+  const date=iso(day),e=menuEntry(day,meal),canEdit=parentUnlocked;
+  const body=e.common
+    ? `<div class="menu-cell-common">${menuMealCard('common',e.shared)}</div>`
+    : `<div class="menu-cell-split">${menuMealCard('parents',e.parents)}${menuMealCard('children',e.children)}</div>`;
+  return `<td class="menu-meal-cell">
+    ${body}
+    ${canEdit?`<button type="button" class="menu-edit-btn" data-menu-date="${date}" data-menu-meal="${meal}">✏️ Modifier</button>`:''}
+  </td>`;
 }
+
 function renderMenus(){
   let base=monday(menuWeekDate),days=[0,1,2,3,4,5,6].map(i=>addDays(base,i)),end=days[6];
   document.getElementById('menuRangeTitle').textContent=base.toLocaleDateString(currentLocale(),{day:'numeric',month:'long'})+' – '+end.toLocaleDateString(currentLocale(),{day:'numeric',month:'long',year:'numeric'});
@@ -2162,18 +2325,33 @@ function closeMenuEditor(){
 }
 function toggleMenuEditorMode(){document.getElementById('menuModalBox').classList.toggle('common-mode',document.getElementById('menuCommonToggle').checked)}
 let pickerDraft={parents:[],children:[],shared:[]};
+let outsideDraft={parents:false,children:false,shared:false};
 function renderFoodPickers(e){
  pickerDraft={
    parents:[...(e.parents.selected||[])],
    children:[...(e.children.selected||[])],
    shared:[...(e.shared.selected||[])]
  };
+ outsideDraft={
+   parents:!!e.parents.outside,
+   children:!!e.children.outside,
+   shared:!!e.shared.outside
+ };
+ const p=document.getElementById('outsideParents'),c=document.getElementById('outsideChildren'),s=document.getElementById('outsideShared');
+ if(p)p.checked=outsideDraft.parents;
+ if(c)c.checked=outsideDraft.children;
+ if(s)s.checked=outsideDraft.shared;
  renderFoodPicker('foodPickerParents','parents');
  renderFoodPicker('foodPickerChildren','children');
  renderFoodPicker('foodPickerShared','shared');
 }
 function renderFoodPicker(hostId,target){
  const host=document.getElementById(hostId); if(!host)return;
+ host.classList.toggle('outside-mode',!!outsideDraft[target]);
+ if(outsideDraft[target]){
+   host.innerHTML='<div class="food-picker-outside">🍽️ Repas à l’extérieur — aucun aliment à sélectionner.</div>';
+   return;
+ }
  host.innerHTML=FOOD_CATEGORIES.map(cat=>{
    const items=state.foodCatalog.items.filter(x=>x.category===cat.id).sort((a,b)=>a.name.localeCompare(b.name,currentLocale()));
    return `<div class="food-picker-group">
@@ -2181,6 +2359,11 @@ function renderFoodPicker(hostId,target){
      <div class="food-chip-wrap">${items.length?items.map(item=>`<button type="button" class="food-choice food-cat-${cat.id} ${pickerDraft[target].includes(item.id)?'selected':''}" onclick="toggleFoodChoice('${target}','${item.id}')">${esc(item.name)}</button>`).join(''):'<div class="food-picker-empty">Aucun aliment dans ce groupe</div>'}</div>
    </div>`;
  }).join('');
+}
+function toggleOutsideDraft(target,checked){
+ if(!parentUnlocked)return showPin('unlock');
+ outsideDraft[target]=!!checked;
+ renderFoodPicker(target==='parents'?'foodPickerParents':target==='children'?'foodPickerChildren':'foodPickerShared',target);
 }
 function toggleFoodChoice(target,id){
  if(!parentUnlocked)return showPin('unlock');
@@ -2193,9 +2376,9 @@ function saveMenuEntry(){
  if(!menuEditDay)return;
  let e=menuEntry(menuEditDay,menuEditMeal);
  e.common=document.getElementById('menuCommonToggle').checked;
- e.parents={selected:[...pickerDraft.parents]};
- e.children={selected:[...pickerDraft.children]};
- e.shared={selected:[...pickerDraft.shared]};
+ e.parents={selected:[...pickerDraft.parents],outside:!!outsideDraft.parents};
+ e.children={selected:[...pickerDraft.children],outside:!!outsideDraft.children};
+ e.shared={selected:[...pickerDraft.shared],outside:!!outsideDraft.shared};
  saveLocal();closeMenuEditor();renderMenus();renderFoodCatalog();
 }
 function clearMenuEntry(){if(!parentUnlocked)return showPin('unlock');if(!menuEditDay||!confirm('Effacer ce repas ?'))return;let k=iso(menuEditDay);if(state.menus[k])delete state.menus[k][menuEditMeal];saveLocal();closeMenuEditor();renderMenus()}
@@ -2270,32 +2453,173 @@ function renderTransportModes(){document.getElementById('transportModes').innerH
 function toggleTransport(id){if(!parentUnlocked)return showPin('unlock');let t=state.planner.transportModes.find(x=>x.id===id);if(t){t.enabled=t.enabled===false?true:false;saveLocal();renderPlanner()}}
 function renderCalendarConnections(){let names={google:'Google Calendar',outlook:'Outlook / Microsoft 365',apple:'Apple Calendar'};document.getElementById('calendarConnections').innerHTML=Object.keys(names).map(k=>`<div class="syncrow"><div><b>${names[k]}</b><div class="small">Mode prévu : bidirectionnel</div></div><span class="status-badge">À connecter</span></div>`).join('')}
 
-function renderPoints(){
- let m=monday(selectedDay),s=addDays(m,6),scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score);
- function podiumCard(item,place){
+
+function weekDates(base){
+  const m=monday(base);
+  return [0,1,2,3,4,5,6].map(i=>iso(addDays(m,i)));
+}
+function improvementStatsFor(person,base){
+  const dates=new Set(weekDates(base));
+  const counts={};
+
+  function add(label,n=1){
+    counts[label]=(counts[label]||0)+n;
+  }
+
+  // Behaviour incidents.
+  const behavior=state.dailyEvaluation?.behavior||{};
+  Object.entries(behavior).forEach(([key,data])=>{
+    const [dateStr,p]=key.split('|');
+    if(p!==person || !dates.has(dateStr))return;
+    const list=['angela','yvan'].includes(person)?PARENT_BEHAVIOR_INCIDENTS:BEHAVIOR_INCIDENTS;
+    const incidents=Array.isArray(data?.incidents)?data.incidents:[];
+    incidents.forEach(id=>{
+      const meta=list.find(x=>x.id===id);
+      if(meta)add(meta.label);
+    });
+  });
+
+  // Missed evaluated tasks that belong to that person.
+  const tasks=state.dailyEvaluation?.tasks||{};
+  Object.entries(tasks).forEach(([key,status])=>{
+    if(status!=='missed')return;
+    const [dateStr,p,task]=key.split('|');
+    if(p!==person || !dates.has(dateStr))return;
+
+    const day=new Date(`${dateStr}T12:00:00`);
+    if(task==='turtles')add('Tortues non faites');
+    else if(task==='room')add('Chambre non rangée');
+    else{
+      const ass=assignments(day);
+      const main=ass[person]?.[0];
+      if(main && main.id===task)add('Tâche principale non faite');
+    }
+  });
+
+  // Children routines.
+  if(['sole','calista'].includes(person)){
+    const routines=state.dailyEvaluation?.routines||{};
+    Object.entries(routines).forEach(([key,status])=>{
+      if(status!=='missed')return;
+      const [dateStr,p,routine]=key.split('|');
+      if(p!==person || !dates.has(dateStr))return;
+      if(routine==='teeth')add('Dents non faites');
+      else if(routine==='bedtime')add('Coucher pas à l’heure');
+      else{
+        const r=EVENING_ROUTINE.find(x=>x.id===routine);
+        if(r)add(r.label+' : pas OK');
+      }
+    });
+  }
+
+  const items=Object.entries(counts)
+    .map(([label,count])=>({label,count}))
+    .sort((a,b)=>b.count-a.count || a.label.localeCompare(b.label,'fr'));
+
+  return {
+    items,
+    total:items.reduce((sum,x)=>sum+x.count,0)
+  };
+}
+function improvementTrend(current,previous){
+  if(current===0)return {cls:'clear',text:'✓ Rien à signaler'};
+  if(previous===0 && current>0)return {cls:'worse',text:'À surveiller'};
+  if(current<previous)return {cls:'better',text:'↘ En progrès'};
+  if(current>previous)return {cls:'worse',text:'↗ À améliorer'};
+  return {cls:'same',text:'→ Stable'};
+}
+function renderImprovementAxes(base){
+  const host=document.getElementById('improvementAxes');
+  if(!host)return;
+
+  const previousBase=addDays(monday(base),-7);
+
+  host.innerHTML=PEOPLE.map(p=>{
+    const cur=improvementStatsFor(p.id,base);
+    const prev=improvementStatsFor(p.id,previousBase);
+    const trend=improvementTrend(cur.total,prev.total);
+    const top=cur.items.slice(0,3);
+
+    let body='';
+    if(!top.length){
+      body='<div class="improvement-ok">✅ Aucun axe particulier détecté cette semaine.</div>';
+    }else{
+      body=top.map(x=>`
+        <div class="improvement-item">
+          <div class="improvement-label">${esc(x.label)}${x.count===1?' <span class="small">• à surveiller</span>':' <span class="small">• axe d’amélioration</span>'}</div>
+          <div class="improvement-count ${x.count>=2?'axis':''}">${x.count}×</div>
+        </div>`).join('');
+    }
+
+    return `<div class="improvement-card ${p.id}">
+      <div class="improvement-head">
+        <div class="improvement-name">${p.name}</div>
+        <div class="improvement-trend ${trend.cls}">${trend.text}</div>
+      </div>
+      ${body}
+      <div class="improvement-note">Cette synthèse sert à repérer les répétitions, pas à multiplier les pénalités. Le comportement reste plafonné à −1 point par personne et par jour.</div>
+    </div>`;
+  }).join('');
+}
+
+
+function podiumHtml(scores,season=false){
+ function card(item,place){
    if(!item)return `<div class="podium-place podium-${place}"><div class="place-no">${place}</div><div class="place-name">—</div><div class="place-score">0 ⭐</div><div class="place-sub">Aucun membre</div></div>`;
+   let sub='';
+   if(season){
+     sub=place===1?'Leader de la saison':place===2?'2e au général':'3e au général';
+   }else{
+     sub=place===1?'Leader de la semaine':place===2?'Très belle semaine':'Podium';
+   }
    return `<div class="podium-place podium-${place}">
      <div class="place-no">${place}</div>
      <div class="place-name">${item.p.name}</div>
      <div class="place-score">${item.score} ⭐</div>
-     <div class="place-sub">${place===1?'Leader de la semaine':place===2?'Très belle semaine':'Podium'}</div>
+     <div class="place-sub">${sub}</div>
    </div>`;
  }
- let htmlPodium = `<div class="podium-top">
-   ${podiumCard(scores[1],2)}
-   ${podiumCard(scores[0],1)}
-   ${podiumCard(scores[2],3)}
+ let out=`<div class="podium-top">
+   ${card(scores[1],2)}
+   ${card(scores[0],1)}
+   ${card(scores[2],3)}
  </div>`;
  if(scores[3]){
-   htmlPodium += `<div class="podium-fourth">
+   out+=`<div class="podium-fourth">
      <div class="fourth-row">
-       <div class="left"><div class="mini-no">4</div><div><div class="name">${scores[3].p.name}</div><div class="small">4e place de la semaine</div></div></div>
+       <div class="left"><div class="mini-no">4</div><div><div class="name">${scores[3].p.name}</div><div class="small">${season?'4e au classement général':'4e place de la semaine'}</div></div></div>
        <div class="score">${scores[3].score} ⭐</div>
      </div>
    </div>`;
  }
- document.getElementById('rankCards').innerHTML=htmlPodium;
+ return out;
+}
+
+function seasonScoreFor(person){
+  const start=iso(ANCHOR);
+  return effectivePointEntries()
+    .filter(x=>x.person===person && x.date>=start)
+    .reduce((sum,x)=>sum+Number(x.delta||0),0);
+}
+
+function renderPoints(){
+ let m=monday(selectedDay),s=addDays(m,6);
+ let scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
+ let seasonScores=PEOPLE.map(p=>({p,score:seasonScoreFor(p.id)})).sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
+
+ const weekRange=document.getElementById('weeklyRankingRange');
+ if(weekRange)weekRange.textContent=`${formatDate(m)} → ${formatDate(s)}`;
+
+ document.getElementById('rankCards').innerHTML=podiumHtml(scores,false);
  document.getElementById('scoreSummary').innerHTML='<h3>Score de la semaine</h3>'+scores.map((x,i)=>`<div class="task"><div class="label">#${i+1} — ${x.p.name}</div><b style="font-size:22px">${x.score>=0?'+':''}${x.score} ⭐</b></div>`).join('');
+
+ const seasonHost=document.getElementById('seasonRankCards');
+ if(seasonHost)seasonHost.innerHTML=podiumHtml(seasonScores,true);
+ const seasonSummary=document.getElementById('seasonScoreSummary');
+ if(seasonSummary)seasonSummary.innerHTML=seasonScores.map((x,i)=>`<div class="task"><div class="label">#${i+1} — ${x.p.name}</div><b style="font-size:22px">${x.score>=0?'+':''}${x.score} ⭐</b></div>`).join('');
+
+ renderImprovementAxes(selectedDay);
+
  let recent=effectivePointEntries().sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);
  document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
 }
@@ -2348,7 +2672,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-59-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-62-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
