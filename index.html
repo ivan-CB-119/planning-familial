@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.57 — Carballes</title>
+<title>Family Flow V2.59 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1237,8 +1237,8 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 
  <div class="section">
-  <h3>🙂 Comportement quotidien — Solé & Calista</h3>
-  <div class="small">Une appréciation générale par jour. Dès qu’au moins un motif négatif est coché, la pénalité est de <b>−1 point maximum pour la journée</b>, même si plusieurs motifs sont sélectionnés. Le bouton ⭐ Bon comportement reste une appréciation sans point automatique.</div>
+  <h3>🙂 Comportement quotidien — Famille</h3>
+  <div class="small">Une appréciation générale par jour. Dès qu’au moins un motif négatif est coché, la pénalité est de <b>−1 point maximum par personne et par jour</b>. Pour Angela et Yvan, les motifs sont simplement <b>Insultes</b> et <b>Cris</b>.</div>
   <div id="dailyBehaviorEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
@@ -1248,7 +1248,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div id="dailyRoutineEvaluation" style="overflow:auto;margin-top:8px"></div>
  </div>
 
- <div class="section"><h3>🔁 Rotation des 6 prochaines semaines</h3><div class="rotabox" id="rotationBox"></div></div>
+ <div class="section"><h3>🔁 Rotation des 6 semaines suivantes</h3><div class="rotabox" id="rotationBox"></div></div>
 </section>
 
 <section id="menus" class="view">
@@ -1396,7 +1396,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.57;
+const APP_VERSION=2.59;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1631,14 +1631,17 @@ function behaviorNegativePointEntries(){
     if(parts.length!==2)return;
 
     const [dateStr,person]=parts;
-    if(!['sole','calista'].includes(person))return;
+    if(!['sole','calista','angela','yvan'].includes(person))return;
 
     const incidents=Array.isArray(data?.incidents)?data.incidents:[];
     if(!incidents.length)return;
 
+    const list=['angela','yvan'].includes(person)?PARENT_BEHAVIOR_INCIDENTS:BEHAVIOR_INCIDENTS;
     const labels=incidents
-      .map(id=>BEHAVIOR_INCIDENTS.find(x=>x.id===id)?.label)
+      .map(id=>list.find(x=>x.id===id)?.label)
       .filter(Boolean);
+
+    if(!labels.length)return;
 
     out.push({
       person,
@@ -1796,6 +1799,10 @@ const BEHAVIOR_INCIDENTS=[
  {id:'answering_back',label:'Répondre'},
  {id:'rules_not_respected',label:'Règles non respectées'}
 ];
+const PARENT_BEHAVIOR_INCIDENTS=[
+ {id:'insults',label:'Insultes'},
+ {id:'shouting',label:'Cris'}
+];
 
 
 function autoEvalPointReason(person,task,day){
@@ -1927,14 +1934,16 @@ function toggleBehaviorPositive(day,person){
 }
 function behaviorCell(day,person){
  const b=getBehavior(day,person),dis=canCheckTasks()?'':'disabled';
+ const isParent=['angela','yvan'].includes(person);
+ const incidentsList=isParent?PARENT_BEHAVIOR_INCIDENTS:BEHAVIOR_INCIDENTS;
  return `<div class="behavior-day-cell">
    <div class="behavior-rating">
     <button ${dis} title="Bon" class="good ${b.rating==='good'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','good')">😊</button>
     <button ${dis} title="Moyen" class="medium ${b.rating==='medium'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','medium')">😐</button>
     <button ${dis} title="Mauvais" class="bad ${b.rating==='bad'?'on':''}" onclick="setBehaviorRating(new Date('${iso(day)}T12:00:00'),'${person}','bad')">😠</button>
    </div>
-   <div class="behavior-incidents">${BEHAVIOR_INCIDENTS.map(x=>`<button ${dis} class="${b.incidents.includes(x.id)?'on':''}" onclick="toggleBehaviorIncident(new Date('${iso(day)}T12:00:00'),'${person}','${x.id}')">${x.label}</button>`).join('')}</div>
-   <div class="behavior-positive"><button ${dis} class="${b.positive?'on':''}" onclick="toggleBehaviorPositive(new Date('${iso(day)}T12:00:00'),'${person}')">⭐ Bon comportement</button></div>
+   <div class="behavior-incidents">${incidentsList.map(x=>`<button ${dis} class="${b.incidents.includes(x.id)?'on':''}" onclick="toggleBehaviorIncident(new Date('${iso(day)}T12:00:00'),'${person}','${x.id}')">${x.label}</button>`).join('')}</div>
+   ${isParent?'':`<div class="behavior-positive"><button ${dis} class="${b.positive?'on':''}" onclick="toggleBehaviorPositive(new Date('${iso(day)}T12:00:00'),'${person}')">⭐ Bon comportement</button></div>`}
  </div>`;
 }
 
@@ -1977,8 +1986,9 @@ function renderWeek(){
  document.getElementById('dailyTaskEvaluation').innerHTML=th;
 
  let bh=`<div class="behavior-card"><table class="eval-table"><tr><th>Enfant</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
- ['sole','calista'].forEach(id=>{
-   bh+=`<tr><td><div class="eval-person-badge ${personBadgeClass(id)}">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-task-label">Comportement quotidien</div><div class="eval-task-meta">😊 Bon • 😐 Moyen • 😠 Mauvais</div></td>${days.map(d=>`<td>${behaviorCell(d,id)}</td>`).join('')}</tr>`;
+ ['sole','calista','angela','yvan'].forEach(id=>{
+   const isParent=['angela','yvan'].includes(id);
+   bh+=`<tr><td><div class="eval-person-badge ${personBadgeClass(id)}">${PEOPLE.find(p=>p.id===id).name}</div><div class="eval-task-label">Comportement quotidien</div><div class="eval-task-meta">${isParent?'Insultes • Cris':'😊 Bon • 😐 Moyen • 😠 Mauvais'}</div></td>${days.map(d=>`<td>${behaviorCell(d,id)}</td>`).join('')}</tr>`;
  });
  bh+='</table><div class="eval-legend"><span>Les incidents sont facultatifs.</span><span>⭐ Bon comportement permet de relever aussi les journées particulièrement positives.</span></div></div>';
  document.getElementById('dailyBehaviorEvaluation').innerHTML=bh;
@@ -1992,7 +2002,7 @@ function renderWeek(){
  rh+='</table><div class="eval-legend"><span>✓ OK</span><span>✕ Pas OK</span><span>— Non évalué / pas nécessaire</span></div></div>';
  document.getElementById('dailyRoutineEvaluation').innerHTML=rh;
 
- document.getElementById('rotationBox').innerHTML=[0,1,2,3,4,5].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
+ document.getElementById('rotationBox').innerHTML=[1,2,3,4,5,6].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
 }
 function menuBlank(){return {common:false,parents:{selected:[]},children:{selected:[]},shared:{selected:[]}}}
 function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};return state.menus[k]}
@@ -2338,7 +2348,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-57-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-59-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
