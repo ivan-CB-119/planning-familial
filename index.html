@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.62 — Carballes</title>
+<title>Family Flow V2.64 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1225,6 +1225,83 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   background:#fbfcff;
 }
 
+
+/* V2.63 — historique classements + axes persistants */
+.history-link-btn{width:100%;justify-content:center}
+.persistent-improvement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}
+.persistent-card{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fff}
+.persistent-card.sole{border-top:4px solid var(--sole)}
+.persistent-card.calista{border-top:4px solid var(--calista)}
+.persistent-card.angela{border-top:4px solid var(--angela)}
+.persistent-card.yvan{border-top:4px solid var(--yvan)}
+.persistent-head{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:6px}
+.persistent-name{font-weight:900;font-size:14px}
+.persistent-axis{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid #edf1f6;font-size:10px;font-weight:800}
+.persistent-axis:first-of-type{border-top:0}
+.persistent-meta{font-size:8px;color:var(--muted)}
+.ranking-history-list{display:grid;gap:10px}
+.ranking-week-card{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fff}
+.ranking-week-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.ranking-week-title{font-size:14px;font-weight:900}
+.ranking-week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.ranking-week-person{border:1px solid #e3e8f0;border-radius:9px;padding:7px;text-align:center;background:#fafcff}
+.ranking-week-position{font-size:9px;color:var(--muted);font-weight:800}
+.ranking-week-name{font-size:11px;font-weight:900;margin-top:2px}
+.ranking-week-score{font-size:17px;font-weight:900;margin-top:3px}
+.ranking-week-axes{margin-top:8px;display:grid;gap:4px}
+.ranking-axis-line{padding:5px 6px;border-radius:8px;background:#fbfcfe;border:1px solid #edf1f6;font-size:9px}
+@media(max-width:700px){
+ .persistent-improvement-grid{grid-template-columns:1fr}
+ .ranking-week-grid{grid-template-columns:1fr 1fr}
+}
+
+
+/* V2.64 — figer la première colonne des tableaux Semaine */
+#week .eval-wrap,
+#week .behavior-card,
+#week .section[style*="overflow:auto"]{
+  position:relative;
+}
+
+#week .eval-table th:first-child,
+#week .eval-table td:first-child,
+#week #weekTable th:first-child,
+#week #weekTable td:first-child{
+  position:sticky;
+  left:0;
+  z-index:6;
+  box-shadow:4px 0 7px -6px #26364f;
+}
+
+#week .eval-table th:first-child,
+#week #weekTable th:first-child{
+  background:#eef3fa;
+  z-index:8;
+}
+
+#week .eval-table td:first-child,
+#week #weekTable td:first-child{
+  background:#ffffff;
+}
+
+#week #weekTable th:first-child,
+#week #weekTable td:first-child{
+  min-width:120px;
+}
+
+@media(max-width:700px){
+  #week .eval-table th:first-child,
+  #week .eval-table td:first-child{
+    min-width:165px;
+    max-width:165px;
+  }
+  #week #weekTable th:first-child,
+  #week #weekTable td:first-child{
+    min-width:96px;
+    max-width:96px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1452,6 +1529,17 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   <div class="small">Analyse automatique de la semaine : un seul événement est signalé « à surveiller » ; à partir de 2 occurrences, il devient un axe d’amélioration. La comparaison avec la semaine précédente permet aussi de voir les progrès.</div>
   <div id="improvementAxes" class="improvement-grid"></div>
  </div>
+
+ <div class="section">
+  <h3>🧭 Axes d’amélioration à suivre</h3>
+  <div class="small">Synthèse des tendances récentes qui restent importantes d’une semaine à l’autre.</div>
+  <div id="persistentImprovementAxes" class="persistent-improvement-grid"></div>
+ </div>
+
+ <div class="section">
+  <button type="button" class="btn secondary history-link-btn" onclick="showRankingHistory()">📚 Voir l’historique complet des classements</button>
+ </div>
+
  <div class="section"><h3>Historique récent</h3><div id="history"></div></div>
 </section>
 
@@ -1459,6 +1547,20 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
  <div class="rulegrid"><div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div><div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div></div>
  <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1 maximum par enfant et par jour</b> dès qu’au moins un motif négatif est coché : insultes, chamailleries, cris, répondre ou règles non respectées. Plusieurs motifs le même jour ne cumulent pas les pénalités.</p></div>
+</section>
+
+
+<section id="rankingHistory" class="view">
+ <div class="weekhead">
+  <div>
+   <h2>📚 Historique des classements</h2>
+   <div class="small">Tous les classements hebdomadaires et les axes d’amélioration de la saison scolaire.</div>
+  </div>
+  <button type="button" class="btn secondary" onclick="showView('points',true)">← Retour aux points</button>
+ </div>
+ <div class="section">
+  <div id="rankingHistoryList" class="ranking-history-list"></div>
+ </div>
 </section>
 
 <section id="settings" class="view">
@@ -1551,7 +1653,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.62;
+const APP_VERSION=2.64;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2602,6 +2704,82 @@ function seasonScoreFor(person){
     .reduce((sum,x)=>sum+Number(x.delta||0),0);
 }
 
+
+function schoolSeasonWeekBases(){
+  const start=monday(ANCHOR);
+  const now=monday(new Date());
+  const out=[];
+  for(let d=new Date(start); d<=now; d=addDays(d,7)) out.push(new Date(d));
+  return out;
+}
+function rankingForWeek(base){
+  const m=monday(base),s=addDays(m,6);
+  return PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)}))
+    .sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
+}
+function persistentImprovementFor(person){
+  const weeks=schoolSeasonWeekBases().slice(-4);
+  const aggregate={};
+  weeks.forEach(base=>{
+    const stats=improvementStatsFor(person,base);
+    stats.items.forEach(item=>{
+      if(!aggregate[item.label])aggregate[item.label]={label:item.label,count:0,weeks:0};
+      aggregate[item.label].count+=item.count;
+      aggregate[item.label].weeks+=1;
+    });
+  });
+  return Object.values(aggregate)
+    .sort((a,b)=>b.weeks-a.weeks || b.count-a.count || a.label.localeCompare(b.label,'fr'))
+    .slice(0,3);
+}
+function renderPersistentImprovementAxes(){
+  const host=document.getElementById('persistentImprovementAxes');
+  if(!host)return;
+  host.innerHTML=PEOPLE.map(p=>{
+    const items=persistentImprovementFor(p.id);
+    const body=items.length
+      ? items.map(x=>`<div class="persistent-axis"><span>${esc(x.label)}</span><span class="persistent-meta">${x.count}× / ${x.weeks} sem.</span></div>`).join('')
+      : '<div class="improvement-ok">✅ Aucun axe récurrent sur les 4 dernières semaines.</div>';
+    return `<div class="persistent-card ${p.id}">
+      <div class="persistent-head"><div class="persistent-name">${p.name}</div><div class="small">4 semaines</div></div>
+      ${body}
+    </div>`;
+  }).join('');
+}
+function showRankingHistory(){
+  showView('rankingHistory',true);
+}
+function renderRankingHistory(){
+  const host=document.getElementById('rankingHistoryList');
+  if(!host)return;
+  const weeks=schoolSeasonWeekBases().slice().reverse();
+  host.innerHTML=weeks.map(base=>{
+    const m=monday(base),s=addDays(m,6),ranking=rankingForWeek(base);
+    const axes=PEOPLE.map(p=>{
+      const stats=improvementStatsFor(p.id,base);
+      const top=stats.items.slice(0,2);
+      if(!top.length)return '';
+      return `<div class="ranking-axis-line"><b>${p.name}</b> : ${top.map(x=>`${esc(x.label)} (${x.count}×)`).join(' • ')}</div>`;
+    }).filter(Boolean).join('');
+    return `<div class="ranking-week-card">
+      <div class="ranking-week-head">
+        <div>
+          <div class="ranking-week-title">S${weekIndex(m)+1} • ${formatDate(m)} → ${formatDate(s)}</div>
+          <div class="small">Classement hebdomadaire</div>
+        </div>
+      </div>
+      <div class="ranking-week-grid">
+        ${ranking.map((x,i)=>`<div class="ranking-week-person">
+          <div class="ranking-week-position">#${i+1}</div>
+          <div class="ranking-week-name">${x.p.name}</div>
+          <div class="ranking-week-score">${x.score} ⭐</div>
+        </div>`).join('')}
+      </div>
+      <div class="ranking-week-axes">${axes || '<div class="ranking-axis-line">Aucun axe d’amélioration relevé cette semaine.</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
 function renderPoints(){
  let m=monday(selectedDay),s=addDays(m,6);
  let scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
@@ -2619,6 +2797,7 @@ function renderPoints(){
  if(seasonSummary)seasonSummary.innerHTML=seasonScores.map((x,i)=>`<div class="task"><div class="label">#${i+1} — ${x.p.name}</div><b style="font-size:22px">${x.score>=0?'+':''}${x.score} ⭐</b></div>`).join('');
 
  renderImprovementAxes(selectedDay);
+ renderPersistentImprovementAxes();
 
  let recent=effectivePointEntries().sort((a,b)=>String(b.ts).localeCompare(String(a.ts))).slice(0,50);
  document.getElementById('history').innerHTML=recent.length?recent.map(x=>`<div class="task"><div class="label">${PEOPLE.find(p=>p.id===x.person)?.name||x.person}<div class="tag">${x.date} — ${esc(x.reason)}</div></div><b style="color:${x.delta>=0?'var(--green)':'var(--red)'}">${x.delta>0?'+':''}${x.delta}</b></div>`).join(''):'<div class="small">Aucun point enregistré.</div>'
@@ -2672,7 +2851,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-62-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-64-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -2697,7 +2876,7 @@ function renderTaskAccess(){
 
 
 function showView(id,updateHash=true){
-  const valid=['today','week','menus','points','rules','settings'];
+  const valid=['today','week','menus','points','rules','settings','rankingHistory'];
   if(!valid.includes(id))id='today';
 
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
@@ -2714,6 +2893,7 @@ function showView(id,updateHash=true){
   else if(id==='week')renderWeek();
   else if(id==='menus')renderMenus();
   else if(id==='points')renderPoints();
+  else if(id==='rankingHistory')renderRankingHistory();
 }
 function renderAll(){ensureState();document.getElementById('app').classList.toggle('parent-mode',parentUnlocked);document.getElementById('parentBtn').textContent=parentUnlocked?'🔓 Parent':'🔒 Parent';renderTaskAccess();let mn=document.getElementById('menuReadOnlyNotice');if(mn)mn.innerHTML=parentUnlocked?'🔓 Mode parent actif • menus modifiables':'👀 Consultation libre • 🔒 modification réservée aux parents';renderToday();renderWeek();renderMenus();renderFoodCatalog();renderPoints();loadCloudFields();updateSyncUI();renderFamilyAccount();applyTranslations()}
 document.querySelectorAll('.nav button').forEach(b=>{
@@ -2778,7 +2958,7 @@ document.getElementById('foodNameInput')?.addEventListener('keydown',e=>{if(e.ke
 
 renderAll();
 (function initViewFromHash(){
-  const valid=['today','week','menus','points','rules','settings'];
+  const valid=['today','week','menus','points','rules','settings','rankingHistory'];
   let id=(location.hash||'').replace(/^#/,'');
   if(!valid.includes(id))id='today';
   showView(id,false);
