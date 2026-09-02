@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.64 — Carballes</title>
+<title>Family Flow V2.66 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1302,6 +1302,103 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   }
 }
 
+
+/* V2.65 — groupe parents fusionné dans le suivi quotidien */
+.eval-person-badge.parents{
+  background:#eef2f7;
+  border-color:#c9d2df;
+  color:#334155;
+}
+.eval-parent-credit{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#f6f8fb;
+  border:1px solid #dde3eb;
+  font-size:8px;
+  font-weight:850;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+
+/* V2.66 — véritable "figer les volets" sur iPhone */
+#week .week-horizontal-scroll{
+  width:100%;
+  max-width:100%;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  position:relative;
+}
+
+/* Important pour Safari iOS : le tableau ne doit pas couper les cellules sticky. */
+#week .eval-table{
+  overflow:visible!important;
+  border-radius:0;
+}
+
+/* Le contenu complet reste assez large pour faire défiler lundi → dimanche. */
+#week .week-horizontal-scroll .eval-wrap,
+#week .week-horizontal-scroll .behavior-card{
+  width:max-content;
+  min-width:820px;
+}
+
+/* Première colonne réellement figée. */
+#week .week-horizontal-scroll .eval-table th:first-child,
+#week .week-horizontal-scroll .eval-table td:first-child{
+  position:-webkit-sticky!important;
+  position:sticky!important;
+  left:0!important;
+  z-index:20!important;
+  background:#ffffff!important;
+  box-shadow:5px 0 8px -6px rgba(20,33,58,.75);
+  background-clip:padding-box;
+}
+
+#week .week-horizontal-scroll .eval-table th:first-child{
+  background:#eef3fa!important;
+  z-index:30!important;
+}
+
+/* Empêche les cellules des jours de passer visuellement par-dessus. */
+#week .week-horizontal-scroll .eval-table th:not(:first-child),
+#week .week-horizontal-scroll .eval-table td:not(:first-child){
+  position:relative;
+  z-index:1;
+}
+
+/* Mobile : assez large pour prénom + explication tout en laissant voir le jour courant. */
+@media(max-width:700px){
+  #week .week-horizontal-scroll .eval-wrap,
+  #week .week-horizontal-scroll .behavior-card{
+    min-width:760px;
+  }
+
+  #week .week-horizontal-scroll .eval-table th:first-child,
+  #week .week-horizontal-scroll .eval-table td:first-child{
+    min-width:155px!important;
+    width:155px!important;
+    max-width:155px!important;
+  }
+
+  #week .week-horizontal-scroll .eval-person-badge{
+    max-width:145px;
+    white-space:normal;
+    line-height:1.1;
+  }
+
+  #week .week-horizontal-scroll .eval-task-label,
+  #week .week-horizontal-scroll .eval-task-meta,
+  #week .week-horizontal-scroll .eval-parent-credit{
+    max-width:145px;
+    white-space:normal;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1445,19 +1542,19 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  <div class="section">
   <h3>✅ Suivi quotidien des tâches</h3>
   <div class="small">Pour chaque jour : <b>✅ Fait</b> • <b>❌ Non fait</b> • <b>➖ Pas nécessaire</b>. La tâche principale donne <b>+2</b> si elle est faite ou pas nécessaire. Pour les tortues : <b>0 point si fait</b>, <b>0 si pas nécessaire</b>, <b>−1 si non fait</b>.</div>
-  <div id="dailyTaskEvaluation" style="overflow:auto;margin-top:8px"></div>
+  <div id="dailyTaskEvaluation" class="week-horizontal-scroll" style="margin-top:8px"></div>
  </div>
 
  <div class="section">
   <h3>🙂 Comportement quotidien — Famille</h3>
   <div class="small">Une appréciation générale par jour. Dès qu’au moins un motif négatif est coché, la pénalité est de <b>−1 point maximum par personne et par jour</b>. Pour Angela et Yvan, les motifs sont simplement <b>Insultes</b> et <b>Cris</b>.</div>
-  <div id="dailyBehaviorEvaluation" style="overflow:auto;margin-top:8px"></div>
+  <div id="dailyBehaviorEvaluation" class="week-horizontal-scroll" style="margin-top:8px"></div>
  </div>
 
  <div class="section">
   <h3>🌙 Routines quotidiennes — Solé & Calista</h3>
   <div class="small">Dents et coucher : <b>✅ OK</b> • <b>❌ Pas OK</b> • <b>➖ Non évalué / pas nécessaire</b>.</div>
-  <div id="dailyRoutineEvaluation" style="overflow:auto;margin-top:8px"></div>
+  <div id="dailyRoutineEvaluation" class="week-horizontal-scroll" style="margin-top:8px"></div>
  </div>
 
  <div class="section"><h3>🔁 Rotation des 6 semaines suivantes</h3><div class="rotabox" id="rotationBox"></div></div>
@@ -1653,7 +1750,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.64;
+const APP_VERSION=2.66;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2154,17 +2251,50 @@ function evalTaskButtons(day,person,task){
 function weeklyTaskRows(d){
  const ass=assignments(d);
  let rows=[];
- PEOPLE.forEach(p=>{
-   const t=ass[p.id][0];
-   rows.push({person:p.id,personName:p.name,task:t.id,label:`${t.icon} ${t.label}`});
+
+ ['sole','calista'].forEach(id=>{
+   const p=PEOPLE.find(x=>x.id===id);
+   const t=ass[id][0];
+   rows.push({person:id,personName:p.name,task:t.id,label:`${t.icon} ${t.label}`});
  });
- GIRLS_SHARED.forEach(t=>rows.push({person:'girls',personName:'Solé + Calista',task:t.id,label:`${t.icon} ${t.label}`}));
- ['sole','calista'].forEach(id=>rows.push({person:id,personName:PEOPLE.find(p=>p.id===id).name,task:'room',label:'🛏️ Ranger sa chambre'}));
+
+ ['angela','yvan'].forEach(id=>{
+   const p=PEOPLE.find(x=>x.id===id);
+   const t=ass[id][0];
+   rows.push({
+     person:id,
+     groupPerson:'parents',
+     personName:'Angela + Yvan',
+     creditName:p.name,
+     task:t.id,
+     label:`${t.icon} ${t.label}`
+   });
+ });
+
+ GIRLS_SHARED.forEach(t=>rows.push({
+   person:'girls',
+   personName:'Solé + Calista',
+   task:t.id,
+   label:`${t.icon} ${t.label}`
+ }));
+
+ ['sole','calista'].forEach(id=>rows.push({
+   person:id,
+   personName:PEOPLE.find(p=>p.id===id).name,
+   task:'room',
+   label:'🛏️ Ranger sa chambre'
+ }));
+
  const tp=turtlePerson(d);
- rows.push({person:tp.id,personName:tp.name,task:'turtles',label:'🐢 S’occuper des tortues'});
+ rows.push({
+   person:tp.id,
+   personName:tp.name,
+   task:'turtles',
+   label:'🐢 S’occuper des tortues'
+ });
+
  return rows;
 }
-
 function behaviorKey(day,person){return `${iso(day)}|${person}`}
 function getBehavior(day,person){
  const k=behaviorKey(day,person);
@@ -2224,7 +2354,9 @@ function routineEvalButtons(day,person,routine){
 
 
 function personBadgeClass(person){
-  return person==='girls'?'girls':person;
+  if(person==='girls')return 'girls';
+  if(person==='parents')return 'parents';
+  return person;
 }
 
 function renderWeek(){
@@ -2237,7 +2369,14 @@ function renderWeek(){
  const rows=weeklyTaskRows(selectedDay);
  let th=`<div class="eval-wrap"><table class="eval-table"><tr><th>Tâche</th>${days.map(d=>`<th>${d.toLocaleDateString(currentLocale(),{weekday:'short'})}<br>${d.getDate()}</th>`).join('')}</tr>`;
  rows.forEach(r=>{
-   th+=`<tr><td><div class="eval-person-badge ${personBadgeClass(r.person)}">${r.personName}</div><div class="eval-task-label">${r.label}</div><div class="eval-task-meta">À évaluer pour cette personne / ce groupe</div></td>${days.map(d=>`<td>${evalTaskButtons(d,r.person,r.task)}</td>`).join('')}</tr>`;
+   const badgePerson=r.groupPerson||r.person;
+   th+=`<tr><td>
+     <div class="eval-person-badge ${personBadgeClass(badgePerson)}">${r.personName}</div>
+     <div class="eval-task-label">${r.label}</div>
+     ${r.creditName
+       ? `<div class="eval-parent-credit">Responsabilité suivie : ${r.creditName}</div>`
+       : `<div class="eval-task-meta">À évaluer pour cette personne / ce groupe</div>`}
+   </td>${days.map(d=>`<td>${evalTaskButtons(d,r.person,r.task)}</td>`).join('')}</tr>`;
  });
  th+='</table><div class="eval-legend"><span>✓ Fait</span><span>✕ Non fait</span><span>— Pas nécessaire</span></div></div>';
  document.getElementById('dailyTaskEvaluation').innerHTML=th;
@@ -2851,7 +2990,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-64-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-66-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
