@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.70 — Carballes</title>
+<title>Family Flow V2.71 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1892,7 +1892,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.70</b> • Dernière mise à jour : <b>02/09/2026 à 18:31</b></footer>
+<footer class="footerinfo">Version <b>2.71</b> • Dernière mise à jour : <b>03/09/2026 à 20:18</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1948,7 +1948,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.70;
+const APP_VERSION=2.71;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2511,7 +2511,7 @@ function toggleBehaviorIncident(day,person,incident){
  if(!canCheckTasks())return denyTaskWrite();
  let b=getBehavior(day,person);
  b.incidents=b.incidents.includes(incident)?b.incidents.filter(x=>x!==incident):[...b.incidents,incident];
- saveLocal();renderAll();
+ saveLocal();renderWeek();
 }
 function toggleBehaviorPositive(day,person){
  if(!canCheckTasks())return denyTaskWrite();
@@ -3183,12 +3183,53 @@ function updateSyncUI(){let dot=document.getElementById('syncDot'),txt=document.
 async function api(method,body=null){let u=`${cloud.url}/rest/v1/family_boards?family_code=eq.${encodeURIComponent(cloud.familyCode)}`,headers={'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'};let r=await fetch(u,{method,headers,body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(await r.text());return r.status===204?[]:await r.json()}
 async function pushCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Envoi…');let existing=await api('GET');if(existing.length)await api('PATCH',{payload:state,updated_at:new Date().toISOString()});else{let r=await fetch(`${cloud.url}/rest/v1/family_boards`,{method:'POST',headers:{'apikey':cloud.key,'Authorization':'Bearer '+cloud.key,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({family_code:cloud.familyCode,payload:state})});if(!r.ok)throw new Error(await r.text())}msg('✅ Synchronisé vers le cloud.')}catch(e){msg('❌ '+e.message)}}
 async function pullCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{msg('Récupération…');let arr=await api('GET');if(!arr.length)return msg('Aucune donnée cloud pour ce code famille.');if(arr[0].payload){state=arr[0].payload;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();msg('✅ Données cloud récupérées.')}}catch(e){msg('❌ '+e.message)}}
+
+function stateTimestamp(s){
+ const t=Date.parse(s?.updatedAt||'');
+ return Number.isFinite(t)?t:0;
+}
+
+async function syncCloudPreferNewest(){
+ if(!cloudReady()||!navigator.onLine)return;
+ try{
+   msg('Synchronisation…');
+   const arr=await api('GET');
+
+   if(!arr.length){
+     await pushCloud();
+     return;
+   }
+
+   const remote=arr[0]?.payload;
+   if(!remote){
+     await pushCloud();
+     return;
+   }
+
+   const localTs=stateTimestamp(state);
+   const remoteTs=stateTimestamp(remote);
+
+   if(localTs>remoteTs){
+     await pushCloud();
+   }else if(remoteTs>localTs){
+     state=remote;
+     ensureState();
+     localStorage.setItem('familyBoardV2',JSON.stringify(state));
+     renderAll();
+     msg('✅ Données cloud plus récentes récupérées.');
+   }else{
+     msg('✅ Données déjà synchronisées.');
+   }
+ }catch(e){
+   msg('❌ '+e.message);
+ }
+}
 async function testCloud(){if(!cloudReady())return msg('Configuration cloud incomplète.');try{await api('GET');msg('✅ Connexion Supabase réussie.')}catch(e){msg('❌ '+e.message)}}
 function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
-window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())pullCloud()});window.addEventListener('offline',updateSyncUI);
+window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())syncCloudPreferNewest()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-70-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-71-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
@@ -3306,7 +3347,7 @@ window.addEventListener('hashchange',()=>{
   showView(id,false);
 });
 
-if(cloudReady()&&navigator.onLine)setTimeout(()=>pullCloud(),800);
+if(cloudReady()&&navigator.onLine)setTimeout(()=>syncCloudPreferNewest(),800);
 </script>
 </body>
 </html>
