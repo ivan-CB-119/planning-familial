@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.71 — Carballes</title>
+<title>Family Flow V2.72 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1597,6 +1597,70 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
   }
 }
 
+
+/* V2.72 — points bonus ponctuels */
+.quick-bonus-box{
+  display:grid;
+  gap:9px;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fbfcff;
+}
+.quick-bonus-row{
+  display:grid;
+  grid-template-columns:1.1fr .65fr 1.8fr;
+  gap:8px;
+  align-items:end;
+}
+.quick-bonus-field label{
+  display:block;
+  font-size:9px;
+  font-weight:850;
+  color:var(--muted);
+  margin:0 0 4px 2px;
+}
+.quick-bonus-field select,
+.quick-bonus-field input{
+  width:100%;
+  min-height:38px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fff;
+  padding:7px 9px;
+  font:inherit;
+  font-size:11px;
+}
+.quick-bonus-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.quick-bonus-give{
+  flex:1;
+  min-width:180px;
+}
+.quick-bonus-feedback{
+  font-size:10px;
+  font-weight:850;
+  color:var(--green);
+}
+.quick-bonus-locked{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:9px;
+  border:1px dashed var(--line);
+  border-radius:10px;
+  background:#fafbfc;
+}
+@media(max-width:700px){
+  .quick-bonus-row{grid-template-columns:1fr 1fr}
+  .quick-bonus-field.reason{grid-column:1/-1}
+  .quick-bonus-give{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -1813,6 +1877,12 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  <div class="section" id="scoreSummary"></div>
 
  <div class="section">
+  <h3>🌟 Points bonus à la volée</h3>
+  <div class="small">Pour féliciter une initiative ponctuelle : aider quelqu’un, faire une tâche qui n’était pas la sienne, prendre une bonne initiative, etc.</div>
+  <div id="quickBonusPanel" style="margin-top:10px"></div>
+ </div>
+
+ <div class="section">
   <h3>🎓 Classement de la saison scolaire</h3>
   <div class="small">Cumul des points enregistrés depuis le début de la saison scolaire.</div>
   <div class="podium" id="seasonRankCards" style="margin-top:9px"></div>
@@ -1841,7 +1911,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 <section id="rules" class="view">
  <div class="weekhead"><div><h2>🏠 Règles de la maison</h2><div class="small">Les mêmes règles valent pour les parents et les enfants.</div></div></div>
  <div class="rulegrid"><div class="rule">❤️ On se respecte</div><div class="rule">💬 On parle calmement</div><div class="rule">📦 On range après soi</div><div class="rule">📚 Devoirs avant les écrans</div><div class="rule">🏡 On aide à la maison</div><div class="rule">🍽️ Pendant les repas : on évite les cris</div></div>
- <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1</b> aide spontanée / comportement positif.</p><p><b>−1 maximum par enfant et par jour</b> dès qu’au moins un motif négatif est coché : insultes, chamailleries, cris, répondre ou règles non respectées. Plusieurs motifs le même jour ne cumulent pas les pénalités.</p></div>
+ <div class="section"><h3>Barème</h3><p><b>+2</b> responsabilité principale de la semaine • <b>0</b> tortues faites / pas nécessaires • <b>−1</b> tortues non faites • <b>+1 à +3</b> bonus ponctuel décidé par un parent pour une initiative positive.</p><p><b>−1 maximum par enfant et par jour</b> dès qu’au moins un motif négatif est coché : insultes, chamailleries, cris, répondre ou règles non respectées. Plusieurs motifs le même jour ne cumulent pas les pénalités.</p></div>
 </section>
 
 
@@ -1892,7 +1962,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.71</b> • Dernière mise à jour : <b>03/09/2026 à 20:18</b></footer>
+<footer class="footerinfo">Version <b>2.72</b> • Dernière mise à jour : <b>03/09/2026 à 21:58</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -1948,7 +2018,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  </div>
 </div>
 <script>
-const APP_VERSION=2.71;
+const APP_VERSION=2.72;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -1986,6 +2056,7 @@ const ANCHOR=new Date(2026,7,17,12,0,0,0);
 let selectedDay=new Date();selectedDay.setHours(12,0,0,0);
 let currentLang=localStorage.getItem('familyFlowLang')||'fr';
 let parentUnlocked=false,pinBuffer='',pinMode='unlock',editingPlannerId=null,menuWeekDate=new Date(selectedDay),menuEditDay=null,menuEditMeal='lunch';
+let quickBonusFeedback='';
 if(!localStorage.getItem('familyParentPin'))localStorage.setItem('familyParentPin','2468');
 
 let state=JSON.parse(localStorage.getItem('familyBoardV2')||'null')||{checks:{},points:[],menus:{},planner:{events:[],places:[],transportModes:DEFAULT_TRANSPORTS.map(x=>({...x}))},version:APP_VERSION,updatedAt:new Date().toISOString()};
@@ -3117,10 +3188,97 @@ function renderRankingHistory(){
   }).join('');
 }
 
+
+function quickBonusReasonLabel(value,custom){
+ const labels={
+   help:'A aidé quelqu’un spontanément',
+   other_task:'A fait une tâche qui n’était pas la sienne',
+   initiative:'Belle initiative',
+   kindness:'Gentillesse / esprit d’entraide',
+   effort:'Effort particulier',
+   positive:'Très bon comportement',
+   custom:''
+ };
+ if(value==='custom')return String(custom||'').trim();
+ return labels[value]||'Bonus positif';
+}
+
+function grantQuickBonus(){
+ if(!parentUnlocked)return showPin('unlock');
+ const person=document.getElementById('quickBonusPerson')?.value;
+ const delta=Number(document.getElementById('quickBonusAmount')?.value||2);
+ const reasonType=document.getElementById('quickBonusReason')?.value||'other_task';
+ const custom=document.getElementById('quickBonusCustom')?.value||'';
+ const reason=quickBonusReasonLabel(reasonType,custom);
+
+ if(!['sole','calista'].includes(person))return;
+ if(![1,2,3].includes(delta))return;
+ if(!reason)return alert('Indique un motif pour ce bonus.');
+
+ const child=PEOPLE.find(p=>p.id===person);
+ quickBonusFeedback=`✅ +${delta} point${delta>1?'s':''} pour ${child?.name||person} — ${reason}`;
+ addPoint(person,delta,reason,selectedDay,false);
+}
+
+function renderQuickBonusPanel(){
+ const host=document.getElementById('quickBonusPanel');
+ if(!host)return;
+
+ if(!parentUnlocked){
+   host.innerHTML=`<div class="quick-bonus-locked">
+     <div><b>🔒 Mode parent requis</b><div class="small">Les bonus ponctuels modifient directement le classement.</div></div>
+     <button type="button" class="btn secondary" onclick="showPin('unlock')">Déverrouiller</button>
+   </div>`;
+   return;
+ }
+
+ host.innerHTML=`<div class="quick-bonus-box">
+   <div class="quick-bonus-row">
+     <div class="quick-bonus-field">
+       <label>Enfant</label>
+       <select id="quickBonusPerson">
+         <option value="sole">Solé</option>
+         <option value="calista">Calista</option>
+       </select>
+     </div>
+     <div class="quick-bonus-field">
+       <label>Bonus</label>
+       <select id="quickBonusAmount">
+         <option value="1">+1</option>
+         <option value="2" selected>+2</option>
+         <option value="3">+3</option>
+       </select>
+     </div>
+     <div class="quick-bonus-field reason">
+       <label>Motif</label>
+       <select id="quickBonusReason" onchange="document.getElementById('quickBonusCustomWrap').style.display=this.value==='custom'?'block':'none'">
+         <option value="other_task">A fait une tâche qui n’était pas la sienne</option>
+         <option value="help">A aidé quelqu’un spontanément</option>
+         <option value="initiative">Belle initiative</option>
+         <option value="kindness">Gentillesse / esprit d’entraide</option>
+         <option value="effort">Effort particulier</option>
+         <option value="positive">Très bon comportement</option>
+         <option value="custom">Autre motif…</option>
+       </select>
+     </div>
+   </div>
+   <div id="quickBonusCustomWrap" class="quick-bonus-field" style="display:none">
+     <label>Motif personnalisé</label>
+     <input id="quickBonusCustom" type="text" maxlength="90" placeholder="Ex. A rangé la cuisine sans qu’on lui demande">
+   </div>
+   <div class="quick-bonus-actions">
+     <button type="button" class="btn good quick-bonus-give" onclick="grantQuickBonus()">🌟 Ajouter le bonus</button>
+   </div>
+   ${quickBonusFeedback?`<div class="quick-bonus-feedback">${esc(quickBonusFeedback)}</div>`:''}
+ </div>`;
+}
+
 function renderPoints(){
  let m=monday(selectedDay),s=addDays(m,6);
  let scores=PEOPLE.map(p=>({p,score:scoreFor(p.id,m,s)})).sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
  let seasonScores=PEOPLE.map(p=>({p,score:seasonScoreFor(p.id)})).sort((a,b)=>b.score-a.score || PEOPLE.indexOf(a.p)-PEOPLE.indexOf(b.p));
+
+ renderQuickBonusPanel();
 
  const weekRange=document.getElementById('weeklyRankingRange');
  if(weekRange)weekRange.textContent=`${formatDate(m)} → ${formatDate(s)}`;
@@ -3229,7 +3387,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())syncCloudPreferNewest()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-71-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-72-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
