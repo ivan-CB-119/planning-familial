@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.73 — Carballes</title>
+<title>Family Flow V2.74 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1662,7 +1662,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 }
 
 
-/* V2.73 : styles limités à l'onglet Nettoyage et navigation à sept entrées. */
+/* V2.74 : styles limités à l'onglet Nettoyage et navigation à sept entrées. */
 .nav{grid-template-columns:repeat(7,minmax(0,1fr))}
 .clean-levels{display:flex;gap:8px;margin:14px 0}.clean-levels button{flex:1;min-height:44px}
 .clean-room{background:white;border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden}
@@ -1675,6 +1675,13 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 .clean-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.clean-dialog-head h3{margin:0}
 #cleaningAt{display:block;max-width:100%;width:100%;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:8px}
 .clean-history{padding:0;list-style:none}.clean-history li{border-top:1px solid var(--line);padding:12px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.clean-select-room{display:flex;align-items:center;gap:10px;padding:8px 16px 12px;font-size:12px;color:var(--muted)}
+.clean-check,.clean-select-room input{width:24px;height:24px;flex-shrink:0;accent-color:var(--green)}
+#cleaning .clean-task{justify-content:flex-start;align-items:center}.clean-date{display:flex;flex-wrap:wrap;align-items:center;gap:6px;border:0;background:transparent;padding:5px 0;min-height:44px;text-align:left;color:inherit;cursor:pointer}.clean-date:hover{text-decoration:underline}.clean-date:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.clean-note{font-size:12px;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px}
+.clean-batch{position:sticky;bottom:65px;z-index:10;background:white;border:1px solid var(--line);box-shadow:0 -3px 12px #14315918;border-radius:14px;padding:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.clean-batch .small{flex:1;min-width:180px}.clean-batch button{min-height:44px}.clean-batch button:disabled{opacity:.5;cursor:default}
+#cleaningForm select,#cleaningForm textarea{display:block;width:100%;max-width:100%;margin:8px 0 16px;padding:10px;border:1px solid var(--line);border-radius:8px}#cleaningForm textarea{resize:vertical}.clean-batch-list{max-height:150px;overflow:auto;font-size:12px;line-height:1.7;padding-left:20px}
+@media(max-width:700px){.clean-batch{bottom:calc(60px + env(safe-area-inset-bottom))}.clean-batch .small{flex-basis:100%}.clean-batch .good{flex:1}.clean-date{display:block}.clean-date .small{display:block;margin-top:5px}}
 @media(max-width:700px){.clean-task{padding:12px;gap:8px;align-items:flex-start}.clean-label{flex:1;font-size:13px}.clean-actions{flex:0 0 120px;display:grid;grid-template-columns:1fr}.clean-actions button{font-size:11px;padding:7px}.clean-levels{gap:5px}.clean-levels button{padding:9px 6px;font-size:12px}.clean-room summary{padding:13px}.nav button,.mobile-ui .nav button{min-height:48px;font-size:8px}}
 </style>
 </head>
@@ -1985,7 +1992,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.73</b> • Dernière mise à jour : <b>17/09/2026 à 21:27</b></footer>
+<footer class="footerinfo">Version <b>2.74</b> • Dernière mise à jour : <b>17/09/2026 à 21:38</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -2069,6 +2076,22 @@ const CLEANING_LEVELS = [
 const CLEANING_TASKS = CLEANING_LEVELS.flatMap(([level,rooms],li)=>rooms.flatMap(([room,tasks],ri)=>tasks.map((name,ti)=>({id:`cl-${li}-${ri}-${ti}`,level,room,name}))));
 let cleaningLevel=0;
 const cleaningOpenRooms=new Set(['0-0','1-0','2-0']);
+const cleaningSelected=new Set();
+function selectCleaning(id,checked){if(!parentUnlocked)return;checked?cleaningSelected.add(id):cleaningSelected.delete(id);updateCleaningSelection();}
+function updateCleaningSelection(){
+ const button=document.getElementById('cleaningBatchButton');
+ if(button){button.disabled=!cleaningSelected.size;button.textContent=`Enregistrer les tâches cochées (${cleaningSelected.size})`;}
+ document.querySelectorAll('[data-clean-room]').forEach(box=>{
+  const ids=CLEANING_TASKS.filter(t=>t.id.startsWith('cl-'+box.dataset.cleanRoom+'-')).map(t=>t.id);
+  const count=ids.filter(id=>cleaningSelected.has(id)).length;
+  box.checked=count===ids.length;box.indeterminate=count>0&&count<ids.length;
+ });
+}
+function selectCleaningRoom(key,checked){
+ if(!parentUnlocked)return;
+ CLEANING_TASKS.filter(t=>t.id.startsWith('cl-'+key+'-')).forEach(t=>checked?cleaningSelected.add(t.id):cleaningSelected.delete(t.id));
+ document.querySelectorAll('[data-clean-check]').forEach(box=>box.checked=cleaningSelected.has(box.dataset.cleanCheck));updateCleaningSelection();
+}
 function cleaningEntries(id){return state.cleaning.entries.filter(e=>e.taskId===id && Number.isFinite(Date.parse(e.at))).sort((a,b)=>Date.parse(b.at)-Date.parse(a.at));}
 function cleaningDate(at){return new Date(at).toLocaleString('fr-CH',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
 function cleaningStatus(at){
@@ -2086,11 +2109,34 @@ function renderCleaning(){
  host.innerHTML=rooms.map(([room,tasks],ri)=>{
   const key=`${cleaningLevel}-${ri}`;
   const recorded=tasks.filter((_,ti)=>cleaningEntries(`cl-${cleaningLevel}-${ri}-${ti}`).length).length;
-  return `<details class="clean-room" ${cleaningOpenRooms.has(key)?'open':''} ontoggle="this.open?cleaningOpenRooms.add('${key}'):cleaningOpenRooms.delete('${key}')"><summary>${esc(room)} <span>${recorded}/${tasks.length}</span></summary><div>${tasks.map((name,ti)=>{
+  return `<details class="clean-room" ${cleaningOpenRooms.has(key)?'open':''} ontoggle="if(this.isConnected){this.open?cleaningOpenRooms.add('${key}'):cleaningOpenRooms.delete('${key}')}"><summary>${esc(room)} <span>${recorded}/${tasks.length}</span></summary>${parentUnlocked?`<label class="clean-select-room"><input type="checkbox" data-clean-room="${key}" onchange="selectCleaningRoom('${key}',this.checked)"> Toute la pièce</label>`:''}<div>${tasks.map((name,ti)=>{
    const id=`cl-${cleaningLevel}-${ri}-${ti}`,entries=cleaningEntries(id),last=entries[0],status=cleaningStatus(last?.at);
-   return `<article class="clean-task"><div class="clean-label"><b>${esc(name)}</b><div class="clean-status ${status.tone}">${status.label}</div><div class="small">${last?esc(cleaningDate(last.at)):'Aucune date renseignée'}</div></div><div class="clean-actions">${parentUnlocked?`<button class="btn good" onclick="recordCleaning('${id}')">✓ Fait maintenant</button><button class="btn secondary" onclick="openCleaningEditor('${id}')">Saisir une date</button>`:''}<button class="btn secondary" onclick="openCleaningHistory('${id}')">Historique (${entries.length})</button></div></article>`;
+   return `<article class="clean-task">${parentUnlocked?`<input class="clean-check" type="checkbox" data-clean-check="${id}" aria-label="${esc(name)} — ${esc(room)}" ${cleaningSelected.has(id)?'checked':''} onchange="selectCleaning('${id}',this.checked)">`:''}<div class="clean-label"><b>${esc(name)}</b><button class="clean-date" onclick="openCleaningHistory('${id}')" aria-label="Historique de ${esc(name)} — ${esc(room)}"><span class="clean-status ${status.tone}">${status.label}</span><span class="small">${last?esc(cleaningDate(last.at)):'Jamais enregistré'} · Historique (${entries.length})</span></button>${last?.person?`<div class="small">Par ${esc(last.person)}</div>`:''}${last?.note?`<div class="clean-note">${esc(last.note)}</div>`:''}</div></article>`;
   }).join('')}</div></details>`;
  }).join('');
+ host.insertAdjacentHTML('beforeend',parentUnlocked?'<div class="clean-batch"><span class="small">Cochez une ou plusieurs tâches, même dans différents niveaux.</span><button class="btn good" id="cleaningBatchButton" onclick="openCleaningBatch()"></button><button class="btn secondary" onclick="cleaningSelected.clear();renderCleaning()">Tout décocher</button></div>':'');
+ updateCleaningSelection();
+}
+function cleaningExtraFields(entry={}){
+ return `<label for="cleaningPerson">Qui l’a fait ? <span class="small">(facultatif)</span></label><select id="cleaningPerson"><option value="">Non précisé</option>${['Angela','Yvan','Solé','Calista'].map(name=>`<option ${entry.person===name?'selected':''}>${name}</option>`).join('')}</select><label for="cleaningNote">Note <span class="small">(facultative)</span></label><textarea id="cleaningNote" maxlength="500" rows="3" placeholder="Par exemple : seulement les vitres intérieures">${esc(entry.note||'')}</textarea>`;
+}
+function openCleaningBatch(){
+ if(!parentUnlocked)return showPin('unlock');
+ const tasks=CLEANING_TASKS.filter(t=>cleaningSelected.has(t.id));if(!tasks.length)return;
+ showCleaningDialog('Enregistrer la séance de ménage',`<p><b>${tasks.length} tâche${tasks.length>1?'s':''} sélectionnée${tasks.length>1?'s':''}</b></p><ul class="clean-batch-list">${tasks.map(t=>`<li>${esc(t.level)} · ${esc(t.room)} — ${esc(t.name)}</li>`).join('')}</ul><form id="cleaningForm"><label for="cleaningAt">Date et heure communes</label><input required type="datetime-local" id="cleaningAt" value="${cleaningLocalInput(Date.now())}" max="${cleaningLocalInput(Date.now())}"><p class="small">Heure locale de cet appareil. Vous pouvez saisir une date passée.</p>${cleaningExtraFields()}<button class="btn good" type="submit">Enregistrer les ${tasks.length} tâches</button></form>`);
+ document.getElementById('cleaningForm').onsubmit=e=>{e.preventDefault();if(recordCleaningBatch(tasks.map(t=>t.id),document.getElementById('cleaningAt').value,document.getElementById('cleaningPerson').value,document.getElementById('cleaningNote').value))closeCleaningDialog();};
+}
+function recordCleaningBatch(ids,at,person='',note=''){
+ if(!parentUnlocked){showPin('unlock');return false;}
+ const unique=[...new Set(ids)],date=new Date(at);
+ if(!unique.length||unique.some(id=>!CLEANING_TASKS.some(t=>t.id===id)))return false;
+ if(!Number.isFinite(date.getTime())||date.getTime()>Date.now()){alert('Choisissez une date et une heure valides, dans le passé ou maintenant.');return false;}
+ const batchId='clean-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+ const additions=unique.map((taskId,i)=>({id:batchId+'-'+i,batchId,taskId,at:date.toISOString(),person:String(person).slice(0,80),note:String(note).trim().slice(0,500)}));
+ if(!commitCleaning([...state.cleaning.entries,...additions]))return false;
+ unique.forEach(id=>cleaningSelected.delete(id));renderCleaning();
+ document.getElementById('cleaningFeedback').textContent=`✓ ${unique.length} tâches enregistrées à ${cleaningDate(date.toISOString())}`;
+ return true;
 }
 function commitCleaning(entries){
  const previous=state.cleaning.entries,updatedAt=state.updatedAt;
@@ -2098,13 +2144,14 @@ function commitCleaning(entries){
  try{saveLocal();}catch(e){state.cleaning.entries=previous;state.updatedAt=updatedAt;alert('Le nettoyage n’a pas pu être sauvegardé. Vérifiez l’espace disponible et réessayez.');return false;}
  renderCleaning();return true;
 }
-function recordCleaning(taskId,at=new Date().toISOString(),editId=null){
+function recordCleaning(taskId,at=new Date().toISOString(),editId=null,details={}){
  if(!parentUnlocked){showPin('unlock');return false;}
  if(!CLEANING_TASKS.some(t=>t.id===taskId))return false;
  const date=new Date(at);
  if(!Number.isFinite(date.getTime())||date.getTime()>Date.now()){alert('Choisissez une date et une heure valides, dans le passé ou maintenant.');return false;}
  if(editId&&!state.cleaning.entries.some(e=>e.id===editId&&e.taskId===taskId)){alert('Cette entrée a changé. Rouvrez son historique.');return false;}
- const entry={id:editId||('clean-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),taskId,at:date.toISOString()};
+ const existing=editId?state.cleaning.entries.find(e=>e.id===editId):{};
+ const entry={...existing,id:editId||('clean-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),taskId,at:date.toISOString(),person:String(details.person??existing.person??'').slice(0,80),note:String(details.note??existing.note??'').trim().slice(0,500)};
  const entries=editId?state.cleaning.entries.map(e=>e.id===editId?entry:e):[...state.cleaning.entries,entry];
  if(!commitCleaning(entries))return false;
  document.getElementById('cleaningFeedback').textContent='✓ Nettoyage enregistré à '+cleaningDate(entry.at);
@@ -2124,13 +2171,14 @@ function openCleaningEditor(taskId,editId=null){
  if(!parentUnlocked)return showPin('unlock');
  const task=CLEANING_TASKS.find(t=>t.id===taskId),entry=editId?state.cleaning.entries.find(e=>e.id===editId&&e.taskId===taskId):null;
  if(!task||(editId&&!entry))return;
- showCleaningDialog(editId?'Corriger le nettoyage':'Enregistrer un nettoyage',`<p>${esc(task.level)} · ${esc(task.room)}<br><b>${esc(task.name)}</b></p><form id="cleaningForm"><label for="cleaningAt">Date et heure du nettoyage</label><input required type="datetime-local" id="cleaningAt" value="${cleaningLocalInput(entry?.at||Date.now())}" max="${cleaningLocalInput(Date.now())}"><p class="small">Heure locale de cet appareil.</p><button class="btn good" type="submit">Enregistrer</button></form>`);
- document.getElementById('cleaningForm').onsubmit=e=>{e.preventDefault();const value=document.getElementById('cleaningAt').value;if(recordCleaning(taskId,value,editId))closeCleaningDialog();};
+ showCleaningDialog(editId?'Corriger le nettoyage':'Enregistrer un nettoyage',`<p>${esc(task.level)} · ${esc(task.room)}<br><b>${esc(task.name)}</b></p><form id="cleaningForm"><label for="cleaningAt">Date et heure du nettoyage</label><input required type="datetime-local" id="cleaningAt" value="${cleaningLocalInput(entry?.at||Date.now())}" max="${cleaningLocalInput(Date.now())}"><p class="small">Heure locale de cet appareil.</p>${cleaningExtraFields(entry||{})}<button class="btn good" type="submit">Enregistrer</button></form>`);
+
+ document.getElementById('cleaningForm').onsubmit=e=>{e.preventDefault();const value=document.getElementById('cleaningAt').value;if(recordCleaning(taskId,value,editId,{person:document.getElementById('cleaningPerson').value,note:document.getElementById('cleaningNote').value}))closeCleaningDialog();};
 }
 function openCleaningHistory(taskId){
  const task=CLEANING_TASKS.find(t=>t.id===taskId);if(!task)return;
  const entries=cleaningEntries(taskId);
- showCleaningDialog('Historique',`<p>${esc(task.level)} · ${esc(task.room)}<br><b>${esc(task.name)}</b></p>${entries.length?'<ul class="clean-history">'+entries.map(e=>`<li><time>${esc(cleaningDate(e.at))}</time>${parentUnlocked?`<div><button class="btn secondary" data-clean-edit="${esc(e.id)}">Corriger</button> <button class="btn secondary" data-clean-delete="${esc(e.id)}">Supprimer</button></div>`:''}</li>`).join('')+'</ul>':'<p class="small">Aucun nettoyage enregistré pour cette tâche.</p>'}`);
+ showCleaningDialog('Historique',`<p>${esc(task.level)} · ${esc(task.room)}<br><b>${esc(task.name)}</b></p>${entries.length?'<ul class="clean-history">'+entries.map(e=>`<li><div><time>${esc(cleaningDate(e.at))}</time>${e.person?`<div class="small">Par ${esc(e.person)}</div>`:''}${e.note?`<div class="clean-note">${esc(e.note)}</div>`:''}</div>${parentUnlocked?`<div><button class="btn secondary" data-clean-edit="${esc(e.id)}">Corriger</button> <button class="btn secondary" data-clean-delete="${esc(e.id)}">Supprimer</button></div>`:''}</li>`).join('')+'</ul>':'<p class="small">Aucun nettoyage enregistré pour cette tâche.</p>'}`);
  document.querySelectorAll('[data-clean-edit]').forEach(b=>b.onclick=()=>openCleaningEditor(taskId,b.dataset.cleanEdit));
  document.querySelectorAll('[data-clean-delete]').forEach(b=>b.onclick=()=>{
   if(!parentUnlocked)return showPin('unlock');
@@ -2139,7 +2187,7 @@ function openCleaningHistory(taskId){
 }
 
 
-const APP_VERSION=2.73;
+const APP_VERSION=2.74;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -3512,7 +3560,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())syncCloudPreferNewest()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-73-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-74-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
