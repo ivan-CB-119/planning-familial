@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#123463">
-<title>Family Flow V2.77 — Carballes</title>
+<title>Family Flow V2.78 — Carballes</title>
 <style>
 :root{
   --navy:#123463;--navy2:#0c274c;--bg:#f3f6fb;--card:#fff;--line:#d8e0ec;
@@ -1662,7 +1662,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 }
 
 
-/* V2.77 : styles limités à l'onglet Nettoyage et navigation à sept entrées. */
+/* V2.78 : styles limités à l'onglet Nettoyage et navigation à sept entrées. */
 .nav{grid-template-columns:repeat(7,minmax(0,1fr))}
 .clean-levels{display:flex;gap:8px;margin:14px 0}.clean-levels button{flex:1;min-height:44px}
 .clean-room{background:white;border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden}
@@ -1988,7 +1988,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
  <div class="section"><div class="syncinfo"><div class="syncicon">📱</div><div><b>Installation iPhone / iPad</b><br><span class="small">Ouvrir ce fichier dans Safari → Partager → Sur l’écran d’accueil. Les données locales restent dans le navigateur ; Supabase permet le partage entre appareils quand il est configuré.</span></div></div></div>
 </section>
 <section id="cleaning" class="view">
- <div class="clean-hero"><div><span class="clean-eyebrow">FAMILY FLOW · V2.77</span><h2>Le carnet de ménage</h2><p>Une pièce à la fois, toute la maison en vue.</p></div><span id="cleaningSummary" class="clean-counter"></span></div>
+ <div class="clean-hero"><div><span class="clean-eyebrow">FAMILY FLOW · V2.78</span><h2>Le carnet de ménage</h2><p>Une pièce à la fois, toute la maison en vue.</p></div><span id="cleaningSummary" class="clean-counter"></span></div>
  <p class="small" id="cleaningAccess"></p>
 
  <p class="small">Dernier nettoyage : <span class="clean-status recent">Moins de 7 jours</span> · <span class="clean-status past">7 à 29 jours</span> · <span class="clean-status older">30 jours ou plus</span>. Ces couleurs indiquent l’ancienneté, sans fréquence imposée.</p>
@@ -1997,7 +1997,7 @@ main{padding:12px 12px 92px;max-width:1500px;margin:auto}
 </section>
 </main>
 
-<footer class="footerinfo">Version <b>2.77</b> • Dernière mise à jour : <b>17/09/2026 à 21:52</b></footer>
+<footer class="footerinfo">Version <b>2.78</b> • Dernière mise à jour : <b>17/09/2026 à 21:56</b></footer>
 
 <nav class="nav">
  <button class="active" data-view="today"><span class="ico">🏠</span>Aujourd’hui</button>
@@ -2188,7 +2188,7 @@ function openCleaningHistory(taskId){
 }
 
 
-const APP_VERSION=2.77;
+const APP_VERSION=2.78;
 /*
   CONFIGURATION DE DEPLOIEMENT (à renseigner une seule fois dans la version GitHub).
   Une fois ces 2 valeurs définies, aucun iPhone/iPad n'a besoin de saisir l'URL ou la clé Supabase.
@@ -2316,7 +2316,15 @@ function monday(d){let x=new Date(d);x.setHours(12,0,0,0);let day=(x.getDay()+6)
 function addDays(d,n){let x=new Date(d);x.setDate(x.getDate()+n);return x}
 function weekIndex(d){return Math.floor((monday(d)-ANCHOR)/(7*86400000))}
 function formatDate(d){return d.toLocaleDateString(currentLocale(),{weekday:'short',day:'2-digit',month:'2-digit'})}
-function rangeText(d){let m=monday(d),s=addDays(m,6);return `Semaine ${weekIndex(d)+1} — du ${formatDate(m)} au ${formatDate(s)}`}
+function calendarWeek(d){
+ const thursday=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+ thursday.setUTCDate(thursday.getUTCDate()+4-(thursday.getUTCDay()||7));
+ const year=thursday.getUTCFullYear();
+ const week=Math.ceil((((thursday-new Date(Date.UTC(year,0,1)))/86400000)+1)/7);
+ return {week,year};
+}
+function calendarWeekLabel(d){const w=calendarWeek(d);return 'Semaine '+w.week+' de '+w.year;}
+function rangeText(d){let m=monday(d),s=addDays(m,6);return `${calendarWeekLabel(d)} — du ${formatDate(m)} au ${formatDate(s)}`}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 function saveLocal(){state.updatedAt=new Date().toISOString();state.version=APP_VERSION;localStorage.setItem('familyBoardV2',JSON.stringify(state));schedulePush()}
@@ -2531,7 +2539,7 @@ function renderToday(){
  const rangeEl=document.getElementById('todayRangeText');
  if(rangeEl)rangeEl.textContent=rangeText(selectedDay);
  const weekEl=document.getElementById('weekNo');
- if(weekEl)weekEl.textContent='Sem. '+(weekIndex(selectedDay)+1);
+ if(weekEl)weekEl.textContent=calendarWeekLabel(selectedDay);if(weekEl)weekEl.title='Semaine de l’année, du lundi au dimanche (calendrier ISO)' ;
 
  const turtle=turtlePerson(selectedDay);
  const host=document.getElementById('todayResponsibilities');
@@ -2841,7 +2849,7 @@ function renderWeek(){
  rh+='</table><div class="eval-legend"><span>✓ OK</span><span>✕ Pas OK</span><span>— Non évalué / pas nécessaire</span></div></div>';
  document.getElementById('dailyRoutineEvaluation').innerHTML=rh;
 
- document.getElementById('rotationBox').innerHTML=[1,2,3,4,5,6].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>S${weekIndex(d)+1} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
+ document.getElementById('rotationBox').innerHTML=[1,2,3,4,5,6].map(i=>{let d=addDays(m,i*7),a=assignments(d);return `<div class="rotacell"><b>${calendarWeekLabel(d)} • ${formatDate(d)}</b>${PEOPLE.map(p=>`${p.name}: ${a[p.id][0].icon} ${a[p.id][0].label}`).join('<br>')}<br>🐢 Tortues : ${turtlePerson(d).name}</div>`}).join('');
 }
 function menuBlank(){return {common:false,parents:{selected:[]},children:{selected:[]},shared:{selected:[]}}}
 function menuDayObj(day){const k=iso(day);if(!state.menus[k])state.menus[k]={};return state.menus[k]}
@@ -3346,7 +3354,7 @@ function renderRankingHistory(){
     return `<div class="ranking-week-card">
       <div class="ranking-week-head">
         <div>
-          <div class="ranking-week-title">S${weekIndex(m)+1} • ${formatDate(m)} → ${formatDate(s)}</div>
+          <div class="ranking-week-title">${calendarWeekLabel(m)} • ${formatDate(m)} → ${formatDate(s)}</div>
           <div class="small">Classement hebdomadaire</div>
         </div>
       </div>
@@ -3561,7 +3569,7 @@ function msg(t){document.getElementById('cloudMsg').textContent=t}
 let pushTimer=null;function schedulePush(){if(!cloudReady()||!navigator.onLine)return;clearTimeout(pushTimer);pushTimer=setTimeout(()=>pushCloud(),1800)}
 window.addEventListener('online',()=>{updateSyncUI();if(cloudReady())syncCloudPreferNewest()});window.addEventListener('offline',updateSyncUI);
 
-function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-77-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
+function exportData(){let blob=new Blob([JSON.stringify({state,cloud:{url:cloud.url,familyCode:cloud.familyCode}},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-flow-v2-78-sauvegarde.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);state=x.state||x;ensureState();localStorage.setItem('familyBoardV2',JSON.stringify(state));renderAll();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)}
 function resetCurrentWeek(){if(!parentUnlocked)return showPin('unlock');if(!confirm('Réinitialiser uniquement les coches et points de la semaine en cours ? Les menus et le planning sont conservés.'))return;let m=monday(selectedDay),s=addDays(m,6),from=iso(m),to=iso(s);Object.keys(state.checks).forEach(k=>{let match=k.match(/(\d{4}-\d{2}-\d{2})/);if(match&&match[1]>=from&&match[1]<=to)delete state.checks[k]});state.points=state.points.filter(x=>x.date<from||x.date>to);saveLocal();renderAll()}
 function resetPointsOnly(){if(!parentUnlocked)return showPin('unlock');if(confirm('Effacer tous les points enregistrés ? Les tâches cochées, menus et planning sont conservés.')){state.points=[];saveLocal();renderAll()}}
